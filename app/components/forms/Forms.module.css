@@ -1,0 +1,59 @@
+.authInput {
+  background-color: transparent;
+  border-radius: 0px;
+  font-size: 16px;
+  outline: none !important;
+  padding: 0px;
+}
+
+.authInputWrapper {
+  align-items: center;
+  background-color: white;
+  border-radius: 8px;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem 12px;
+}
+
+.inputTransparent {
+  background-color: transparent;
+  border-radius: 0px;
+  box-shadow: none;
+  outline: none;
+  padding: 0px;
+}
+
+.searchBox {
+  align-items: center;
+  background-color: white;
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 0.4rem;
+  padding: 8px 12px;
+  width: 100%;
+}
+
+.uploader {
+  align-items: center;
+  background-color: var(--background);
+  border: 1px dashed var(--border-color);
+  border-radius: 20px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 14px;
+  gap: 0.5rem;
+  justify-content: center;
+  height: 150px;
+  text-transform: none;
+  transition: all 0.3s ease-out;
+  width: 100%;
+}
+
+.uploader:hover {
+  border-color: var(--primary);
+}

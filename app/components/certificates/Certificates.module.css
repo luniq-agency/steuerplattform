@@ -1,0 +1,11 @@
+
+.input {
+    background-color: var(--transparent);
+    cursor: pointer;
+    font-size: 0px;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}

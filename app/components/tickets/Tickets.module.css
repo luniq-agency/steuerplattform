@@ -1,0 +1,56 @@
+.chatBubble {
+    background-color: var(--background-container);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.9rem;
+    font-weight: 500;
+    line-height: 1.2em;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.docItem {
+    align-items: center;
+    background-color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    font-weight: 700;
+    gap: 0.5rem;
+    padding: 0.5rem 12px;
+}
+
+.selected {
+    background-color: #f2f6ff;
+}
+
+.textDescription {
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.textMeta {
+    color: var(--text-secondary);
+    font-size: 0.7rem;
+}
+
+.titleSmall {
+    font-size: 0.9rem;
+    font-weight: 700;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.wrapper {
+    border-radius: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 1rem;
+    transition: all 0.3s ease-out
+}

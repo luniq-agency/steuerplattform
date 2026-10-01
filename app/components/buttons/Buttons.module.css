@@ -1,0 +1,124 @@
+.buttonContext {
+  align-items: center;
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  font-weight: 400 !important;
+  gap: 0.4rem;
+  justify-content: left;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.buttonDelete {
+  align-items: center;
+  background-color: var(--error-text);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  font-weight: 600;
+  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+}
+
+.buttonHeader {
+  align-items: center;
+  background-color: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  height: 24px;
+  justify-content: center;
+  padding: 0px;
+  width: 24px;
+}
+
+.buttonPrimary {
+  align-items: center;
+  background-color: var(--primary);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  font-weight: 600;
+  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+}
+
+.buttonSecondary {
+  align-items: center;
+  background-color: var(--button-secondary);
+  border: none;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  font-weight: 600;
+  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+}
+
+.buttonTertiary {
+  align-items: center;
+  background-color: var(--secondary);
+  border: none;
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  font-weight: 600;
+  gap: 0.4rem;
+  justify-content: center;
+  padding: 0.5rem 1.25rem;
+}
+
+.disabled {
+  cursor: default !important;
+  opacity: 0.5;
+}
+
+.disabled:hover {
+  background-color: inherit !important;
+  color: inherit !important;
+}
+
+.iconButton {
+  align-items: center;
+  background-color: var(--button-secondary);
+  cursor: pointer;
+  display: flex;
+  height: 40px;
+  justify-content: center;
+  padding: 0.5rem;
+  width: 40px;
+}
+
+.interfaceButton {
+  align-items: center;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  font-size: 12px;
+  font-weight: 500;
+  gap: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  transition: all 0.25s ease-out;
+}
+
+.interfaceButton:hover {
+  background-color: var(--primary);
+  color: white;
+}
+
+.small {
+  font-size: 14px;
+}

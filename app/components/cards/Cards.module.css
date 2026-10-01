@@ -1,0 +1,29 @@
+.card {
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.cardHeader {
+  color: var(--text-tertiary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  line-height: 1.2em;
+}
+
+.iconWrapper {
+  align-items: center;
+  aspect-ratio: 1;
+  background: linear-gradient(25deg, var(--primary), var(--primary-dark));
+  border-radius: 200px;
+  color: white;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  padding: 0.6rem;
+}
+
+.value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1em;
+}

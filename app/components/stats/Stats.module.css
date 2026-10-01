@@ -1,0 +1,40 @@
+.description {
+    color: var(--text-secondary);
+    font-size: 12px;
+    line-height: 1.2em;
+}
+
+.iconWrapper {
+    align-items: center;
+    background: linear-gradient(var(--primary), var(--primary-dark));
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    height: 36px;
+    width: 36px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.2em;
+}
+
+.negative {
+    color: var(--error-text) !important;
+}
+
+.positive {
+    color: var(--success-text) !important;
+}
+
+.statPercent {
+    color: var(--text-secondary);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.statValue {
+    font-size: 3rem;
+    font-weight: 300;
+}

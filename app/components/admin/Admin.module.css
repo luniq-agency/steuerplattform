@@ -1,0 +1,174 @@
+.adminContainer {
+    background-color: var(--background-container);
+    border-right: 1px solid var(--border-color);
+    height: 100%;
+    max-width: 400px;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.cardHeader {
+    color: var(--text-tertiary);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.chatBubble {
+    background-color: var(--background-container);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    padding: 1rem;
+}
+
+.chatBubble:last-child {
+    margin-bottom: 0px;
+}
+
+.chatContainer {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-height: 100%;
+}
+
+.chatContent {
+    flex-grow: 1;
+    overflow-y: scroll;
+    padding: 1.5rem;
+}
+
+.chatContainerFooter {
+    background-color: var(--background-container);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 0.5rem;
+    padding: 1.5rem;
+}
+
+.chatContainerHeader {
+    background-color: var(--background-container);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+.disclaimer {
+    font-size: 0.8rem;
+}
+
+.navbar {
+    display: none;
+}
+
+.navbarButton {
+    background-color: transparent;
+    border-radius: 10px;
+    color: var(--text-tertiary);
+    display: flex;
+    flex-direction: column;
+    font-size: 10px;
+    transition: all 0.3s ease-out;
+    width: 100%;
+}
+
+.pageHeader {
+    background-color: white;
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+}
+
+.selected {
+    background-color: azure;
+    color: red;
+}
+
+.sidebar {
+    background-color: var(--background-sidebar);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-width: 90px;
+    overflow: hidden;
+    transition: width 0.25s ease;
+    width: 300px;
+}
+
+.sidebarCollapsed {
+    background-color: var(--background-sidebar);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: width 0.25s ease;
+    width: 90px;
+}
+
+.sidebarButton {
+    background-color: transparent;
+    border-radius: 10px;
+    color: white;
+    font-size: 14px;
+    padding: 0.5rem 0.5rem;
+    transition: all 0.3s ease-out;
+    white-space: nowrap;
+    width: 100%;
+}
+
+.sidebarButton:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    color: var(--secondary);
+}
+
+.sidebarButtonActive {
+    background-color: transparent;
+    border-radius: 10px;
+    color: var(--secondary);
+    cursor: inherit;
+    font-size: 14px;
+    opacity: 1;
+    padding: 0.5rem 0.5rem;
+    transition: all 0.3s ease-out;
+    width: 100%;
+}
+
+.sidebarButtonActiveLink {
+    color: var(--secondary);
+    cursor: inherit;
+    opacity: 1;
+}
+
+.sidebarContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem;
+}
+
+.sidebarTop {
+    padding: 1.5rem 1rem;
+}
+
+.value {
+    font-size: 3rem;
+    font-weight: 600;
+}
+
+@media only screen and (max-width:768px) {
+    .navbar {
+        background-color: var(--background-sidebar);
+        border-top: 1px solid var(--border-color);
+        bottom: 0px;
+        display: flex;
+        left: 0px;
+        padding: 0.5rem 1rem;
+        position: fixed;
+        width: 100vw;
+        z-index: 999
+    }
+
+    .sidebar, .sidebarCollapsed {
+        display: none;
+    }
+}
