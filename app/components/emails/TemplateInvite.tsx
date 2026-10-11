@@ -37,9 +37,9 @@ export function TemplateInvite({ firstName, referrer, url }: EmailTemplateProps)
   return (
     <body style={styles.page}>
       <div style={styles.container}>
-        <h1>Deine Einladung zu CONEK</h1>
+        <h1>Deine Einladung zu ADVACT</h1>
         <p style={styles.p}>Hallo {firstName}!</p>
-        <p style={styles.p}>{referrer} hat dich zu CONEK eingeladen.</p>
+        <p style={styles.p}>{referrer} hat dich zu ADVACT eingeladen.</p>
         <p style={styles.p}>Klicke auf den folgenden Link, um deinen Account zu erstellen.</p>
         <a href={url} style={styles.button} target="_blank">
           Konto erstellen
@@ -48,7 +48,7 @@ export function TemplateInvite({ firstName, referrer, url }: EmailTemplateProps)
           Du hast Fragen? Dann antworte einfach auf diese E-Mail – wir stehen dir zur Verfügung.
         </p>
         <p style={styles.p}>Mit freundlichen Grüßen</p>
-        <p style={styles.p}>Dein Team von CONEK</p>
+        <p style={styles.p}>Dein Team von ADVACT</p>
       </div>
     </body>
   );

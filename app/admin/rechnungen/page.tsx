@@ -4,7 +4,7 @@ import { Metadata } from 'next';
 import Rechnungen from './Rechnungen';
 
 export const metadata: Metadata = {
-  title: 'Rechnungen | CONEK',
+  title: 'Rechnungen | ADVACT',
   description: '',
 };
 

@@ -3,7 +3,7 @@ import { Metadata } from 'next';
 import TicketPageClient from '@/app/components/tickets/TicketPageClient';
 
 export const metadata: Metadata = {
-  title: 'Ticket | CONEK',
+  title: 'Ticket | ADVACT',
   description: '',
 };
 

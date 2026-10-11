@@ -16,7 +16,7 @@ export default function AdminSidebar() {
   return (
     <div className={styles.sidebar}>
       <div className={styles.sidebarTop}>
-        <Image alt="CONEK Logo" height={20} loading="eager" src="/conek-logo-weiss.svg" width={100} />
+        <Image alt="ADVACT Logo" height={20} loading="eager" src="/conek-logo-weiss.svg" width={100} />
         <DividerBlock height={1} />
         <div className="row space-between align-center gap-s">
           <UserAvatar fontSize={16} height={32} user={userProfile} width={32} />

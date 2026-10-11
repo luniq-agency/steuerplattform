@@ -3,7 +3,7 @@ import UserSettings from '@/app/components/UserSettings';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Einstellungen | CONEK',
+  title: 'Einstellungen | ADVACT',
   description: '',
 };
 

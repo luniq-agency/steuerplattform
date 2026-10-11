@@ -2,7 +2,7 @@ import AufgabenPage from './AufgabenPage';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Aufgaben | CONEK',
+  title: 'Aufgaben | ADVACT',
   description: '',
 };
 

@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { notFound } from 'next/navigation';
 
 export const metadata: Metadata = {
-  title: 'Konto erstellen | CONEK',
+  title: 'Konto erstellen | ADVACT',
   description: '',
 };
 
@@ -18,7 +18,7 @@ export default async function CreateAccountPage({ params }: { params: Promise<{ 
   if (!profile)
     return (
       <main className="auth-page" style={{ width: '100vw' }}>
-        <Image alt="CONEK Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
+        <Image alt="ADVACT Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
         <DividerBlock height={1} />
         <h2 style={{ color: 'white' }}>Konto erstellen</h2>
         <span style={{ color: 'white' }}>
@@ -30,7 +30,7 @@ export default async function CreateAccountPage({ params }: { params: Promise<{ 
 
   return (
     <main className="auth-page" style={{ width: '100vw' }}>
-      <Image alt="CONEK Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
+      <Image alt="ADVACT Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
       <DividerBlock height={1} />
       <h2 style={{ color: 'white' }}>Konto erstellen</h2>
       <div style={{ maxWidth: 360, width: '100%' }}>
@@ -39,12 +39,12 @@ export default async function CreateAccountPage({ params }: { params: Promise<{ 
             <span style={{ color: 'white', textAlign: 'center' }}>
               {profile.user_role === 'admin' ? (
                 <span>
-                  Du wurdest zu CONEK eingeladen. <br />
+                  Du wurdest zu ADVACT eingeladen. <br />
                   Erstelle jetzt dein Admin-Konto.
                 </span>
               ) : (
                 <span>
-                  Du wurdest zu CONEK eingeladen. <br />
+                  Du wurdest zu ADVACT eingeladen. <br />
                   Erstelle jetzt dein Agentur-Konto.
                 </span>
               )}

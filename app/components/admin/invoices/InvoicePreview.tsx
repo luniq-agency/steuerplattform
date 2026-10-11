@@ -36,13 +36,13 @@ export default function InvoicePreview({ client, invoice, invoiceItems }: Props)
           <h2>Rechnung</h2>
           <span>{invoice.invoice_number}</span>
         </div>
-        <Image alt="CONEK Logo" height={20} src="/conek-logo-blue.svg" width={130} />
+        <Image alt="ADVACT Logo" height={20} src="/conek-logo-blue.svg" width={130} />
       </div>
       <Divider />
       <div className="row space-between align-start">
         <div className="column">
           <label>Rechnungssteller</label>
-          <span>CONEK UG (haftungsbeschränkt)</span>
+          <span>ADVACT UG (haftungsbeschränkt)</span>
           <span>Haselnussweg 8</span>
           <span>31275 Hämelerwald</span>
         </div>
@@ -102,7 +102,7 @@ export default function InvoicePreview({ client, invoice, invoiceItems }: Props)
       <span>Bei Fragen stehen wir dir gerne zur Verfügung.</span>
       <span>Mit freundlichen Grüßen</span>
       <span style={{ fontSize: 20 }}>
-        <strong>Dein Team von CONEK</strong>
+        <strong>Dein Team von ADVACT</strong>
       </span>
     </div>
   );

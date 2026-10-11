@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import OnboardingClient from '../components/auth/OnboardingClient';
 
 export const metadata: Metadata = {
-  title: 'Onboarding | CONEK',
+  title: 'Onboarding | ADVACT',
   description: '',
 };
 

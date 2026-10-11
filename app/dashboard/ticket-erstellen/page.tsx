@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import PageTicketErstellen from './PageTicketErstellen';
 
 export const metadata: Metadata = {
-  title: 'Neues Ticket erstellen | CONEK',
+  title: 'Neues Ticket erstellen | ADVACT',
   description: '',
 };
 

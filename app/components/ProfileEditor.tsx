@@ -216,7 +216,7 @@ export default function ProfileEditor() {
             <DividerBlock height={1} />
             <div className="column gap-m">
               <InputSwitchLabel
-                additional="Erhalte Benachrichtigungen in der CONEK App."
+                additional="Erhalte Benachrichtigungen in der ADVACT App."
                 booleanValue={notificationsApp}
                 label="In-App Benachrichtigungen"
                 onBooleanChange={setNotificationsApp}

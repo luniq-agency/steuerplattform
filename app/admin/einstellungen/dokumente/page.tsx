@@ -3,7 +3,7 @@ import DividerBlock from '@/app/components/DividerBlock';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Dokumente verwalten | CONEK',
+  title: 'Dokumente verwalten | ADVACT',
   description: '',
 };
 

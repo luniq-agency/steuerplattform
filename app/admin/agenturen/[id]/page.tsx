@@ -8,7 +8,7 @@ import { usersLoadAll } from '@/app/actions/users';
 import AgencyActions from '@/app/components/agency/AgencyActions';
 
 export const metadata: Metadata = {
-  title: 'Agentur | CONEK',
+  title: 'Agentur | ADVACT',
   description: '',
 };
 

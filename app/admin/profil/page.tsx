@@ -2,7 +2,7 @@ import { Metadata } from 'next';
 import ProfileEditor from '@/app/components/ProfileEditor';
 
 export const metadata: Metadata = {
-  title: 'Mein Profil | CONEK',
+  title: 'Mein Profil | ADVACT',
   description: '',
 };
 export default function AdminProfile() {

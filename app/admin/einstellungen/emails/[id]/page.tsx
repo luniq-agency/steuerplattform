@@ -5,7 +5,7 @@ import { emailTemplateLoad } from '@/app/actions/emailtemplates';
 import EmailTemplateEditor from '@/app/components/admin/emails/EmailTemplateEditor';
 
 export const metadata: Metadata = {
-  title: 'E-Mail-Vorlage bearbeiten | CONEK',
+  title: 'E-Mail-Vorlage bearbeiten | ADVACT',
   description: '',
 };
 

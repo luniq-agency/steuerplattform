@@ -2,7 +2,7 @@ import AdminDashboard from './AdminDashboard';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Mein Dashboard | CONEK',
+  title: 'Mein Dashboard | ADVACT',
   description: '',
 };
 

@@ -4,7 +4,7 @@ import { useAuth } from '@/app/context/AuthContext';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Meine Tickets | CONEK',
+  title: 'Meine Tickets | ADVACT',
   description: '',
 };
 

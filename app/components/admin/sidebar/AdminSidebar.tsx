@@ -38,7 +38,7 @@ export default function AdminSidebar() {
           <Row alignItems='center' justifyContent='space-between'>
             {expanded && (
               <Image
-                alt="CONEK Logo"
+                alt="ADVACT Logo"
                 className="logo-sidebar"
                 height={20}
                 loading="eager"

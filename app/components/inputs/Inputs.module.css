@@ -11,6 +11,16 @@
   position: relative;
 }
 
+.inputAuth {
+  background: linear-gradient(104deg, #fdfdfd0d 5%, #f0f0e41a 100%);
+  border: 1px solid rgba(90,90,90,0.5);
+  border-radius: 16px;
+  color: var(--foreground);
+    height: 48px;
+    outline: none !important;
+  padding: 0px 20px;
+}
+
 .searchBox {
   align-items: center;
   background-color: white;

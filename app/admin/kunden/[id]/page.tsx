@@ -3,7 +3,7 @@ import { userLookup } from '@/app/actions/users';
 import KundeDetailPage from './KundeDetailPage';
 
 export const metadata: Metadata = {
-  title: 'Kundenprofil | CONEK',
+  title: 'Kundenprofil | ADVACT',
   description: '',
 };
 

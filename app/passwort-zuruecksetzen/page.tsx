@@ -31,7 +31,7 @@ export default function PasswordReset() {
   return (
     <main className="auth-page">
       <Link href="/">
-        <Image alt="CONEK Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
+        <Image alt="ADVACT Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
       </Link>
       <DividerBlock height={1} />
       <div className="column gap-m">

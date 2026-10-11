@@ -14,6 +14,9 @@ import { registerBubbleUser } from '@/app/actions/migrate';
 import { Toast } from 'primereact/toast';
 import { Dialog } from 'primereact/dialog';
 import { PrimaryButton } from '../buttons/Buttons';
+import AuthInput from '../inputs/AuthInput';
+import AuthPassword from '../inputs/AuthPassword';
+import Column from '../layout/Column';
 
 const translateError = (message: string): string => {
   const errors: Record<string, string> = {
@@ -135,20 +138,9 @@ export function SignInForm() {
     <div className="column gap-l">
       <form onSubmit={signIn}>
         <div className="column gap-m">
-          <InputText
-            autoComplete="email"
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="E-Mail"
-            value={email}
-          />
-          <div className="column gap-xs">
-            <Password
-              autoComplete="current-password"
-              feedback={false}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Passwort"
-              value={password}
-            />
+          <AuthInput onChange={setEmail} placeholder="" value={email} />
+          <Column gap={2}>
+            <AuthPassword onChange={setPassword} value={password} />
             <Button
               className="container-link"
               label="Passwort vergessen?"
@@ -160,7 +152,7 @@ export function SignInForm() {
                 width: 'fit-content',
               }}
             />
-          </div>
+          </Column>
           <Button
             className="button-auth"
             disabled={!email || !password || submitting}

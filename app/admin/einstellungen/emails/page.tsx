@@ -5,7 +5,7 @@ import DividerBlock from '@/app/components/DividerBlock';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'E-Mail-Vorlagen | CONEK',
+  title: 'E-Mail-Vorlagen | ADVACT',
   description: '',
 };
 

@@ -10,7 +10,7 @@ import { ticketsLoadAll } from '@/app/actions/tickets';
 import { usersLoadAll } from '@/app/actions/users';
 
 export const metadata: Metadata = {
-  title: 'Tickets | CONEK',
+  title: 'Tickets | ADVACT',
   description: '',
 };
 

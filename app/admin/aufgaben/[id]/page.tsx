@@ -6,7 +6,7 @@ import TaskEditor from '@/app/components/admin/tasks/TaskEditor';
 import { userLookup } from '@/app/actions/users';
 
 export const metadata: Metadata = {
-  title: 'Aufgabe | CONEK',
+  title: 'Aufgabe | ADVACT',
   description: '',
 };
 

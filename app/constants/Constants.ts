@@ -263,7 +263,7 @@ export const ticket_options = [
   },
   {
     description: 'Änderungswünsche, Verbesserungsvorschläge etc.',
-    label: 'Frage zu CONEK',
+    label: 'Frage zu ADVACT',
     value: 'general',
   },
   {

@@ -6,7 +6,7 @@ import Documents from '@/app/components/pages/clients/Documents';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Meine Dokumente | CONEK',
+  title: 'Meine Dokumente | ADVACT',
   description: '',
 };
 

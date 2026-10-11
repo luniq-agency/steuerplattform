@@ -19,10 +19,8 @@ export async function login(email: string, password: string) {
   const { data: userData } = await supabase
     .from('user')
     .select('user_role')
-    .eq('user_uuid', data.user.id)
+    .eq('user_id', data.user.id)
     .single();
-
-  console.log('User:', userData);
 
   if (!userData) {
     redirect('/onboarding');
@@ -33,6 +31,8 @@ export async function login(email: string, password: string) {
       redirect('/admin');
     case 'agency':
       redirect('/admin');
+      case 'partner':
+        redirect('/admin');
     case 'client':
       redirect('/dashboard');
     default:

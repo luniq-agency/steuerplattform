@@ -54,9 +54,9 @@ export function InvoicePDF({ invoice, items, recipient }: Props) {
         {/* Header */}
         <View style={styles.header}>
           <View>
-            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#4b39ef' }}>CONEK</Text>
+            <Text style={{ fontSize: 18, fontWeight: 'bold', color: '#4b39ef' }}>ADVACT</Text>
             <Text style={{ fontSize: 9, color: '#888', marginTop: 4 }}>
-              CONEK UG (haftungsbeschränkt)
+              ADVACT UG (haftungsbeschränkt)
             </Text>
             <Text style={{ fontSize: 9, color: '#888' }}>Haselnussweg 8, 31275 Hämelerwald</Text>
           </View>
@@ -133,7 +133,7 @@ export function InvoicePDF({ invoice, items, recipient }: Props) {
             Rechnungsbetrag bis zum {formatDate(dueDate)} an das untenstehende Konto.
           </Text>
           <Text style={styles.paragraph}>Mit freundlichen Grüßen</Text>
-          <Text style={styles.paragraph}>Ihr Team von CONEK</Text>
+          <Text style={styles.paragraph}>Ihr Team von ADVACT</Text>
         </View>
 
         {/* FOOTER */}
@@ -141,7 +141,7 @@ export function InvoicePDF({ invoice, items, recipient }: Props) {
           <View style={{ borderTopWidth: 0.5, borderColor: '#eee', paddingTop: 12 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
               <View>
-                <Text style={{ fontSize: 8, color: '#aaa' }}>CONEK UG (haftungsbeschränkt)</Text>
+                <Text style={{ fontSize: 8, color: '#aaa' }}>ADVACT UG (haftungsbeschränkt)</Text>
                 <Text style={{ fontSize: 8, color: '#aaa' }}>Haselnussweg 8</Text>
                 <Text style={{ fontSize: 8, color: '#aaa' }}>31275 Hämelerwald</Text>
               </View>

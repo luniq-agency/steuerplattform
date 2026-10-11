@@ -3,7 +3,7 @@ import { fetchEmails } from '@/app/actions/email';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'E-Mails | CONEK',
+  title: 'E-Mails | ADVACT',
   description: '',
 };
 

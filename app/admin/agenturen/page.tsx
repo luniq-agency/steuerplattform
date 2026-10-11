@@ -8,7 +8,7 @@ import { agencyOverview } from '@/app/actions/stats';
 import { usersLoadAll } from '@/app/actions/users';
 
 export const metadata: Metadata = {
-  title: 'Agenturen | CONEK',
+  title: 'Agenturen | ADVACT',
   description: '',
 };
 

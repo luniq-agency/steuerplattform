@@ -4,7 +4,7 @@ import DividerBlock from '@/app/components/DividerBlock';
 import { clientsLoadAll } from '@/app/actions/clients';
 
 export const metadata: Metadata = {
-  title: 'Meetings | CONEK',
+  title: 'Meetings | ADVACT',
   description: '',
 };
 

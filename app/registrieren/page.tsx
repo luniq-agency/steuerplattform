@@ -4,17 +4,17 @@ import DividerBlock from '../components/DividerBlock';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Registrieren | CONEK',
+  title: 'Registrieren | ADVACT',
   description: '',
 };
 
 export default function Home() {
   return (
     <main className="auth-page">
-      <Image alt="CONEK Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
+      <Image alt="ADVACT Logo" height={30} src="/conek-logo-weiss.svg" width={150} />
       <DividerBlock height={1} />
       <h2 style={{ color: 'white' }}>Konto erstellen</h2>
-      <span style={{ color: 'white' }}>Erstelle jetzt dein CONEK-Konto.</span>
+      <span style={{ color: 'white' }}>Erstelle jetzt dein ADVACT-Konto.</span>
       <DividerBlock height={2} />
       <div style={{ maxWidth: 360, width: '100%' }}>
         <ClientSignupForm />

@@ -116,7 +116,7 @@ export default function OnboardingClient() {
         <div className="column gap-m">
           <div className="column">
             <h3>Grunddaten</h3>
-            <span>Vervollständige dein CONEK-Profil.</span>
+            <span>Vervollständige dein ADVACT-Profil.</span>
           </div>
           <InputText
             onBlur={(e) => setFirstName(sanitizeInputFinal(e.target.value))}

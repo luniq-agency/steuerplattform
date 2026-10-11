@@ -9,7 +9,7 @@ import AdminCreateAdmin from '@/app/components/admin/admins/AdminCreateAdmin';
 import { adminsLoadAll } from '@/app/actions/admin';
 
 export const metadata: Metadata = {
-  title: 'Admins | CONEK',
+  title: 'Admins | ADVACT',
   description: '',
 };
 

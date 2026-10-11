@@ -9,8 +9,8 @@ const templates: Record<string, (props: any) => React.ReactElement> = {
 };
 
 const subjects: Record<string, string> = {
-  invite: 'Du wurdest zu CONEK eingeladen',
-  welcome: 'Willkommen bei CONEK',
+  invite: 'Du wurdest zu ADVACT eingeladen',
+  welcome: 'Willkommen bei ADVACT',
 };
 
 export async function POST(request: NextRequest) {
