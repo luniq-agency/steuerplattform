@@ -14,7 +14,7 @@ export default function Rechnungen({ clients }: Props) {
   const { userProfile } = useAuth();
   if (!userProfile) return;
 
-  if (userProfile.user_role != 'admin') redirect('/admin');
+  if (userProfile.rolle != 'admin') redirect('/admin');
 
   return (
     <div className="page-content">

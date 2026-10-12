@@ -1,17 +1,13 @@
 'use client';
 
 import styles from './Sidebar.module.css';
-import AdminSidebarButton, { AdminNavbarButton } from '../AdminSidebarButton';
-import DividerBlock from '../../DividerBlock';
+import AdminSidebarButton, { AdminNavbarButton } from './SidebarButton';
+import DividerBlock from '../DividerBlock';
 import Image from 'next/image';
 import { useAuth } from '@/app/context/AuthContext';
-import NotificationButton from '../../notifications/NotificationButton';
-import { UserAvatar } from '../../UserAvatar';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Button } from 'primereact/button';
-import Row from '../../layout/Row';
 
 export default function AdminSidebar() {
   const { user, userProfile, logout } = useAuth();
@@ -35,51 +31,14 @@ export default function AdminSidebar() {
     <>
       <div className={expanded ? styles.sidebar : styles.sidebarCollapsed}>
         <div className={expanded ? styles.sidebarTop : styles.sidebarTopCollapsed}>
-          <Row alignItems='center' justifyContent='space-between'>
-            {expanded && (
-              <Image
-                alt="ADVACT Logo"
-                className="logo-sidebar"
-                height={20}
-                loading="eager"
-                src="/conek-logo-weiss.svg"
-                width={80}
-              />
-            )}
-            <Button
-              className="button-square"
-              icon={expanded ? 'pi pi-chevron-left' : 'pi pi-chevron-right'}
-              onClick={() => setExpanded(!expanded)}
-              style={{ border: '1px solid white', color: 'white', padding: 8 }}
-              text
-            />
-          </Row>
-          <DividerBlock height={2} />
-          <div className={expanded ? styles.sidebarProfileWrapper : styles.sidebarProfileWrapperCollapsed}>
-            <div className="row gap-s width-100">
-              <div
-                onClick={() => {
-                  router.push('/admin/profil');
-                }}
-                style={{ cursor: 'pointer', flexShrink: 0, width: 32 }}
-              >
-                <UserAvatar fontSize={16} height={32} width={32} />
-              </div>
-              {expanded && (
-                <div className="row width-100">
-                  <div className="column" style={{flexGrow: 1 }}>
-                    <span style={{ color: 'white', lineHeight: '1.1em' }}>
-                      {userProfile?.user_name_first}
-                    </span>
-                    <span style={{ color: 'var(--text-tertiary)', fontSize: 10 }}>
-                      {userProfile.email}
-                    </span>
-                  </div>
-                  <NotificationButton user={userProfile} />
-                </div>
-              )}
-            </div>
-          </div>
+          <Image
+            alt="ADVACT Logo"
+            className="logo-sidebar"
+            height={20}
+            loading="eager"
+            src="/advact-logo-black.png"
+            width={80}
+          />
         </div>
         <div className={styles.sidebarContent} style={{ flexGrow: 1 }}>
           <AdminSidebarButton
@@ -98,7 +57,7 @@ export default function AdminSidebar() {
             label="Kunden"
             target="/admin/kunden"
           />
-          {userProfile.user_role === 'admin' && (
+          {userProfile.rolle === 'admin' && (
             <AdminSidebarButton
               collapsed={!expanded}
               icon="pi pi-file-pdf"
@@ -119,7 +78,7 @@ export default function AdminSidebar() {
             target="/admin/tickets"
           />
           <DividerBlock height={1} />
-          {userProfile.user_role === 'admin' && (
+          {userProfile.rolle === 'admin' && (
             <div className="column gap-s">
               {expanded && (
                 <label>
@@ -144,12 +103,6 @@ export default function AdminSidebar() {
                 label="Statistiken"
                 target="/admin/statistiken"
               />
-              {/* <AdminSidebarButton
-                collapsed={!expanded}
-                icon="pi pi-envelope"
-                label="E-Mails"
-                target="/admin/emails"
-              />*/}
               {expanded && (
                 <Accordion>
                   <AccordionTab

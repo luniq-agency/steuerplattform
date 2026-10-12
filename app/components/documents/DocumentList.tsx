@@ -95,7 +95,7 @@ export default function DocumentList() {
       <div className="row gap-s align-center">
         <UserAvatarOther fontSize={12} height={32} user={profile} width={32} />
         <span>
-          {profile?.user_name_last || ''}, {profile?.user_name_first || ''}
+          {profile?.nachname || ''}, {profile?.vorname || ''}
         </span>
       </div>
     );

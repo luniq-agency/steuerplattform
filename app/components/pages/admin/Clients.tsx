@@ -23,7 +23,7 @@ export default function Clients() {
   useEffect(() => {
     if (!userProfile) return;
     const fetchClients = async () => {
-      const clientRes = await clientsLoadAll(userProfile.user_role, userProfile.id);
+      const clientRes = await clientsLoadAll(userProfile.rolle, userProfile.id);
       setClients(clientRes);
     };
     fetchClients();
@@ -31,7 +31,7 @@ export default function Clients() {
 
   const refresh = async () => {
     if (!userProfile) return;
-    const clientRes = await clientsLoadAll(userProfile.user_role, userProfile.id);
+    const clientRes = await clientsLoadAll(userProfile.rolle, userProfile.id);
     setClients(clientRes);
     toast.current?.show({
       severity: 'success',

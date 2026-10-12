@@ -13,7 +13,7 @@ export async function agencyGetSignups(id: string) {
   const { data, error } = await supabase
     .from('user')
     .select('*')
-    .eq('user_role', 'client')
+    .eq('rolle', 'client')
     .eq('referrer', id)
     .gte('created_at', monthStart)
     .lte('created_at', monthEnd);

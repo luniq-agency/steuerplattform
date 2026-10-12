@@ -5,8 +5,9 @@
 
 .cardHeader {
   color: var(--text-tertiary);
-  font-size: 0.8rem;
-  font-weight: 600;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: 1px;
   line-height: 1.2em;
 }
 

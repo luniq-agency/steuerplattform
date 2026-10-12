@@ -44,9 +44,9 @@ export default function ClientEditor({ user: userProp }: Props) {
   const [clientJob, setClientJob] = useState(user?.job || '');
   const [clientJobType, setClientJobType] = useState(user?.job_status || '');
   const [clientKids, setClientKids] = useState(user?.kinder || 0);
-  const [clientNachname, setClientNachname] = useState(user?.user_name_last || '');
+  const [clientNachname, setClientNachname] = useState(user?.nachname || '');
   const [clientNotes, setClientNotes] = useState(user?.notizen || '');
-  const [clientVorname, setClientVorname] = useState(user?.user_name_first || '');
+  const [clientVorname, setClientVorname] = useState(user?.vorname || '');
   const [clientStatus, setClientStatus] = useState(user?.status || '');
   const [clientTaxId, setClientTaxId] = useState(user?.steuer_id || '');
 
@@ -55,15 +55,15 @@ export default function ClientEditor({ user: userProp }: Props) {
   const originalFamily = family_options.find((t) => t.value === user?.family_status)?.label ?? '';
 
   const isChanged =
-    clientVorname !== user?.user_name_first ||
-    clientNachname !== user.user_name_last ||
+    clientVorname !== user?.vorname ||
+    clientNachname !== user.nachname ||
     clientJob !== user.job ||
     clientIban !== user.iban ||
     clientKids !== user.kinder ||
     clientFamily !== originalFamily ||
     currentDob !== originalDob;
 
-  const hasProfile = user?.user_uuid;
+  const hasProfile = user?.user_id;
 
   const updateUser = async () => {
     setUpdating(true);
@@ -73,7 +73,7 @@ export default function ClientEditor({ user: userProp }: Props) {
       const updatePayload = {
         body: `Status auf '${status?.label}' geändert.`,
         created_at: new Date(),
-        created_by: `${userProfile?.user_name_first} ${userProfile?.user_name_last}`,
+        created_by: `${userProfile?.vorname} ${userProfile?.nachname}`,
         user: user?.id,
       };
       setStatusChanged(true);
@@ -91,9 +91,9 @@ export default function ClientEditor({ user: userProp }: Props) {
       kinder: clientKids,
       notizen: clientNotes,
       steuer_id: clientTaxId,
-      user_name_last: clientNachname,
+      nachname: clientNachname,
       status: clientStatus,
-      user_name_first: clientVorname,
+      vorname: clientVorname,
     };
 
     if (!user) return;
@@ -150,7 +150,7 @@ export default function ClientEditor({ user: userProp }: Props) {
         <TextInputLabel label="IBAN" onChange={setClientIban} value={clientIban} />
         <TextInputLabel label="Steuer-ID" onChange={setClientTaxId} value={clientTaxId} />
         <TextAreaLabel label="Notizen" onChange={setClientNotes} value={clientNotes} />
-        {userProfile?.user_role === 'admin' && (
+        {userProfile?.rolle === 'admin' && (
           <SelectLabel
             label="Status"
             onChange={setClientStatus}
@@ -190,7 +190,7 @@ export function ClientContactEditor({ user }: Props) {
   const [clientWebsite, setClientWebsite] = useState(user?.website || '');
   const [clientZip, setClientZip] = useState(user?.plz || '');
 
-  const hasProfile = user?.user_uuid;
+  const hasProfile = user?.user_id;
 
   const updateUser = async () => {
     setUpdating(true);

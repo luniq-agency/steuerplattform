@@ -1,14 +1,14 @@
 'use server';
 
 import { createClient } from '@/app/utils/supabase/server';
-import { Invoice, Notification, User } from '../types/Database';
+import { Benachrichtigung, User } from '../types/Database';
 
-export async function notificationCreate(data: Partial<Notification>, recipient: User) {
+export async function notificationCreate(data: Partial<Benachrichtigung>, recipient: User) {
   const supabase = await createClient();
 
   if (recipient.permission_notifications_push === true) {
     const { data: created, error } = await supabase
-      .from('notification')
+      .from('benachrichtigung')
       .insert(data)
       .select()
       .single();
@@ -23,7 +23,7 @@ export async function notificationDelete(id: string) {
   const supabase = await createClient();
 
   const { data: deleted, error } = await supabase
-    .from('notification')
+    .from('benachrichtigung')
     .delete()
     .eq('id', id)
     .single();
@@ -33,37 +33,37 @@ export async function notificationDelete(id: string) {
   return deleted;
 }
 
-export async function notificationsLoadUser(id: string): Promise<Notification[]> {
+export async function notificationsLoadUser(id: string): Promise<Benachrichtigung[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from('notification')
+    .from('benachrichtigung')
     .select('*')
-    .eq('recipient', id)
-    .eq('read', false);
+    .eq('user', id)
+    .eq('gelesen', false);
 
   if (error) throw new Error(error.message);
   return data || [];
 }
 
-export async function notificationsMarkAllRead(id: string): Promise<Notification[]> {
+export async function notificationsMarkAllRead(id: string): Promise<Benachrichtigung[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from('notification')
+    .from('benachrichtigung')
     .update({ read: true })
-    .eq('recipient', id)
-    .eq('read', false);
+    .eq('user', id)
+    .eq('gelesen', false);
 
   if (error) throw new Error(error.message);
   return data || [];
 }
 
-export async function notificationUpdate(data: Partial<Notification>, id: string) {
+export async function notificationUpdate(data: Partial<Benachrichtigung>, id: string) {
   const supabase = await createClient();
 
   const { data: created, error } = await supabase
-    .from('notification')
+    .from('benachrichtigung')
     .update(data)
     .eq('id', id)
     .select();

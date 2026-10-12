@@ -25,7 +25,7 @@ export default function AdminCreateTask({ onCreate }: Props) {
   const [submitting, setSubmitting] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  const isAdmin = userProfile?.user_role === 'admin';
+  const isAdmin = userProfile?.rolle === 'admin';
 
   // USERS
   const [selectedAdmin, setSelectedAdmin] = useState<User | null>(null);
@@ -59,7 +59,7 @@ export default function AdminCreateTask({ onCreate }: Props) {
     if (!selectedAdmin || !userProfile) return;
 
     const notificationPayload = {
-      message: `${userProfile?.user_name_first} ${userProfile?.user_name_last} hat die Aufgabe '${taskName}' erstellt und dir zugewiesen.`,
+      message: `${userProfile?.vorname} ${userProfile?.nachname} hat die Aufgabe '${taskName}' erstellt und dir zugewiesen.`,
       read: false,
       recipient: selectedAdmin.id,
       title: 'Neue Aufgabe',
@@ -81,9 +81,9 @@ export default function AdminCreateTask({ onCreate }: Props) {
       const taskRes = await taskCreate(taskPayload, userProfile);
 
       const taskUpdatePayload = {
-        body: `${userProfile?.user_name_first} ${userProfile?.user_name_last} hat den Task erstellt.`,
+        body: `${userProfile?.vorname} ${userProfile?.nachname} hat den Task erstellt.`,
         created_by: userProfile?.id,
-        creator: `${userProfile?.user_name_first} ${userProfile?.user_name_last}`,
+        creator: `${userProfile?.vorname} ${userProfile?.nachname}`,
         image: userProfile?.avatar || null,
         task: taskRes.id,
       };
@@ -108,7 +108,7 @@ export default function AdminCreateTask({ onCreate }: Props) {
   // OPTIONS
   const adminOptions = filterAdmins(users);
   const clientOptions =
-    userProfile?.user_role === 'admin'
+    userProfile?.rolle === 'admin'
       ? filterClientsAll(users)
       : filterClients(users, userProfile?.id || '1');
 

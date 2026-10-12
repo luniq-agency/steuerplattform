@@ -138,14 +138,14 @@ export default function TaskEditor({ task }: Props) {
     if (updateType === 'hold' && date)
       body = `Aufgabe auf Wiedervorlage mit Datum ${formatDate(date)} gesetzt.`;
     if (updateType === 'transfer' && updateTarget)
-      body = `Die Aufgabe wurde an ${updateTarget?.user_name_first} ${updateTarget?.user_name_last} übertragen.`;
+      body = `Die Aufgabe wurde an ${updateTarget?.vorname} ${updateTarget?.nachname} übertragen.`;
     setSubmitting(true);
 
     const payload = {
       body: body || updateText,
       created_at: new Date(),
       created_by: userProfile?.id,
-      creator: `${userProfile?.user_name_first} ${userProfile?.user_name_last}`,
+      creator: `${userProfile?.vorname} ${userProfile?.nachname}`,
       task: task.id,
     };
 
@@ -183,12 +183,12 @@ export default function TaskEditor({ task }: Props) {
   const creator = users.find((t) => t.id === task.created_by);
 
   const userOptions = users
-    .filter((u) => u.user_role === 'admin')
+    .filter((u) => u.rolle === 'admin')
     .map((u) => ({
       ...u,
-      fullName: `${u.user_name_last}, ${u.user_name_first}`,
+      fullName: `${u.nachname}, ${u.vorname}`,
     }))
-    .sort((a, b) => a.user_name_last.localeCompare(b.user_name_last));
+    .sort((a, b) => a.nachname.localeCompare(b.nachname));
 
   if (!users || !userOptions) return;
 

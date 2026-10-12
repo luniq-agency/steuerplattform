@@ -79,7 +79,7 @@ export async function sendInvoiceEmail(
     template: {
       id: 'rechnung',
       variables: {
-        NAME: recipient.user_name_first,
+        NAME: recipient.vorname,
         INVOICE: invoice.invoice_number,
         URL: link,
       },

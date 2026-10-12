@@ -22,7 +22,7 @@ export function useProfilePolling(user: User | null, userProfile: any) {
 
     intervalRef.current = setInterval(async () => {
       const supabase = createClient();
-      const { data } = await supabase.from('user').select('*').eq('user_uuid', user.id).single();
+      const { data } = await supabase.from('user').select('*').eq('user_id', user.id).single();
 
       if (data) {
         clearInterval(intervalRef.current!);

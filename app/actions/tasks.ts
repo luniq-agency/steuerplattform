@@ -29,7 +29,7 @@ export async function taskCreate(data: Partial<Task>, user: User) {
     .insert({
       body: 'Aufgabe erstellt',
       created_by: user.id,
-      creator: `${user.user_name_first} ${user.user_name_last}`,
+      creator: `${user.vorname} ${user.nachname}`,
       task: created.id,
     })
     .select()

@@ -101,12 +101,12 @@ export default function DocumentEditor({ document, onSave, preview, users }: Pro
   };
 
   const userOptions = users
-    ?.filter((a) => a.user_role === 'client')
+    ?.filter((a) => a.rolle === 'client')
     .map((u: User) => ({
       ...u,
-      fullName: `${u.user_name_last}, ${u.user_name_first}`,
+      fullName: `${u.nachname}, ${u.vorname}`,
     }))
-    .sort((a: User, b: User) => a.user_name_last.localeCompare(b.user_name_last));
+    .sort((a: User, b: User) => a.nachname.localeCompare(b.nachname));
 
   return (
     <div className="row gap-l height-100 width-100">

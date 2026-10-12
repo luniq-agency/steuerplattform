@@ -24,7 +24,7 @@ export default async function AdminAgencyPage({ params }: { params: Promise<{ id
       url: '/admin/agenturen',
     },
     {
-      label: `${agency.user_name_last}, ${agency.user_name_first}`,
+      label: `${agency.nachname}, ${agency.vorname}`,
     },
   ];
 
@@ -39,7 +39,7 @@ export default async function AdminAgencyPage({ params }: { params: Promise<{ id
       <div className="row space-between align-center">
         <div className="column">
           <h1>
-            {agency.user_name_last}, {agency.user_name_first}
+            {agency.nachname}, {agency.vorname}
           </h1>
           <span className="meta">{agency.firma}</span>
         </div>

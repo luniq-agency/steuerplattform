@@ -41,7 +41,7 @@ export async function agencyLoad(id: string): Promise<User> {
 export async function agencyLoadAll(): Promise<User[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('user').select('*').eq('user_role', 'agency');
+  const { data, error } = await supabase.from('user').select('*').eq('rolle', 'agency');
 
   if (error) throw new Error(error.message);
   return data;
@@ -69,7 +69,7 @@ export async function agencySignup(email: string, id: string, password: string) 
   //USER ACCOUNT
   const { data: userData, error: userError } = await supabase
     .from('user')
-    .update({ user_uuid: userId })
+    .update({ user_id: userId })
     .eq('id', id)
     .single();
   if (userError) throw new Error(userError.message);

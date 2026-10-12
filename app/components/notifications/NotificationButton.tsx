@@ -35,7 +35,7 @@ export default function NotificationButton({ user }: Props) {
   }, [user]);
 
   const markasread = async () => {
-    await notificationsMarkAllRead(user.user_uuid);
+    await notificationsMarkAllRead(user.user_id);
   };
 
   const reloadNotifications = async () => {

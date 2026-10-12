@@ -16,14 +16,14 @@ export async function registerBubbleUser(email: string, password: string) {
 
   const { data: userProfile, error: userError } = await supabase
     .from('user')
-    .update({ user_uuid: signupData.user?.id })
+    .update({ user_id: signupData.user?.id })
     .eq('email', email)
     .select()
     .single();
   if (userError) throw new Error(userError.message);
 
-  if (userProfile.user_role === 'agency' || userProfile.user.role === 'admin') redirect('/admin');
-  if (userProfile.user_role === 'client') redirect('/dashboard');
+  if (userProfile.rolle === 'agency' || userProfile.user.role === 'admin') redirect('/admin');
+  if (userProfile.rolle === 'client') redirect('/dashboard');
 
   return signupData;
 }

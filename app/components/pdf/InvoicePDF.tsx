@@ -75,7 +75,7 @@ export function InvoicePDF({ invoice, items, recipient }: Props) {
         <View style={styles.section}>
           <Text style={{ fontSize: 9, color: '#888', marginBottom: 4 }}>RECHNUNGSEMPFÄNGER</Text>
           <Text style={styles.bold}>
-            {recipient.user_name_first} {recipient.user_name_last}
+            {recipient.vorname} {recipient.nachname}
           </Text>
           {recipient.anschrift && <Text style={{ fontSize: 10 }}>{recipient.anschrift}</Text>}
           {recipient.plz && (

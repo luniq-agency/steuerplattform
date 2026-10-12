@@ -37,7 +37,7 @@ export function ClientTableSmall({clients}:Props) {
         <UserAvatarOther fontSize={11} height={30} user={rowData} width={30} />
         <div className="column">
           <span style={{ fontSize: 14, fontWeight: 700 }}>
-            {rowData.user_name_last}, {rowData.user_name_first}
+            {rowData.nachname}, {rowData.vorname}
           </span>
           <span style={{ fontSize: 12 }}>Angemeldet seit: {formatDate(rowData.created_at)}</span>
         </div>

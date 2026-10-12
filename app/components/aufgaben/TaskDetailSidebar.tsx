@@ -63,14 +63,14 @@ export default function TaskDetailSidebar({ onFinished, task, users }: Props) {
     if (updateType === 'hold' && date)
       body = `Aufgabe auf Wiedervorlage mit Datum ${formatDate(date)} gesetzt.`;
     if (updateType === 'transfer' && updateTarget)
-      body = `Die Aufgabe wurde an ${updateTarget?.user_name_first} ${updateTarget?.user_name_last} übertragen.`;
+      body = `Die Aufgabe wurde an ${updateTarget?.vorname} ${updateTarget?.nachname} übertragen.`;
     setSubmitting(true);
 
     const payload = {
       body: body || updateText,
       created_at: new Date(),
       created_by: userProfile?.id,
-      creator: `${userProfile?.user_name_first} ${userProfile?.user_name_last}`,
+      creator: `${userProfile?.vorname} ${userProfile?.nachname}`,
       task: task.id,
     };
 

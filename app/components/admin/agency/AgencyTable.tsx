@@ -30,7 +30,7 @@ export default function AgencyTable({ agents, users }: Props) {
           width={32}
         />
         <span>
-          {rowData.user_name_last}, {rowData.user_name_first}
+          {rowData.nachname}, {rowData.vorname}
         </span>
       </div>
     );
@@ -46,7 +46,7 @@ export default function AgencyTable({ agents, users }: Props) {
       onRowClick={(e) => selectAgent(e.data as AgencyStats)}
       paginator
       rows={10}
-      sortField="user_name_last"
+      sortField="nachname"
       sortOrder={1}
       stripedRows
       value={agents}

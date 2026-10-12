@@ -83,7 +83,7 @@ export default function TicketsAdmin({ tickets, users }: Props) {
     };
 
     const notificationPayload = {
-      message: `${userProfile.user_name_first} ${userProfile.user_name_last} hat dein Ticket ${selectedTicket.name} aktualisiert.`,
+      message: `${userProfile.vorname} ${userProfile.nachname} hat dein Ticket ${selectedTicket.name} aktualisiert.`,
       read: false,
       recipient: client.id,
       ref: selectedTicket.id,
@@ -199,7 +199,7 @@ export default function TicketsAdmin({ tickets, users }: Props) {
           <div className="row align-center gap-s">
             <UserAvatar fontSize={16} height={32} user={ticketCreator} width={32} />
             <span style={{ flexGrow: 1, fontSize: 16, fontWeight: 700 }}>
-              {ticketCreator?.user_name_last}, {ticketCreator?.user_name_first}
+              {ticketCreator?.nachname}, {ticketCreator?.vorname}
             </span>
             <Button
               className="button-square button-bordered"

@@ -20,7 +20,7 @@ export async function createStripeCustomer(client: User) {
       postal_code: client.plz || '',
     },
     email: client.email || '',
-    name: `${client.user_name_first} ${client.user_name_last}`,
+    name: `${client.vorname} ${client.nachname}`,
     phone: client.telefon || '',
   });
 

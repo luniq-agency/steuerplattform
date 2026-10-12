@@ -65,7 +65,7 @@ export default function TaskTable({ admins, tasks }: Props) {
       <div className="row align-center gap-s">
         <UserAvatarOther fontSize={11} height={24} user={assignee} width={24} />
         <span>
-          {assignee?.user_name_last}, {assignee?.user_name_first}
+          {assignee?.nachname}, {assignee?.vorname}
         </span>
       </div>
     );
@@ -149,7 +149,7 @@ export function TaskTableSmall({ admins, tasks }: Props) {
     return (
       <div className="row align-center gap-s">
         <UserAvatarOther fontSize={11} height={24} user={assignee} width={24} />
-        <span>{assignee?.user_name_first}</span>
+        <span>{assignee?.vorname}</span>
       </div>
     );
   };

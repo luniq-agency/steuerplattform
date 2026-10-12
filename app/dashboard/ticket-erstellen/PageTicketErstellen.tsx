@@ -92,7 +92,7 @@ export default function PageTicketErstellen() {
     // TICKET ENTRY
     const entryPayload = {
       created_by: userProfile?.id,
-      content: `${userProfile?.user_name_first} ${userProfile?.user_name_last} hat das Ticket erstellt.`,
+      content: `${userProfile?.vorname} ${userProfile?.nachname} hat das Ticket erstellt.`,
       ticket: res.id,
     };
     await ticketEntryCreate(entryPayload);
@@ -110,7 +110,7 @@ export default function PageTicketErstellen() {
 
     // BENACHRICHTIGUNG
     const notificationPayload = {
-      message: `${userProfile?.user_name_first} ${userProfile?.user_name_last} hat das Ticket ${ticketName} erstellt.`,
+      message: `${userProfile?.vorname} ${userProfile?.nachname} hat das Ticket ${ticketName} erstellt.`,
       read: false,
       recipient: assignee.id,
       ref: res.id,

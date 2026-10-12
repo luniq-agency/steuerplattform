@@ -24,13 +24,13 @@ export default function AgencyEditor({ user: userProp }: Props) {
   // CLIENT DATA
   const [agentCompany, setAgentCompany] = useState(user.firma || '');
   const [agentEmail, setAgentEmail] = useState(user.email || '');
-  const [agentNachname, setAgentNachname] = useState(user.user_name_last || '');
+  const [agentNachname, setAgentNachname] = useState(user.nachname || '');
   const [agentPhone, setAgentPhone] = useState(user.telefon || '');
-  const [agentVorname, setAgentVorname] = useState(user.user_name_first || '');
+  const [agentVorname, setAgentVorname] = useState(user.vorname || '');
 
   const isChanged =
-    agentVorname !== user?.user_name_first ||
-    agentNachname !== user.user_name_last ||
+    agentVorname !== user?.vorname ||
+    agentNachname !== user.nachname ||
     agentCompany !== user.firma;
 
   const updateUser = async () => {
@@ -40,8 +40,8 @@ export default function AgencyEditor({ user: userProp }: Props) {
       email: agentEmail,
       firma: agentCompany,
       telefon: agentPhone,
-      user_name_last: agentNachname,
-      user_name_first: agentVorname,
+      nachname: agentNachname,
+      vorname: agentVorname,
     };
 
     try {

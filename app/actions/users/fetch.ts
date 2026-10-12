@@ -15,7 +15,7 @@ export async function fetchUsersParter(): Promise<User[]> {
   const { data } = await supabase
     .from('user')
     .select('*')
-    .eq('user_role', 'client')
+    .eq('rolle', 'client')
     .eq('job_status', 'self-employed');
   return data || [];
 }

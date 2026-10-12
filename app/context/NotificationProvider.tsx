@@ -8,21 +8,21 @@ interface Notification {
   id: string;
   title: string;
   message: string;
-  read: boolean;
+  gelesen: boolean;
   type: string;
   created_at: string;
 }
 
 interface NotificationContextType {
   notifications: Notification[];
-  unreadCount: number;
+  ungelesenCount: number;
   markAsRead: (id: string) => Promise<void>;
   markAllAsRead: () => Promise<void>;
 }
 
 const NotificationContext = createContext<NotificationContextType>({
   notifications: [],
-  unreadCount: 0,
+  ungelesenCount: 0,
   markAsRead: async () => {},
   markAllAsRead: async () => {},
 });
@@ -37,9 +37,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 
     const fetchNotifications = async () => {
       const { data } = await supabase
-        .from('notification')
+        .from('benachrichtigung')
         .select('*')
-        .eq('recipient', userProfile.id)
+        .eq('user', userProfile.id)
         .order('created_at', { ascending: false });
       setNotifications(data ?? []);
     };
@@ -47,14 +47,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     fetchNotifications();
 
     const channel = supabase
-      .channel('notifications')
+      .channel('benachrichtigung')
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
-          table: 'notification',
-          filter: `recipient=eq.${userProfile.id}`, // ← userProfile.id statt user?.id
+          table: 'benachrichtigung',
+          filter: `user=eq.${userProfile.id}`,
         },
         (payload) => {
           setNotifications((prev) => [payload.new as Notification, ...prev]);
@@ -68,20 +68,20 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   }, [userProfile]);
 
   const markAsRead = async (id: string) => {
-    await supabase.from('notification').update({ read: true }).eq('id', id);
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+    await supabase.from('benachrichtigung').update({ gelesen: true }).eq('id', id);
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, gelesen: true } : n)));
   };
 
   const markAllAsRead = async () => {
     if (!userProfile) return;
-    await supabase.from('notification').update({ read: true }).eq('recipient', userProfile.id); // ← konsistent mit den anderen Queries
-    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+    await supabase.from('benachrichtigung').update({ gelesen: true }).eq('recipient', userProfile.id); // ← konsistent mit den anderen Queries
+    setNotifications((prev) => prev.map((n) => ({ ...n, gelesen: true })));
   };
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const ungelesenCount = notifications.filter((n) => !n.gelesen).length;
 
   return (
-    <NotificationContext.Provider value={{ notifications, unreadCount, markAsRead, markAllAsRead }}>
+    <NotificationContext.Provider value={{ notifications, ungelesenCount, markAsRead, markAllAsRead }}>
       {children}
     </NotificationContext.Provider>
   );

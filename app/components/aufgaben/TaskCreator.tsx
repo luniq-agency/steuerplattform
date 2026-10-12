@@ -26,9 +26,9 @@ export default function TaskCreator() {
   const adminOptions = admins
     .map((a) => ({
       ...a,
-      fullName: `${a.user_name_last}, ${a.user_name_first}`,
+      fullName: `${a.nachname}, ${a.vorname}`,
     }))
-    .sort((a: User, b: User) => a.user_name_last.localeCompare(b.user_name_last));
+    .sort((a: User, b: User) => a.nachname.localeCompare(b.nachname));
 
   // INPUTS
   const [taskAssignee, setTaskAssignee] = useState('');

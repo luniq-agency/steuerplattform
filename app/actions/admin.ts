@@ -2,7 +2,6 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { User } from '../types/Database';
-import { sendEmail } from './email';
 
 export async function adminCompleteAccount(email: string, password: string, role: string) {
   const supabase = await createClient();
@@ -16,7 +15,7 @@ export async function adminCompleteAccount(email: string, password: string, role
   //UPDATE
   const { data: updated, error: updateError } = await supabase
     .from('user')
-    .update({ user_uuid: userId, status: 'approved' })
+    .update({ user_id: userId, status: 'approved' })
     .eq('email', email);
   if (updateError) throw new Error(updateError.message);
 
@@ -51,7 +50,7 @@ export async function adminLookUp(id: string): Promise<User> {
 export async function adminsLoadAll(): Promise<User[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('user').select('*').eq('user_role', 'admin');
+  const { data, error } = await supabase.from('user').select('*').eq('rolle', 'admin');
 
   if (error) throw new Error(error.message);
   return data || [];

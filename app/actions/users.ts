@@ -9,7 +9,7 @@ export async function usersLoadAgentsAdmins(): Promise<User[]> {
   const { data, error } = await supabase
     .from('user')
     .select('*')
-    .in('user_role', ['admin', 'agency']);
+    .in('rolle', ['admin', 'agency']);
 
   if (error) throw new Error(error.message);
   return data || [];
@@ -42,7 +42,7 @@ export async function userLookup(id: string): Promise<User> {
 export async function userLookupWithId(id: string): Promise<User> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('user').select('*').eq('user_uuid', id).single();
+  const { data, error } = await supabase.from('user').select('*').eq('user_id', id).single();
   if (error) throw new Error(error.message);
 
   return data;

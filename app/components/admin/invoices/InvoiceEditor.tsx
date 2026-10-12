@@ -120,7 +120,7 @@ export default function InvoiceEditor({ clients, invoice, onSubmit }: Props) {
   // TEMPLATES
   const clientTemplate = (client: User) => (
     <span>
-      {client.user_name_last}, {client.user_name_first}
+      {client.nachname}, {client.vorname}
     </span>
   );
 
@@ -241,9 +241,9 @@ export default function InvoiceEditor({ clients, invoice, onSubmit }: Props) {
   const clientOptions = clients
     .map((c) => ({
       ...c,
-      fullName: `${c.user_name_last}, ${c.user_name_first}`,
+      fullName: `${c.nachname}, ${c.vorname}`,
     }))
-    .sort((a, b) => a.user_name_last.localeCompare(b.user_name_last));
+    .sort((a, b) => a.nachname.localeCompare(b.nachname));
 
   if (loading)
     return (

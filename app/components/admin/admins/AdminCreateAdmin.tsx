@@ -24,9 +24,9 @@ export default function AdminCreateAdmin() {
     const payload = {
       created_at: new Date(),
       email: adminEmail,
-      user_name_first: adminVorname,
-      user_name_last: adminNachname,
-      user_role: 'admin',
+      vorname: adminVorname,
+      nachname: adminNachname,
+      rolle: 'admin',
     };
 
     try {

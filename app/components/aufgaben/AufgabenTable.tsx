@@ -63,7 +63,7 @@ export default function AufgabenTable({ staff, user }: Props) {
 
   // FILTERS
   const admins = filterAdmins(staff);
-  const agents = staff.filter((s) => s.user_role === 'agency');
+  const agents = staff.filter((s) => s.rolle === 'agency');
   const clients = filterClients(users, user.id);
 
   // TEMPLATES
@@ -75,7 +75,7 @@ export default function AufgabenTable({ staff, user }: Props) {
       <Row alignItems="center" gap={4}>
         <UserAvatarOther fontSize={12} height={24} user={assignee} width={24} />
         <span>
-          {assignee?.user_name_first} {assignee?.user_name_last}
+          {assignee?.vorname} {assignee?.nachname}
         </span>
       </Row>
     );

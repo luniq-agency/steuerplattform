@@ -79,9 +79,9 @@ export default function AdminCreateInvoice({ onCreate, secondary, user, users }:
   const userOptions = users
     .map((u) => ({
       ...u,
-      fullName: `${u.user_name_last}, ${u.user_name_first}`,
+      fullName: `${u.nachname}, ${u.vorname}`,
     }))
-    .sort((a, b) => a.user_name_last.localeCompare(b.user_name_last));
+    .sort((a, b) => a.nachname.localeCompare(b.nachname));
 
   return (
     <>

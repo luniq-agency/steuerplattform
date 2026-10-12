@@ -1,7 +1,7 @@
 'use client';
 
 import styles from '../admin/Admin.module.css';
-import AdminSidebarButton from '../admin/AdminSidebarButton';
+import AdminSidebarButton from '../sidebar/SidebarButton';
 import DividerBlock from '../DividerBlock';
 import Image from 'next/image';
 import { useAuth } from '@/app/context/AuthContext';
@@ -21,7 +21,7 @@ export default function AdminSidebar() {
         <div className="row space-between align-center gap-s">
           <UserAvatar fontSize={16} height={32} user={userProfile} width={32} />
           <span className="grow" style={{ color: 'white' }}>
-            {userProfile?.user_name_first}
+            {userProfile?.vorname}
           </span>
           <NotificationButton user={userProfile} />
         </div>

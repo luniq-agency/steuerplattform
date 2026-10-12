@@ -66,7 +66,7 @@ export default function ClientTable({ bearbeiter, clients, search }: Props) {
   });
 
   const [globalFilterValue, setGlobalFilterValue] = useState('');
-  const isAdmin = userProfile?.user_role === 'admin';
+  const isAdmin = userProfile?.rolle === 'admin';
 
   //SELECTION
   const selectClient = (rowData: User) => {
@@ -122,7 +122,7 @@ export default function ClientTable({ bearbeiter, clients, search }: Props) {
           width={30}
         />
         <span>
-          {rowData.user_name_last}, {rowData.user_name_first}
+          {rowData.nachname}, {rowData.vorname}
         </span>
       </div>
     );
@@ -184,7 +184,7 @@ export default function ClientTable({ bearbeiter, clients, search }: Props) {
               optionLabel="fullName"
               options={agents.map((a) => ({
                 ...a,
-                fullName: `${a.user_name_last}, ${a.user_name_first}`,
+                fullName: `${a.nachname}, ${a.vorname}`,
               }))}
               value={transferTarget}
             />
@@ -205,14 +205,14 @@ export default function ClientTable({ bearbeiter, clients, search }: Props) {
           emptyMessage="Keine Kunden gefunden."
           filterDisplay="menu"
           filters={filters}
-          globalFilterFields={['user_name_first', 'user_name_last']}
+          globalFilterFields={['vorname', 'nachname']}
           paginator
           onSelectionChange={(e: any) => setSelectedClients(e.value)}
           paginatorTemplate="FirstPageLink PrevPageLink NextPageLink LastPageLink CurrentPageReport"
           rows={10}
           selection={selectedClients}
           selectionMode={rowClick ? null : 'checkbox'}
-          sortField="user_name_last"
+          sortField="nachname"
           sortOrder={1}
           stripedRows
           value={clients}

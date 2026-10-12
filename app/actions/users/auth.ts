@@ -14,7 +14,7 @@ export async function changeUserEmail(id: string, email: string) {
 
   const { data: user, error: userError } = await supabase
     .from('user')
-    .select('user_uuid')
+    .select('user_id')
     .eq('id', id)
     .single();
 
@@ -25,11 +25,11 @@ export async function changeUserEmail(id: string, email: string) {
 
   await userUpdate({ email: email }, id);
 
-  if (!user?.user_uuid) {
-    throw new Error('Kein user_uuid gefunden für diesen User');
+  if (!user?.user_id) {
+    throw new Error('Kein user_id gefunden für diesen User');
   }
 
-  const { data, error } = await supabase.auth.admin.updateUserById(user.user_uuid, {
+  const { data, error } = await supabase.auth.admin.updateUserById(user.user_id, {
     email,
   });
 

@@ -1,6 +1,6 @@
 import { Button } from 'primereact/button';
-import styles from './Admin.module.css';
 import Link from 'next/link';
+import styles from './Sidebar.module.css';
 import { usePathname } from 'next/navigation';
 
 interface Props {

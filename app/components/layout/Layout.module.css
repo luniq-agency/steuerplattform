@@ -5,6 +5,7 @@
 
 .dashboardContainer {
   background-color: var(--background-container);
+  border: 1px solid var(--border-color);
   border-radius: 20px;
   box-shadow: 0px 0px 8px 0px rgba(0, 0, 8, 0, 0.1);
   display: flex;

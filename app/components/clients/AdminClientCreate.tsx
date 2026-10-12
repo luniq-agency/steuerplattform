@@ -47,7 +47,7 @@ export default function AdminClientCreate({ onCreate }: Props) {
 
   //USER EINLADEN
   const createUser = async () => {
-    const isAgent = userProfile?.user_role == 'agency';
+    const isAgent = userProfile?.rolle == 'agency';
 
     setSubmitting(true);
     const clientPayload = {
@@ -60,11 +60,11 @@ export default function AdminClientCreate({ onCreate }: Props) {
       job_status: berufsstatus,
       kinder,
       notizen,
-      user_name_last: nachname,
+      nachname: nachname,
       status: 'pending',
       telefon,
-      user_role: 'client',
-      user_name_first: vorname,
+      rolle: 'client',
+      vorname: vorname,
     };
 
     try {

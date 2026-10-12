@@ -11,18 +11,20 @@ interface Props {
   collapsed?: boolean;
   fontSize: number;
   height: number;
+  onClick?: () => void;
   user?: User;
   width: number;
 }
 
-export function UserAvatar({ backgroundColor, color, collapsed, fontSize, height, width }: Props) {
+export function UserAvatar({ backgroundColor, color, collapsed, fontSize, height, onClick, width }: Props) {
   const { userProfile } = useAuth();
 
-  const label = userProfile?.user_name_first[0];
+  const label = userProfile?.vorname[0];
   if (!userProfile?.avatar)
     return (
       <Avatar
         label={label}
+        onClick={onClick}
         shape="circle"
         style={{
           backgroundColor: 'var(--secondary)',
@@ -38,7 +40,7 @@ export function UserAvatar({ backgroundColor, color, collapsed, fontSize, height
 
   return (
     <img
-      alt={`${userProfile.user_name_first} ${userProfile.user_name_last}`}
+      alt={`${userProfile.vorname} ${userProfile.nachname}`}
       style={{ borderRadius: '200%', height, width }}
       src={userProfile.avatar}
     />
@@ -46,7 +48,7 @@ export function UserAvatar({ backgroundColor, color, collapsed, fontSize, height
 }
 
 export function UserAvatarOther({ backgroundColor, color, fontSize, height, user, width }: Props) {
-  const label = `${user?.user_name_first[0]}${user?.user_name_last[0]}`;
+  const label = `${user?.vorname[0]}${user?.nachname[0]}`;
 
   if (!user) return <Avatar label="?" shape="circle" />;
 
@@ -68,7 +70,7 @@ export function UserAvatarOther({ backgroundColor, color, fontSize, height, user
 
   return (
     <Image
-      alt={`${user.user_name_first} ${user.user_name_last}`}
+      alt={`${user.vorname} ${user.nachname}`}
       height={height}
       src={user.avatar}
       style={{ borderRadius: '200%' }}

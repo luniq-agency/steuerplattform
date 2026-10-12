@@ -18,13 +18,10 @@ interface Props {
 export default function StatCard({ disclaimer, header, icon: Icon, value }: Props) {
   return (
     <DashboardContainer>
-      <Row alignItems="center">
-        <div className={styles.iconWrapper}>{Icon && <Icon size={20} />}</div>
-        <Column gap={0}>
+        <Column gap={8}>
           <span className={styles.cardHeader}>{header}</span>
           <span className={styles.value}>{value}</span>
         </Column>
-      </Row>
     </DashboardContainer>
   );
 }

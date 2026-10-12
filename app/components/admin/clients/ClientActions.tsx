@@ -26,7 +26,7 @@ export default function ClientActions({ client }: Props) {
   const [agents, setAgents] = useState<User[]>([]);
   const agentOptions = agents.map((a) => ({
     ...a,
-    fullName: `${a.user_name_last}, ${a.user_name_last}`,
+    fullName: `${a.nachname}, ${a.nachname}`,
   }));
 
   useEffect(() => {
@@ -59,9 +59,9 @@ export default function ClientActions({ client }: Props) {
 
     //BENACHRICHTIGUNG
     const notificationPayload = {
-      message: `${userProfile?.user_name_first} ${userProfile?.user_name_last} hat dir den Kunden ${client.vorname} ${client.nachname} zugewiesen.`,
+      message: `${userProfile?.vorname} ${userProfile?.nachname} hat dir den Kunden ${client.vorname} ${client.nachname} zugewiesen.`,
       read: false,
-      recipient: transferTarget.user_uuid,
+      recipient: transferTarget.user_id,
       title: 'Neuer Kunde',
       type: '',
     };
@@ -70,7 +70,7 @@ export default function ClientActions({ client }: Props) {
     //UPDATE
     const updatePayload = {
       body: `Kunde wurde an ${agent.vorname} ${agent.nachname} übertragen`,
-      created_by: `${userProfile?.user_name_first} ${userProfile?.user_name_last}`,
+      created_by: `${userProfile?.vorname} ${userProfile?.nachname}`,
     };
     await userUpdateCreate(updatePayload);
 

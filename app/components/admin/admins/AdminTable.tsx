@@ -35,7 +35,7 @@ export default function AdminsTable({ admins }: Props) {
 
   const sendInvite = async (u: User) => {
     op.current?.hide();
-    const name = u.user_name_first;
+    const name = u.vorname;
     console.log(name, u.email, u.id);
     await sendAdminInviteEmail(name, u.email, u.id);
   };
@@ -43,7 +43,7 @@ export default function AdminsTable({ admins }: Props) {
   const nameTemplate = (rowData: User) => {
     return (
       <span>
-        {rowData.user_name_last}, {rowData.user_name_first}
+        {rowData.nachname}, {rowData.vorname}
       </span>
     );
   };
@@ -86,8 +86,8 @@ export default function AdminsTable({ admins }: Props) {
         visible={visible}
       >
         <LayoutColumn>
-          <TextInputLabel label="Vorname" readonly value={selectedUser?.user_name_first} />
-          <TextInputLabel label="Nachname" readonly value={selectedUser?.user_name_last} />
+          <TextInputLabel label="Vorname" readonly value={selectedUser?.vorname} />
+          <TextInputLabel label="Nachname" readonly value={selectedUser?.nachname} />
           <TextInputLabel label="E-Mail" readonly value={selectedUser?.email} />
           <PrimaryButton
             label="Einladung erneut versenden"
@@ -100,7 +100,7 @@ export default function AdminsTable({ admins }: Props) {
         emptyMessage="Keine Agenturen gefunden."
         paginator
         rows={10}
-        sortField="user_name_last"
+        sortField="nachname"
         sortOrder={1}
         stripedRows
         value={admins}

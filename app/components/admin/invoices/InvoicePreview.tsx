@@ -49,7 +49,7 @@ export default function InvoicePreview({ client, invoice, invoiceItems }: Props)
         <div className="column">
           <label>Rechnungsempfänger</label>
           <span>
-            {user?.user_name_first} {user?.user_name_last}
+            {user?.vorname} {user?.nachname}
           </span>
           <span>
             {user?.anschrift}

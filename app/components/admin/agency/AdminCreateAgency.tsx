@@ -34,9 +34,9 @@ export default function AdminCreateAgency() {
         firma: agentCompany,
         referrer: userProfile.id,
         status: 'pending',
-        user_name_first: agentVorname,
-        user_name_last: agentNachname,
-        user_role: 'agency',
+        vorname: agentVorname,
+        nachname: agentNachname,
+        rolle: 'agency',
       };
 
       await agencyCreate(agencyPayload);

@@ -21,7 +21,7 @@ export default function Dashboard() {
 
     intervalRef.current = setInterval(async () => {
       const supabase = createClient();
-      const { data } = await supabase.from('user').select('*').eq('user_uuid', user.id).single();
+      const { data } = await supabase.from('user').select('*').eq('user_id', user.id).single();
 
       if (data) {
         clearInterval(intervalRef.current!);
@@ -39,7 +39,7 @@ export default function Dashboard() {
   return (
     <div className="content-wrapper" style={{ padding: 16 }}>
       <div className="row gap-m">
-        <h1>Hallo, {userProfile?.user_name_first}!</h1>
+        <h1>Hallo, {userProfile?.vorname}!</h1>
       </div>
       <DividerBlock height={2} />
       <div className="grid columns-two gap-s">

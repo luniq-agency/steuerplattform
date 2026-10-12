@@ -29,7 +29,7 @@ export default function AufgabenPage() {
       const adminRes = await adminsLoadAll();
       const userRes = await usersLoadAll();
       const res =
-        userProfile?.user_role === 'admin'
+        userProfile?.rolle === 'admin'
           ? await tasksOpenAdmin()
           : await tasksOpenAgency(userProfile.id);
       setAdmins(adminRes);
@@ -42,7 +42,7 @@ export default function AufgabenPage() {
   const update = async () => {
     if (!userProfile) return;
     const res =
-      userProfile?.user_role === 'admin'
+      userProfile?.rolle === 'admin'
         ? await tasksOpenAdmin()
         : await tasksOpenAgency(userProfile.id);
     setTasks(res);

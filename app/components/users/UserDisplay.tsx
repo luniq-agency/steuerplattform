@@ -11,7 +11,7 @@ interface Props {
 
 export default function UserDisplay({ label, user }: Props) {
   const status = job_categories.find((j) => j.value === user?.job_status);
-  const userName = `${user?.user_name_first} ${user?.user_name_last}`;
+  const userName = `${user?.vorname} ${user?.nachname}`;
 
   if (!user)
     return (

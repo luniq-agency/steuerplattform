@@ -34,10 +34,10 @@ export default async function CreateAccountPage({ params }: { params: Promise<{ 
       <DividerBlock height={1} />
       <h2 style={{ color: 'white' }}>Konto erstellen</h2>
       <div style={{ maxWidth: 360, width: '100%' }}>
-        {profile.user_role === 'admin' || profile.user_role === 'agency' ? (
+        {profile.rolle === 'admin' || profile.rolle === 'agency' ? (
           <div className="column">
             <span style={{ color: 'white', textAlign: 'center' }}>
-              {profile.user_role === 'admin' ? (
+              {profile.rolle === 'admin' ? (
                 <span>
                   Du wurdest zu ADVACT eingeladen. <br />
                   Erstelle jetzt dein Admin-Konto.
@@ -50,7 +50,7 @@ export default async function CreateAccountPage({ params }: { params: Promise<{ 
               )}
             </span>
             <DividerBlock height={2} />
-            <AdminSignupForm email={profile.email} role={profile.user_role} user={profile} />
+            <AdminSignupForm email={profile.email} role={profile.rolle} user={profile} />
           </div>
         ) : (
           <span>

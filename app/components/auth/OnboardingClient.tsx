@@ -75,10 +75,10 @@ export default function OnboardingClient() {
       setup_complete: false,
       status: 'in_review',
       telefon: phone,
-      user_name_first: firstName,
-      user_name_last: lastName,
-      user_uuid: user?.id,
-      user_role: 'client',
+      vorname: firstName,
+      nachname: lastName,
+      user_id: user?.id,
+      rolle: 'client',
     };
 
     try {
@@ -90,7 +90,7 @@ export default function OnboardingClient() {
   };
 
   if (userProfile)
-    switch (userProfile.user_role) {
+    switch (userProfile.rolle) {
       case 'admin':
         redirect('/admin');
       case 'agency':

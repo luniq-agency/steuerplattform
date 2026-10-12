@@ -14,7 +14,7 @@ export async function agencyOverview(): Promise<AgencyStats[]> {
   const { data, error } = await supabase
     .from('agency_client_count')
     .select('*')
-    .order('user_name_last', { ascending: true });
+    .order('nachname', { ascending: true });
 
   if (error) throw error;
   return data;
@@ -123,7 +123,7 @@ export async function registrationsLoadMonthly(): Promise<Registration[]> {
   const { data, error } = await supabase
     .from('user')
     .select('*')
-    .eq('user_role', 'client')
+    .eq('rolle', 'client')
     .gte('created_at', monthStart)
     .lte('created_at', monthEnd);
 

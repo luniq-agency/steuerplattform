@@ -53,7 +53,7 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
 
   const items = [
     { label: 'Kunden', url: '/admin/kunden' },
-    { label: `${user.user_name_last}, ${user.user_name_first}` },
+    { label: `${user.nachname}, ${user.vorname}` },
   ];
 
   const home = { icon: 'pi pi-home', url: '/admin' };
@@ -88,13 +88,13 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
           </div>
           <div className="column width-100">
             <h1>
-              {user.user_name_last}, {user.user_name_first}
+              {user.nachname}, {user.vorname}
             </h1>
             <span>
               Angemeldet seit: {formatDate(user.created_at)} •{' '}
               {bearbeiter ? (
                 <span>
-                  Bearbeiter: {bearbeiter.user_name_first} {bearbeiter.user_name_last}
+                  Bearbeiter: {bearbeiter.vorname} {bearbeiter.nachname}
                 </span>
               ) : (
                 <span>Selbst registriert</span>

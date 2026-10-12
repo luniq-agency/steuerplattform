@@ -27,7 +27,7 @@ export default function TicketUpdateBox({ creator, docs, entry, users }: Props) 
 
   const hasMedia = entry.media;
   const doc = hasMedia && docs.find((d) => d.id == entry.media);
-  const initial = user?.user_name_first.substring(1, 0);
+  const initial = user?.vorname.substring(1, 0);
 
   // STATE
   const [visible, setVisible] = useState(false);
@@ -37,7 +37,7 @@ export default function TicketUpdateBox({ creator, docs, entry, users }: Props) 
     return (
       <Column gap={0}>
         <span className={styles.titleSmall}>
-          {user?.user_name_first} {user?.user_name_last}
+          {user?.vorname} {user?.nachname}
         </span>
         <span className={styles.textMeta}>{formatDateWithTime(entry.created_at)}</span>
         <DividerBlock height={1} />

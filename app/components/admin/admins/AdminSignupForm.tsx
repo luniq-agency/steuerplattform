@@ -24,12 +24,12 @@ export default function AdminSignupForm({ email, role, user }: Props) {
   const [password, setPassword] = useState('');
   const [passwordRepeat, setPasswordRepeat] = useState('');
 
-  const hasProfile = user.user_uuid;
+  const hasProfile = user.user_id;
   
   // INIT
   useEffect(() => {
     if (!hasProfile) return;
-    switch (user.user_role) {
+    switch (user.rolle) {
       case 'admin':
         router.push('/admin');
       case 'agency':
@@ -45,7 +45,7 @@ export default function AdminSignupForm({ email, role, user }: Props) {
     setSubmitting(true);
     if (role === 'admin')
       try {
-        await adminCompleteAccount(user.email, password, user.user_role);
+        await adminCompleteAccount(user.email, password, user.rolle);
         router.push('/admin');
       } catch (err) {
         console.error(err);

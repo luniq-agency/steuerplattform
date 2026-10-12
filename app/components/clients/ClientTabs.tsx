@@ -63,13 +63,13 @@ const buildFormData = (user: User): ClientFormData => ({
   job: user.job || '',
   jobType: user.job_status || '',
   kinder: user.kinder || 0,
-  nachname: user.user_name_last || '',
+  nachname: user.nachname || '',
   notizen: user.notizen || '',
   plz: user.plz || '',
   steuerid: user.steuer_id || '',
   street: user.anschrift || '',
   telefon: user.telefon || '',
-  vorname: user.user_name_first || '',
+  vorname: user.vorname || '',
 });
 
 export default function ClientTabs({ onChange, onSaveRef, user }: Props) {
@@ -103,7 +103,7 @@ export default function ClientTabs({ onChange, onSaveRef, user }: Props) {
   const [admins, setAdmins] = useState<User[]>([]);
   const [certificates, setCertificates] = useState<Certificate[]>([]);
 
-  const isAdmin = userProfile?.user_role === 'admin';
+  const isAdmin = userProfile?.rolle === 'admin';
 
   // SAVING
   const save = async () => {
@@ -121,8 +121,8 @@ export default function ClientTabs({ onChange, onSaveRef, user }: Props) {
       plz: formData.plz,
       steuer_id: formData.steuerid,
       telefon: formData.telefon,
-      user_name_first: formData.vorname,
-      user_name_last: formData.nachname,
+      vorname: formData.vorname,
+      nachname: formData.nachname,
     };
 
     await userUpdate(payload, user.id);

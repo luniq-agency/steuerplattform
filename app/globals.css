@@ -3,14 +3,12 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #000000;
+  --background: #ececec;
   --background-container: #ffffff;
-  --background-sidebar: #060231;
-  --foreground: #ffffff;
+  --background-sidebar: #ffffff;
+  --foreground: #242424;
 
   --primary: #48f5b6;
-
-  /*--primary: #4b39ef;*/
   --primary-dark: #091e7c;
   --secondary: #48f5b6;
   --border-color: #ebebeb;
@@ -32,9 +30,9 @@
   --warning-text: #946f00;
   --warning-bg: #fef7c8;
 
-  --text-primary: #2b3674;
-  --text-secondary: #67686a;
-  --text-tertiary: #a3aed0;
+  --text-primary: #242424;
+  --text-secondary: #4d4f53;
+  --text-tertiary: #656977;
 
   --padding-s: 0.5rem;
   --padding-m: 1rem;
@@ -46,21 +44,41 @@
   --button-font: 'Inter', sans-serif;
 }
 
-/*
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-
-    --background-container: #333333;
-
-    --border-color: rgba(255, 255, 255, 0.1);
-
-    --text-primary: #ffffff;
-    --text-secondary: #ebebeb;
-  }
+/* Mesh gradient: pixel radii and blur match a 938 x 500 px element */
+.mesh-gradient {
+  height: 100%;
+  position: absolute;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: #733c09;
+  width: 100%;
+  z-index: 1;
 }
-  */
+
+.mesh-gradient::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: #af5908;
+  background-image:
+    radial-gradient(circle 650px at 87.2% 22%, #ffd747 0%, transparent 60%),
+    radial-gradient(ellipse 550px 650px at 20% 80%, #ffcc00 0%, transparent 55%);
+  filter: blur(195px);
+}
+
+/* Grain texture overlay */
+.mesh-gradient::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+  opacity: 0.12;
+}
 
 body {
   background: var(--background);
@@ -96,6 +114,8 @@ body {
 .auth-page {
   align-items: center;
   background-color: var(--background);
+  background-position: center;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -256,6 +276,16 @@ button {
   width: 4px;
 }
 
+.form-wrapper {
+  backdrop-filter: blur(25px);
+  background-color: rgba(0,0,0,0.8);
+  border-radius: 20px;
+  color: white;
+  max-width: 480px;
+  padding: 5rem 1.5rem;
+  width: 100%;
+}
+
 .gap-xs {
   gap: 0.25rem;
 }
@@ -289,7 +319,7 @@ h2,
 h3,
 h4 {
   color: var(--text-primary);
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--font-headings), sans-serif;
   font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1.2em;
@@ -592,6 +622,7 @@ p-datepicker-next {
 
 .page-admin {
   display: flex;
+  flex-direction: column;
   width: 100%;
 }
 

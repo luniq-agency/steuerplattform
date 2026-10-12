@@ -15,8 +15,8 @@ export type AgencyStats = {
   email: string;
   firma: string;
   id: string;
-  user_name_first: string;
-  user_name_last: string;
+  vorname: string;
+  nachname: string;
 };
 
 export type Certificate = {
@@ -53,7 +53,7 @@ export type Client = {
   status: string;
   telefon: string;
   user: string;
-  user_uuid: string;
+  user_id: string;
   vorname: string;
   website: string;
 };
@@ -156,15 +156,15 @@ export type InvoiceItem = {
   taxes_amount: number;
 };
 
-export type Notification = {
+export type Benachrichtigung = {
+  body: string;
   created_at: Date;
+  gelesen: boolean;
   id: string;
-  message: string;
-  read: boolean;
   ref: string;
-  recipient: string | number;
   title: string;
   type: string;
+  user: string | number;
 };
 
 export type Subscription = {
@@ -260,10 +260,10 @@ export type User = {
   steuer_id?: string;
   stripe_customer_id: string;
   telefon: string;
-  user_name_first: string;
-  user_name_last: string;
-  user_role: string;
-  user_uuid: string;
+  vorname: string;
+  nachname: string;
+  rolle: string;
+  user_id: string;
   website: string;
 };
 

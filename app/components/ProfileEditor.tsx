@@ -46,7 +46,7 @@ export default function ProfileEditor() {
     if (!avatarFile || !userProfile) return;
 
     try {
-      const res = await imageUpload(avatarFile.file, userProfile.user_uuid);
+      const res = await imageUpload(avatarFile.file, userProfile.user_id);
       const payload = {
         avatar: res,
       };
@@ -78,10 +78,10 @@ export default function ProfileEditor() {
     if (!user) return;
 
     setEmail(user.email);
-    setNachname(user.user_name_last);
+    setNachname(user.nachname);
     setNotificationsApp(user.permission_notifications_push);
     setNotificationsEmail(user.permission_notifications_email);
-    setVorname(user.user_name_first);
+    setVorname(user.vorname);
   }, [user]);
 
   const notificationsChanged =

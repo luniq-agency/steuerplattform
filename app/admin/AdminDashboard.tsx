@@ -40,11 +40,11 @@ export default function AdminDashboard() {
       try {
         const [adminRes, clientRes, registerRes, taskRes] = await Promise.all([
           adminsLoadAll(),
-          clientsLoadAll(userProfile.user_role, userProfile.id),
-          userProfile.user_role === 'admin'
+          clientsLoadAll(userProfile.rolle, userProfile.id),
+          userProfile.rolle === 'admin'
             ? registrationsLoadMonthly()
             : agencyGetSignups(userProfile.id),
-          tasksLoadOpenLatest(userProfile.user_role, userProfile.id),
+          tasksLoadOpenLatest(userProfile.rolle, userProfile.id),
         ]);
         setAdmins(adminRes);
         setClients(clientRes);

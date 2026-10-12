@@ -77,7 +77,7 @@ export default function InvoicesTable({ clients }: Props) {
     const client = clients?.find((c) => c.id === invoice.user);
     return {
       ...invoice,
-      recipientName: client ? `${client.user_name_last}, ${client.user_name_first}` : '',
+      recipientName: client ? `${client.nachname}, ${client.vorname}` : '',
     };
   });
 
@@ -173,7 +173,7 @@ export default function InvoicesTable({ clients }: Props) {
     if (!client) return <span>–</span>;
     return (
       <span>
-        {client.user_name_last}, {client.user_name_first}
+        {client.nachname}, {client.vorname}
       </span>
     );
   };
@@ -462,7 +462,7 @@ export function InvoicesTableUser({ user }: Props) {
             />
           </div>
         </OverlayPanel>
-        {userProfile?.user_role === 'admin' && (
+        {userProfile?.rolle === 'admin' && (
           <>
             <Link href={`/admin/rechnungen/${rowData.id}`}>
               <Button className="button-square" icon="pi pi-pencil" />

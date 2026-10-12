@@ -50,7 +50,7 @@ export async function clientCreateProfile(data: Partial<User>, clientData: Parti
 export async function clientsLoadAll(role: string, agentId?: string): Promise<User[]> {
   const supabase = await createClient();
 
-  let query = supabase.from('user').select('*').eq('user_role', 'client');
+  let query = supabase.from('user').select('*').eq('rolle', 'client');
 
   if (role === 'agency') {
     if (!agentId) {
@@ -81,7 +81,7 @@ export async function clientLoadSingle(id: string): Promise<Client> {
 export async function clientsLoadAdmin(): Promise<User[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('user').select('*').eq('user_role', 'client');
+  const { data, error } = await supabase.from('user').select('*').eq('rolle', 'client');
 
   if (error) throw new Error(error.message);
   return data || [];
@@ -101,7 +101,7 @@ export async function clientsLoadLatest(): Promise<Partial<User>[]> {
 
   const { data, error } = await supabase
     .from('user')
-    .select('id, user_name_last, user_name_first, created_at')
+    .select('id, nachname, vorname, created_at')
     .range(0, 5);
 
   if (error) throw new Error(error.message);
