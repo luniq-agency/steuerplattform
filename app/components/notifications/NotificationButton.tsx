@@ -3,7 +3,7 @@
 import { Badge } from 'primereact/badge';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { useEffect, useRef, useState } from 'react';
-import { Notification, User } from '../../types/Database';
+import { Benachrichtigung, User } from '../../types/Database';
 import { notificationsLoadUser, notificationsMarkAllRead } from '../../actions/notification';
 import { Button } from 'primereact/button';
 import { DataScroller } from 'primereact/datascroller';
@@ -18,7 +18,7 @@ interface Props {
 export default function NotificationButton({ user }: Props) {
   const op = useRef<OverlayPanel | null>(null);
 
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<Benachrichtigung[]>([]);
 
   useEffect(() => {
     if (!user) return;

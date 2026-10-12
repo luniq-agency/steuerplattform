@@ -1,4 +1,4 @@
-import { Notification } from '@/app/types/Database';
+import { Benachrichtigung } from '@/app/types/Database';
 import styles from './Notifications.module.css';
 import { notificationDelete, notificationUpdate } from '@/app/actions/notification';
 import { useRef } from 'react';
@@ -8,7 +8,7 @@ import { IconButton } from '../buttons/IconButton';
 import { EllipsisVertical } from 'lucide-react';
 
 interface Props {
-  notification: Notification;
+  notification: Benachrichtigung;
   onClick: () => void;
 }
 
@@ -37,9 +37,9 @@ export default function NotificationItem({ notification, onClick }: Props) {
   };
 
   const markAsRead = async () => {
-    if (notification.read == true) return;
+    if (notification.gelesen == true) return;
     const payload = {
-      read: true,
+      gelesen: true,
     };
 
     try {
@@ -52,16 +52,16 @@ export default function NotificationItem({ notification, onClick }: Props) {
 
   return (
     <Link
-      className={!notification.read ? `${styles.wrapper} ${styles.unread}` : styles.wrapper}
+      className={!notification.gelesen ? `${styles.wrapper} ${styles.unread}` : styles.wrapper}
       href={target()}
       onClick={markAsRead}
       onContextMenu={(e) => menu.current?.show(e)}
     >
       <ContextMenu model={items} ref={menu} breakpoint="767px" />
       <span className="width-100" style={{ fontSize: 12 }}>
-        {notification.message}
+        {notification.body}
       </span>
-      {!notification.read && <div className="dot-red" />}
+      {!notification.gelesen && <div className="dot-red" />}
       <IconButton
         icon={EllipsisVertical}
         onClick={() => menu.current?.show({} as React.SyntheticEvent)}
