@@ -12,21 +12,22 @@ import Column from '../layout/Column';
 import { Dialog } from 'primereact/dialog';
 import DocumentPreviewer from '../documents/DocumentPreviewer';
 import { File } from 'lucide-react';
+import { Dokument } from '@/app/types/docs';
 
 interface Props {
   creator: string;
-  docs: Document[];
+  docs: Dokument[];
   entry: TicketEntry;
   users: User[];
 }
 
 export default function TicketUpdateBox({ creator, docs, entry, users }: Props) {
   const { userProfile } = useAuth();
-  const userIsSender = creator === userProfile?.id;
-  const user = users.find((u) => u.id === entry.created_by);
+  const userIsSender = Number(creator) === userProfile?.id;
+  const user = users.find((u) => String(u.id) === entry.created_by);
 
   const hasMedia = entry.media;
-  const doc = hasMedia && docs.find((d) => d.id == entry.media);
+  const doc = hasMedia && docs.find((d) => String(d.id) == entry.media);
   const initial = user?.vorname.substring(1, 0);
 
   // STATE
@@ -51,14 +52,14 @@ export default function TicketUpdateBox({ creator, docs, entry, users }: Props) 
     return (
       <div className={styles.docItem} onClick={() => setVisible(true)}>
         <File size={16} />
-        <span className={styles.docTitle}>{doc.document_name}</span>
+        <span className={styles.docTitle}>{doc.name}</span>
       </div>
     );
   };
 
   return (
     <div className="row gap-s">
-      <Dialog header={doc && doc?.document_name || ''} onHide={() => setVisible(false)} style={{maxWidth:800, minHeight:"70vh"}} visible={visible}>
+      <Dialog header={doc && doc?.name || ''} onHide={() => setVisible(false)} style={{maxWidth:800, minHeight:"70vh"}} visible={visible}>
         {doc && <DocumentPreviewer doc={doc} />}
       </Dialog>
       <Avatar

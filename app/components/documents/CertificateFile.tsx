@@ -1,17 +1,15 @@
 'use client';
 
-import { Certificate } from '@/app/types/Database';
 import styles from './Documents.module.css';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 import { ContextMenu } from 'primereact/contextmenu';
-import { TextInput } from '@react-pdf/renderer';
 import { InputText } from 'primereact/inputtext';
 import { certificateDelete, certificateUpdate } from '@/app/actions/certificates';
-import { InputNumber } from 'primereact/inputnumber';
+import { Zertifikat } from '@/app/types/certificates';
 
 interface Props {
-  certificate: Certificate;
+  certificate: Zertifikat;
   onDelete: () => void;
 }
 
@@ -44,14 +42,14 @@ export default function CertificateFile({ certificate, onDelete}: Props) {
 
     const link = document.createElement('a');
     link.href = certificate.file;
-    link.download = certificate.user;
+    link.download = String(certificate.user);
     link.target = '_blank';
     link.click();
   };
 
   const confirmEdit = async () => {
     const payload = {
-      year: editingName,
+      year: Number(editingName),
     };
 
     try {

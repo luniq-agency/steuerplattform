@@ -2,6 +2,7 @@
 
 import { agencyCreate } from '@/app/actions/agency';
 import { userCreate } from '@/app/actions/users';
+import { agentCreate } from '@/app/actions/users/agent';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
@@ -39,7 +40,7 @@ export default function AdminCreateAgency() {
         rolle: 'agency',
       };
 
-      await agencyCreate(agencyPayload);
+      await agentCreate(agencyPayload);
       setVisible(false);
       toast.current?.show({
         severity: 'success',

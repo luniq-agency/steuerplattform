@@ -4,6 +4,7 @@ import DividerBlock from '@/app/components/DividerBlock';
 import { taskLoad } from '@/app/actions/tasks';
 import TaskEditor from '@/app/components/admin/tasks/TaskEditor';
 import { userLookup } from '@/app/actions/users';
+import { fetchVorgangById } from '@/app/actions/vorgang/vorgang';
 
 export const metadata: Metadata = {
   title: 'Aufgabe | ADVACT',
@@ -12,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function AdminTaskPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const task = await taskLoad(id);
+  const task = await fetchVorgangById(id);
 
   const items = [
     {
@@ -20,7 +21,7 @@ export default async function AdminTaskPage({ params }: { params: Promise<{ id: 
       url: '/admin/aufgaben',
     },
     {
-      label: `${task.title}`,
+      label: `${task.titel}`,
     },
   ];
 

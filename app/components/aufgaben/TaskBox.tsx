@@ -3,12 +3,10 @@ import Link from 'next/link';
 import styles from './Tasks.module.css';
 import { priority_options, task_status } from '@/app/constants/Constants';
 import { Task, User } from '@/app/types/Database';
-import { UserAvatarOther } from '../UserAvatar';
 import Tag from '../ui/Tag';
 import DividerBlock from '../DividerBlock';
 import DividerLine from '../ui/DividerLine';
 import UserDisplay from '../users/UserDisplay';
-import { filterClientsAll } from '@/app/actions/users/filter';
 import Row from '../layout/Row';
 
 interface Props {

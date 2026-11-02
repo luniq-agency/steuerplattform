@@ -1,6 +1,6 @@
 import { Benachrichtigung } from '@/app/types/Database';
 import styles from './Notifications.module.css';
-import { notificationDelete, notificationUpdate } from '@/app/actions/notification';
+import { notificationDelete, patchBenachrichtigung } from '@/app/actions/notification';
 import { useRef } from 'react';
 import { ContextMenu } from 'primereact/contextmenu';
 import Link from 'next/link';
@@ -43,7 +43,7 @@ export default function NotificationItem({ notification, onClick }: Props) {
     };
 
     try {
-      await notificationUpdate(payload, notification.id);
+      await patchBenachrichtigung(payload, notification.id);
       onClick();
     } catch (err) {
       console.error(err);

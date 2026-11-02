@@ -1,7 +1,27 @@
 'use server';
 
 import { createClient } from '@/app/utils/supabase/server';
-import { Task, TaskUpdate, User } from '@/app/types/Database';
+import { TaskUpdate, User } from '@/app/types/Database';
+import { Subtask, Task } from '@/app/types/tasks';
+
+export async function subtaskCreate(payload: Partial<Subtask>): Promise<Subtask> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('subtask').insert(payload).select().single();
+  return data;
+}
+
+export async function subtaskLoadTask(task: string | number): Promise<Subtask[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('subtask').select().eq('task', task);
+  return data || [];
+}
+
+
+export async function subtaskLoadAll(): Promise<Subtask[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('subtask').select();
+  return data || [];
+}
 
 export async function taskClose(id: string) {
   const supabase = await createClient();
@@ -99,7 +119,7 @@ export async function taskTransfer(id: string, target: string, user: string): Pr
   return data;
 }
 
-export async function taskUpdate(taskData: Partial<Task>, id: string) {
+export async function taskUpdate(taskData: Partial<Task>, id: string | number) {
   const supabase = await createClient();
 
   const { data, error } = await supabase

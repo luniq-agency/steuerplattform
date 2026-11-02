@@ -2,8 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { createClient as createServiceClient } from '@supabase/supabase-js';
-import { Document } from '../types/Database';
-import { sanitizeFileName } from '../utils/sanitize';
+import type { Dokument } from '../types/docs';
 
 const getServiceClient = () =>
   createServiceClient(
@@ -11,30 +10,30 @@ const getServiceClient = () =>
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-export async function documentCreate(data: Partial<Document>) {
+export async function documentCreate(data: Partial<Dokument>) {
   const supabase = await createClient();
-  const { data: created, error } = await supabase.from('document').insert(data).select().single();
+  const { data: created, error } = await supabase.from('dokument').insert(data).select().single();
   if (error) throw new Error(error.message);
   return created;
 }
 
-export async function documentDelete(id: string) {
+export async function documentDelete(id: string | number) {
   const supabase = await createClient();
-  const { data: deleted, error } = await supabase.from('document').delete().eq('id', id);
+  const { data: deleted, error } = await supabase.from('dokument').delete().eq('id', id);
   if (error) throw new Error(error.message);
   return deleted;
 }
 
-export async function documentLoad(id: string) {
+export async function documentLoad(id: string | number) {
   const supabase = await createClient();
-  const { data } = await supabase.from('document').select('*').eq('id', id).single();
+  const { data } = await supabase.from('dokument').select('*').eq('id', id).single();
   return data;
 }
 
-export async function documentUpdate(data: Partial<Document>, id: string) {
+export async function documentUpdate(data: Partial<Dokument>, id: string | number) {
   const supabase = await createClient();
   const { data: updated, error } = await supabase
-    .from('document')
+    .from('dokument')
     .update(data)
     .eq('id', id)
     .select()
@@ -49,7 +48,7 @@ export async function documentUpload(
   fileType: string,
   name: string,
   user: string | number,
-  folderId?: string | null
+  folderId?: string | number | null
 ) {
   const supabase = getServiceClient();
 
@@ -68,7 +67,7 @@ export async function documentUpload(
   const { data: urlData } = supabase.storage.from('uploads').getPublicUrl(filePath);
 
   const { data, error: dbError } = await supabase
-    .from('document')
+    .from('dokument')
     .insert({
       document_name: name,
       document_file: urlData.publicUrl,
@@ -83,16 +82,23 @@ export async function documentUpload(
   return data;
 }
 
-export async function documentsLoadAll(): Promise<Document[]> {
+export async function documentsLoadAll(): Promise<Dokument[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('document').select('*');
+  const { data, error } = await supabase.from('dokument').select('*');
   if (error) throw new Error(error.message);
   return data || [];
 }
 
-export async function documentsLoadUser(id: string): Promise<Document[]> {
+export async function documentsLoadUser(id: number): Promise<Dokument[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('document').select('*').eq('user', id);
+  const { data, error } = await supabase.from('dokument').select('*').eq('user', id);
   if (error) throw new Error(error.message);
+  return data || [];
+}
+
+// FETCH
+export async function fetchDocsByTeam(team: string | number): Promise<Dokument[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.from('dokument').select('*').eq('team', team);
   return data || [];
 }

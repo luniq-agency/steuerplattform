@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode, useEffect, useState } from 'react';
+import { CSSProperties, ReactNode, useEffect, useState } from 'react';
 import styles from './Layout.module.css';
 
 interface Props {
@@ -9,8 +9,10 @@ interface Props {
   className?: string;
   gap?: number | string;
   grow?: boolean;
+  height?: string | number;
   justifyContent?: 'start' | 'center' | 'end' | 'space-between';
   padding?: number | string;
+  style?: CSSProperties;
   width?: string | number;
 }
 
@@ -20,8 +22,10 @@ export default function Row({
   className,
   gap = '1rem',
   grow,
+  height,
   justifyContent,
   padding,
+  style,
   width = '100%',
 }: Props) {
   return (
@@ -31,9 +35,11 @@ export default function Row({
         alignItems,
         flexGrow: grow ? 1 : 0,
         gap,
+        height,
         justifyContent,
         padding,
         width,
+        ...style
       }}
     >
       {children}

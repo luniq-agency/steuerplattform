@@ -2,12 +2,13 @@
 
 import Button from "../buttons/Button";
 import Column from "../layout/Column";
-import { login } from "@/app/actions/auth";
+import { login, signInWithGoogle } from "@/app/actions/auth";
 import styles from "./Auth.module.css";
 import TextInput from "../inputs/TextInput";
 import { useState } from "react";
+import { Mail } from "lucide-react";
 
-export default function SigninForm() {
+export default function SignInForm() {
 
     // INPUTS
     const [email, setEmail] = useState('');
@@ -15,6 +16,7 @@ export default function SigninForm() {
 
     // STATES
     const [error, setError] = useState('');
+    const [method, setMethod] = useState<'email' | 'google' | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
     // ACTIONS
@@ -31,14 +33,30 @@ export default function SigninForm() {
         }
     };
 
+    const googleSignin = async () => {
+        setError('');
+        setSubmitting(true);
+        const result = await signInWithGoogle();
+        if (result?.error) {
+            setError(result.error);
+            setSubmitting(false);
+        }
+    };
+
     return (
-        <form className={styles.authForm} onSubmit={signIn}>
-            <TextInput label="E-Mail-Adresse" onChange={setEmail} mode="dark" value={email} />
-            <Column alignItems="end">
-                <TextInput label="Passwort" onChange={setPassword} mode="dark" type="password" value={password} />
-            </Column>
-            <Button disabled={!email || !password} label="Anmelden" mode="primary" type="submit" />
+        <div className={styles.authForm}>
+            <Button type="button" icon={Mail} label="Mit E-Mail anmelden" onClick={() => setMethod('email')} width="100%" />
+            <Button type="button" image="/icons/google.svg" label="Mit Google anmelden" onClick={googleSignin} disabled={submitting} width="100%" />
+            {method === 'email' && (<form className={styles.authForm} onSubmit={signIn}>
+                <TextInput label="E-Mail-Adresse" onChange={setEmail} mode="dark" value={email} />
+                <Column alignItems="end">
+                    <TextInput label="Passwort" onChange={setPassword} mode="dark" type="password" value={password} />
+                </Column>
+                <Button disabled={!email || !password} label="Anmelden" mode="primary" type="submit" width="100%" />
+
+            </form>)}
             <span style={{ textAlign: 'center' }}>Du hast noch keinen Account? <a href="/registrieren"><strong>Jetzt registrieren</strong></a></span>
-        </form>
+        </div>
+
     )
 }

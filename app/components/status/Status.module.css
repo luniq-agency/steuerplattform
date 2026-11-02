@@ -1,0 +1,7 @@
+.tagWrapper {
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 0.25rem 0.4rem;
+    width: fit-content;
+}

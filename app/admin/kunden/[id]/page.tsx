@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function AdminClientPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const user = await userLookup(id);
+  const user = await userLookup(Number(id));
   const bearbeiter = user.bearbeiter ? await userLookup(user.bearbeiter) : null;
 
   return <KundeDetailPage bearbeiter={bearbeiter} user={user} />;

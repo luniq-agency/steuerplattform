@@ -33,7 +33,7 @@ export async function userCreate(userData: Partial<User>) {
   return data;
 }
 
-export async function userLookup(id: string): Promise<User> {
+export async function userLookup(id: number): Promise<User> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('user').select('*').eq('id', id).single();
   return data;
@@ -47,7 +47,7 @@ export async function userLookupWithId(id: string): Promise<User> {
 
   return data;
 }
-export async function userUpdate(userData: Partial<User>, id: string) {
+export async function userUpdate(userData: Partial<User>, id: number) {
   const supabase = await createClient();
 
   const { data, error } = await supabase

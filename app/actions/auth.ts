@@ -10,6 +10,27 @@ export async function getEmails() {
   return data.map((u) => u.email);
 }
 
+export async function inviteSignUp(email: string, password: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback` },
+  });
+
+  if (error) return { error: error.message };
+  if (!data.session) return { needsConfirmation: true };
+
+  const { data: profil } = await supabase
+    .from('user')
+    .select('rolle')
+    .eq('user_id', data.user!.id)
+    .maybeSingle();
+
+  return { ziel: profil?.rolle === 'agency' ? '/agentur' : '/admin' };
+}
+
 export async function login(email: string, password: string) {
   const supabase = await createClient();
 
@@ -21,7 +42,7 @@ export async function login(email: string, password: string) {
 
   const { data: userData, error: roleError } = await supabase
     .from('user')
-    .select('rolle')
+    .select('rolle, team_aktiv')
     .eq('user_id', data.user.id)
     .maybeSingle();
 
@@ -29,7 +50,9 @@ export async function login(email: string, password: string) {
 
   switch (userData?.rolle) {
     case 'admin':
+      redirect('/admin');
     case 'agency':
+      redirect('/agentur');
     case 'partner':
       redirect('/admin');
     case 'client':
@@ -50,6 +73,48 @@ export async function resetPassword(email: string) {
 
   if (error) throw new Error(error.message);
   return data;
+}
+
+export async function signUp(email: string, password: string) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    console.error('SignUp error:', error);
+    return { error: error.message };
+  }
+
+  // E-Mail-Bestätigung aktiv → noch keine Session, User muss Mail bestätigen
+  if (!data.session) {
+    return { needsConfirmation: true };
+  }
+
+  redirect('/onboarding');
+}
+
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: 'google',
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
+    },
+  });
+
+  if (error) {
+    console.error('Google OAuth error:', error);
+    return { error: error.message };
+  }
+
+  redirect(data.url);
 }
 
 export async function signOut() {

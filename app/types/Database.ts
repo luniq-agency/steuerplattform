@@ -14,7 +14,7 @@ export type AgencyStats = {
   created_at: Date;
   email: string;
   firma: string;
-  id: string;
+  id: number;
   vorname: string;
   nachname: string;
 };
@@ -190,7 +190,7 @@ export type SubscriptionItem = {
 };
 
 export type Task = {
-  assignee: string | null;
+  assignee: number | null;
   category: string;
   created_at: Date;
   created_by: string;
@@ -235,16 +235,20 @@ export type TicketEntry = {
 export type User = {
   anschrift: string;
   avatar: string | null;
-  bearbeiter: string | null;
+  bearbeiter: number | null;
+  beruf: string;
+  berufsstatus: string;
   certificate: string;
   city: string;
   client_profile: string;
   created_at: Date;
   dob: string | null;
   email: string;
-  family_status: string;
+  familienstand: string;
   firma: string;
-  id: string;
+  geburtsdatum: string | null;
+  hausnummer: string;
+  id: number;
   instagram: string;
   job: string;
   job_status: string;
@@ -252,17 +256,19 @@ export type User = {
   kinder: number;
   linkedin: string;
   notizen: string;
+  ort: string;
   permission_notifications_email: boolean;
   permission_notifications_push: boolean;
   plz: string;
+  rolle: string;
   setup_complete: boolean;
   status: string;
   steuer_id?: string;
+  strasse: string;
   stripe_customer_id: string;
   telefon: string;
   vorname: string;
   nachname: string;
-  rolle: string;
   user_id: string;
   website: string;
 };

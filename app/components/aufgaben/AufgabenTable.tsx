@@ -10,19 +10,17 @@ import { SelectLabel, TextAreaLabel, TextInputLabel } from '../forms/FormElement
 import LayoutColumn from '../layout/Column';
 import Row from '../layout/Row';
 import UserSelector from '../forms/UserSelector';
-import { filterAdmins, filterClients } from '@/app/actions/users/filter';
 import { DatePicker } from '../forms/datepicker/DatePicker';
 import { Toast } from 'primereact/toast';
 import { priority_options, task_status } from '@/app/constants/Constants';
 import Tag from '../ui/Tag';
 import { UserAvatarOther } from '../UserAvatar';
-import { Sidebar } from 'primereact/sidebar';
-import TaskDetailSidebar from './TaskDetailSidebar';
 import { usersLoadAll } from '@/app/actions/users';
 import { useAuth } from '@/app/context/AuthContext';
-import { ContextButton } from '../buttons/Buttons';
 import { InterfaceButton } from '../buttons/InterfaceButton';
 import { Check } from 'lucide-react';
+import { Vorgang } from '@/app/types/vorgang';
+import { fetchVorgaengeByClient, fetchVorgangById } from '@/app/actions/vorgang/vorgang';
 
 interface Props {
   staff: User[];
@@ -33,19 +31,19 @@ export default function AufgabenTable({ staff, user }: Props) {
   const toast = useRef<Toast | null>(null);
   const { userProfile } = useAuth();
 
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Vorgang[]>([]);
   const [users, setUsers] = useState<User[]>([]);
 
   // STATES
   const [creating, setCreating] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Vorgang | null>(null);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     if (!user) return;
 
     const fetchData = async () => {
-      const res = await tasksLoadUser(user.id);
+      const res = await fetchVorgaengeByClient(user.id);
       const userRes = await usersLoadAll();
       setTasks(res);
       setUsers(userRes);
@@ -62,13 +60,11 @@ export default function AufgabenTable({ staff, user }: Props) {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
 
   // FILTERS
-  const admins = filterAdmins(staff);
   const agents = staff.filter((s) => s.rolle === 'agency');
-  const clients = filterClients(users, user.id);
 
   // TEMPLATES
   const assigneeTemplate = (rowData: Task) => {
-    const assignee = admins.find((a) => a.id === rowData.assignee);
+    const assignee = agents.find((a) => a.id === Number(rowData.assignee));
     if (!rowData.assignee) return <span>–</span>;
 
     return (
@@ -95,39 +91,6 @@ export default function AufgabenTable({ staff, user }: Props) {
   };
 
   // ACTIONS
-  const createTask = async () => {
-    if (!userProfile) return;
-
-    const taskPayload = {
-      assignee: taskAssignee ? taskAssignee.id : null,
-      created_by: userProfile?.id,
-      description: taskDescription,
-      due_date: taskDueDate,
-      priority,
-      status: 'open',
-      title: taskName,
-      user: user.id,
-    };
-
-    try {
-      await taskCreate(taskPayload, userProfile);
-      refresh();
-      toast.current?.show({
-        severity: 'success',
-        summary: 'Aufgabe erstellt',
-        detail: 'Die Aufgabe wurde erfolgreich erstellt.',
-      });
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCreating(false);
-      setTaskAssignee(null);
-      setTaskDescription('');
-      setTaskDueDate(null);
-      setTaskName('');
-      setPriority('');
-    }
-  };
 
   const markDone = async () => {
     if (!selectedTask) return;
@@ -138,7 +101,7 @@ export default function AufgabenTable({ staff, user }: Props) {
 
   const refresh = async () => {
     setVisible(false);
-    const res = await tasksLoadUser(user.id);
+    const res = await fetchVorgaengeByClient(user.id);
     setTasks(res);
     setSelectedTask(null);
   };
@@ -157,18 +120,6 @@ export default function AufgabenTable({ staff, user }: Props) {
 
   return (
     <LayoutColumn>
-      <Toast ref={toast} />
-      <Sidebar
-        header={customHeader}
-        onHide={() => setVisible(false)}
-        position="right"
-        style={{ maxWidth: 640, width: '100%' }}
-        visible={visible}
-      >
-        {selectedTask && (
-          <TaskDetailSidebar onFinished={refresh} task={selectedTask} users={users} />
-        )}
-      </Sidebar>
       <Dialog
         draggable={false}
         header="Task erstellen"
@@ -190,14 +141,6 @@ export default function AufgabenTable({ staff, user }: Props) {
             options={priority_options}
             value={priority}
           />
-          <UserSelector
-            label="Bearbeiter (optional)"
-            onChange={setTaskAssignee}
-            optionLabel="fullName"
-            options={admins}
-            value={taskAssignee}
-          />
-          <Button disabled={!taskName} label="Task erstellen" onClick={createTask} />
         </div>
       </Dialog>
       <Row justifyContent="space-between">
@@ -210,10 +153,6 @@ export default function AufgabenTable({ staff, user }: Props) {
       </Row>
       <DataTable
         emptyMessage="Keine Aufgaben gefunden"
-        onRowClick={(e) => {
-          setSelectedTask(e.data as Task);
-          setVisible(true);
-        }}
         value={tasks}
       >
         <Column field="title" header="Name" />

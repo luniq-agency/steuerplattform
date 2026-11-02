@@ -49,9 +49,7 @@ export async function adminLookUp(id: string): Promise<User> {
 
 export async function adminsLoadAll(): Promise<User[]> {
   const supabase = await createClient();
-
   const { data, error } = await supabase.from('user').select('*').eq('rolle', 'admin');
-
   if (error) throw new Error(error.message);
   return data || [];
 }

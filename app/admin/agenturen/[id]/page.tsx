@@ -3,7 +3,6 @@ import { Metadata } from 'next';
 import DividerBlock from '@/app/components/DividerBlock';
 import { clientsLoadAgency } from '@/app/actions/clients';
 import { agencyLoad } from '@/app/actions/agency';
-import AgencyTabs from '@/app/components/admin/agency/AgencyTabs';
 import { usersLoadAll } from '@/app/actions/users';
 import AgencyActions from '@/app/components/agency/AgencyActions';
 
@@ -47,7 +46,6 @@ export default async function AdminAgencyPage({ params }: { params: Promise<{ id
       </div>
       <DividerBlock height={1} />
       <div className="dashboard-container">
-        <AgencyTabs agent={agency} />
       </div>
     </div>
   );

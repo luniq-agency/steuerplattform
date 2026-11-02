@@ -2,7 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { createClient as createServiceClient } from '@supabase/supabase-js';
-import { Certificate, Document } from '../types/Database';
+import { Zertifikat } from '../types/certificates';
 
 const getServiceClient = () =>
   createServiceClient(
@@ -13,7 +13,7 @@ const getServiceClient = () =>
 export async function certificateCreate(
   file: File,
   id: string,
-  data: Partial<Certificate>,
+  data: Partial<Zertifikat>,
   year: string
 ) {
   const supabase = getServiceClient();
@@ -31,7 +31,7 @@ export async function certificateCreate(
   const { data: urlData } = supabase.storage.from('uploads').getPublicUrl(filePath);
 
   const { data: created, error } = await supabase
-    .from('certificate')
+    .from('zertifikat')
     .insert({ ...data, file: urlData.publicUrl })
     .select()
     .single();
@@ -40,12 +40,12 @@ export async function certificateCreate(
   return created;
 }
 
-export async function certificateDelete(id: string) {
+export async function certificateDelete(id: string | number) {
   const supabase = getServiceClient();
 
   // Erst die Datei URL aus der DB holen
   const { data: certificate, error: fetchError } = await supabase
-    .from('certificate')
+    .from('zertifikat')
     .select('file')
     .eq('id', id)
     .single();
@@ -61,19 +61,19 @@ export async function certificateDelete(id: string) {
   }
 
   // Dann DB-Eintrag löschen
-  const { data, error } = await supabase.from('certificate').delete().eq('id', id);
+  const { data, error } = await supabase.from('zertifikat').delete().eq('id', id);
   if (error) throw new Error(error.message);
   return data;
 }
 
-export async function certificatesLoadUser(id: string): Promise<Certificate[]> {
+export async function certificatesLoadUser(id: number): Promise<Zertifikat[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('certificate').select('*').eq('user', id);
+  const { data, error } = await supabase.from('zertifikat').select('*').eq('user', id);
   if (error) throw new Error(error.message);
   return data || [];
 }
 
-export async function certificateUpdate(id: string, data: Partial<Certificate>) {
+export async function certificateUpdate(id: string | number, data: Partial<Zertifikat>) {
   const supabase = await createClient();
   const { data: created, error } = await supabase
     .from('certificate')

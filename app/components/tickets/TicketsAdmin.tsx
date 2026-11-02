@@ -12,11 +12,12 @@ import { Button } from 'primereact/button';
 import TicketUpdateBox from './TicketUpdateBox';
 import { useAuth } from '@/app/context/AuthContext';
 import { OverlayPanel } from 'primereact/overlaypanel';
-import { notificationCreate } from '@/app/actions/notification';
+import { putBenachrichtigung } from '@/app/actions/notification';
 import { userLookup } from '@/app/actions/users';
 import { UserAvatar } from '../UserAvatar';
 import { formatDate } from '@/app/utils/formats';
 import { documentsLoadUser } from '@/app/actions/documents';
+import { Dokument } from '@/app/types/docs';
 
 interface Props {
   tickets: Ticket[];
@@ -30,7 +31,7 @@ export default function TicketsAdmin({ tickets, users }: Props) {
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   // DATA
-  const [docs, setDocs] = useState<Document[]>([]);
+  const [docs, setDocs] = useState<Dokument[]>([]);
 
   // STATES
   const [ticketCreator, setTicketCreator] = useState<User | null>(null);
@@ -54,8 +55,8 @@ export default function TicketsAdmin({ tickets, users }: Props) {
     const fetchEntries = async () => {
       const [res, clientRes, docRes] = await Promise.all([
         ticketEntriesLoadTicket(selectedTicket.id),
-        userLookup(selectedTicket.created_by),
-        documentsLoadUser(selectedTicket.created_by)
+        userLookup(Number(selectedTicket.created_by)),
+        documentsLoadUser(Number(selectedTicket.created_by))
       ]);
       setEntries(res ?? []);
       setTicketCreator(clientRes);
@@ -73,11 +74,11 @@ export default function TicketsAdmin({ tickets, users }: Props) {
     e.preventDefault();
     if (!selectedTicket || !userProfile) return;
 
-    const client = await userLookup(selectedTicket.created_by);
+    const client = await userLookup(Number(selectedTicket.created_by));
 
     const payload = {
       created_at: new Date(),
-      created_by: userProfile.id,
+      created_by: String(userProfile.id),
       content: message,
       ticket: selectedTicket.id,
     };
@@ -92,7 +93,7 @@ export default function TicketsAdmin({ tickets, users }: Props) {
 
     try {
       await ticketEntryCreate(payload);
-      await notificationCreate(notificationPayload, client);
+      await putBenachrichtigung(notificationPayload, client);
       setMessage('');
       const res = await ticketEntriesLoadTicket(selectedTicket.id);
       setEntries(res ?? []);

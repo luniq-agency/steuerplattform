@@ -1,9 +1,9 @@
 import Image from 'next/image';
-import { SignInForm, SignInMigrateForm } from './components/auth/AuthForms';
 import DividerBlock from './components/DividerBlock';
 import { Metadata } from 'next';
 import Column from './components/layout/Column';
-import SigninForm from './components/auth/SigninForm';
+import SignInForm from './components/auth/SignInForm';
+import Row from './components/layout/Row';
 
 export const metadata: Metadata = {
   title: 'Anmelden | ADVACT',
@@ -11,17 +11,26 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  const bg = 'url(/bilder/hero.jpg)';
+
   return (
-    <main className="auth-page" style={{backgroundImage: 'url(/backgrounds/auth-background.jpg'}}>
-      <div className="form-wrapper" style={{ alignItems: 'center', display: 'flex', flexDirection: 'column', zIndex: 4 }}>
-        <Image alt="ADVACT Logo" height={30} src="/advact-logo-white.png" width={80} />
-        <DividerBlock height={1} />
-        <h2 style={{color: 'white'}}>Anmelden</h2>
-        <DividerBlock height={0.5} />
-        <span>Melde dich jetzt mit deinem ADVACT-Konto an.</span>
-        <DividerBlock height={2} />
-        <SigninForm />
-      </div>
+    <main className="auth-page">
+      <Row height="100%">
+        <Column alignItems='center' justifyContent='center'>
+          <div style={{ maxWidth: 360, width: "100%" }}>
+            <Column alignItems='center' gap={0} justifyContent='center'>
+              <Image alt="ADVACT Logo" height={30} src="/advact-logo-black.png" width={80} />
+              <DividerBlock height={1} />
+              <h2>Anmelden</h2>
+              <DividerBlock height={0.5} />
+              <span>Melde dich jetzt mit deinem ADVACT-Konto an.</span>
+              <DividerBlock height={2} />
+              <SignInForm />
+              </Column>
+          </div>
+        </Column>
+        <div className="mobile-hidden" style={{ backgroundImage: bg, backgroundSize: 'cover', width: "100%" }} />
+      </Row>
     </main>
   );
 }

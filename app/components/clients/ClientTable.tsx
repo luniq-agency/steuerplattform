@@ -95,7 +95,7 @@ export default function ClientTable({ bearbeiter, clients, search }: Props) {
   };
 
   const categoryTemplates = (rowData: User) => {
-    const statusObj = job_categories.find((t) => t.value === rowData.job_status);
+    const statusObj = job_categories.find((t) => t.value === rowData.berufsstatus);
     return (
       <Tag
         style={{ backgroundColor: statusObj?.bg, color: statusObj?.color }}

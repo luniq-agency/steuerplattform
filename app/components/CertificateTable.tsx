@@ -5,13 +5,14 @@ import { useEffect, useState } from 'react';
 import { certificatesLoadUser } from '../actions/certificates';
 import DividerBlock from './DividerBlock';
 import { Button } from 'primereact/button';
+import { Zertifikat } from '../types/certificates';
 
 interface Props {
   user: User;
 }
 
 export default function CertificateTable({ user }: Props) {
-  const [certificates, setCertificates] = useState<Certificate[]>([]);
+  const [certificates, setCertificates] = useState<Zertifikat[]>([]);
 
   useEffect(() => {
     if (!user) return;

@@ -1,0 +1,67 @@
+import { SelectItemOptionsType } from "primereact/selectitem";
+import { Dropdown } from 'primereact/dropdown';
+import Column from '../../layout/Column';
+import { IconButton } from '../../buttons/IconButton';
+import styles from '../Inputs.module.css';
+import { X } from 'lucide-react';
+
+interface Props {
+    filter?: boolean;
+    label?: string;
+    maxWidth?: string | number | undefined;
+    onChange: (value: string) => void;
+    onClear?: () => void;
+    options?: SelectItemOptionsType;
+    optionDescription?: string;
+    optionLabel: string;
+    optionValue: string;
+    placeholder?: string;
+    showClear?: boolean;
+    value: string | number | null;
+}
+
+export function SelectLabel({
+    filter = false,
+    label,
+    maxWidth,
+    onChange,
+    onClear,
+    optionDescription,
+    options,
+    optionLabel,
+    optionValue,
+    placeholder,
+    showClear = false,
+    value,
+}: Props) {
+    const itemTemplate = (option: SelectItemOptionsType) => {
+        const opt = option as Record<string, any>;
+        return (
+            <Column gap={4}>
+                <span>{opt[optionLabel]}</span>
+                {optionDescription && <span className="text-s">{opt[optionDescription]}</span>}
+            </Column>
+        );
+    };
+
+    return (
+        <Column gap={4} maxWidth={maxWidth}>
+            {label && <label>{label}</label>}
+            <Dropdown
+                filter={filter}
+                itemTemplate={itemTemplate}
+                onChange={(e) => onChange(e.value)}
+                options={options}
+                optionLabel={optionLabel}
+                optionValue={optionValue}
+                placeholder={placeholder}
+                value={value}
+            />
+            {showClear && (
+                <div className={styles.clearButton} style={{ right: 48 }}>
+                    <IconButton bg="transparent" icon={X} onClick={onClear} />
+                </div>
+            )}
+        </Column>
+    );
+}

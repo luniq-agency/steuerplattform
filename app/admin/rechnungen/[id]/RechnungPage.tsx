@@ -70,7 +70,7 @@ export default function RechnungPage({ invoice }: Props) {
         clientsLoadAdmin(),
         invoiceItemsLoad(invoice.id),
         taxRates.find((t) => t.value === invoice.tax_category),
-        userLookup(invoice.user),
+        userLookup(Number(invoice.user)),
       ]);
       setClients(clientRes);
       setItems(itemsRes);
@@ -149,7 +149,7 @@ export default function RechnungPage({ invoice }: Props) {
       tax_amount: Number(tax.toFixed(2)),
       tax_category: taxRate?.value,
       tax_rate: taxRate?.multiplier,
-      user: recipient?.id,
+      user: String(recipient?.id),
     };
 
     await invoiceUpdate(payload, invoice.id);

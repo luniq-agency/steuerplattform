@@ -30,7 +30,7 @@ export async function imageUpload(file: File, user: string) {
   return `${urlData.publicUrl}?t=${Date.now()}`;
 }
 
-export async function imageUploadReplace(file: File, existingUrl: string, documentId: string) {
+export async function imageUploadReplace(file: File, existingUrl: string, documentId: string | number) {
   const supabase = getServiceClient();
 
   let filePath: string;

@@ -16,6 +16,7 @@ import DocumentEditor from './DocumentEditor';
 import { Dialog } from 'primereact/dialog';
 import { document_options } from '@/app/constants/Constants';
 import { formatDate } from '@/app/utils/formats';
+import { Dokument } from '@/app/types/docs';
 
 export default function DocumentList() {
   const router = useRouter();
@@ -25,8 +26,8 @@ export default function DocumentList() {
   const [mounted, setMounted] = useState(false);
 
   //DATA
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [documents, setDocuments] = useState<Dokument[]>([]);
+  const [selectedDocument, setSelectedDocument] = useState<Dokument | null>(null);
   const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
@@ -89,7 +90,7 @@ export default function DocumentList() {
 
   const nameTemplate = (rowData: Document) => {
     if (!users || !rowData.user) return;
-    const profile = users.find((t) => t.id === rowData.user);
+    const profile = users.find((t) => String(t.id) === rowData.user);
 
     return (
       <div className="row gap-s align-center">
@@ -123,7 +124,7 @@ export default function DocumentList() {
         paginator
         onRowClick={(e) => {
           setVisible(true);
-          setSelectedDocument(e.data as Document);
+          setSelectedDocument(e.data as Dokument);
         }}
         rows={10}
         sortField="document_name"

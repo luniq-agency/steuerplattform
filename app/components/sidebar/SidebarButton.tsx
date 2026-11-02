@@ -2,88 +2,67 @@ import { Button } from 'primereact/button';
 import Link from 'next/link';
 import styles from './Sidebar.module.css';
 import { usePathname } from 'next/navigation';
+import { LucideIcon } from 'lucide-react';
 
 interface Props {
   action?: () => void;
   collapsed?: boolean;
-  icon?: string;
+  exact?: boolean;
+  icon?: LucideIcon;
   label: string;
   target?: string;
 }
 
-export default function AdminSidebarButton({ action, collapsed, icon, label, target }: Props) {
+export default function AdminSidebarButton({ action, collapsed, exact, icon: Icon, label, target }: Props) {
   const pathname = usePathname();
-  const isActive = pathname === target || pathname.startsWith(target + '/');
 
-  if (!target && !collapsed)
-    return (
-      <Button
-        className={`${styles.sidebarButton} ${isActive ? styles.navButtonActive : ''}`}
-        disabled={isActive}
-        icon={icon}
-        onClick={action}
-        style={{ gap: 8 }}
-      >
-        {label}
-      </Button>
-    );
+  const isActive = !!target && (
+    exact
+      ? pathname === target
+      : pathname === target || pathname.startsWith(target + '/')
+  );
 
-  if (!target && collapsed)
-    return (
-      <Button
-        className={`${styles.sidebarButton} ${isActive ? styles.navButtonActive : ''}`}
-        disabled={isActive}
-        icon={icon}
-        onClick={action}
-        style={{ gap: 8 }}
-        text
-      />
-    );
 
-  if (target && collapsed)
-    return (
-      <Link
-        className={isActive ? styles.navButtonActiveLink : ''}
-        href={target}
-        style={{ width: '100%' }}
-      >
-        <Button
-          className={`${styles.sidebarButton} ${isActive ? styles.navButtonActive : ''}`}
-          icon={icon}
-          style={{ gap: 8 }}
-          text
-        />
-      </Link>
-    );
+  if (!target) return (
+    <Button
+      className={`${styles.sidebarButton} ${isActive ? styles.sidebarButtonActive : ''}`}
+      onClick={action}
+      style={{ gap: 8 }}
+    >
+      {Icon && <Icon size={16} />}
+      {label}
+    </Button>
+  )
 
   return (
     <Link
-      className={isActive ? styles.navButtonActiveLink : ''}
       href={target as any}
       style={{ width: '100%' }}
     >
       <Button
-        className={`${styles.sidebarButton} ${isActive ? styles.navButtonActive : ''}`}
-        icon={icon}
+        className={`${styles.sidebarButton} ${isActive ? styles.sidebarButtonActive : ''}`}
         style={{ gap: 8 }}
       >
+        {Icon && <Icon size={16} />}
         {label}
       </Button>
     </Link>
   );
 }
 
-export function AdminNavbarButton({ action, icon, label, target }: Props) {
+export function AdminNavbarButton({ action, icon: Icon, label, target }: Props) {
   if (!target)
     return (
-      <Button className={styles.navbarButton} icon={icon} onClick={action} style={{ gap: 8 }}>
+      <Button className={styles.navbarButton} onClick={action} style={{ gap: 8 }}>
+        {Icon && <Icon size={16} />}
         {label}
       </Button>
     );
 
   return (
     <Link href={target} style={{ width: '100%' }}>
-      <Button className={styles.navbarButton} icon={icon} style={{ gap: 8 }}>
+      <Button className={styles.navbarButton} style={{ gap: 8 }}>
+        {Icon && <Icon size={16} />}
         {label}
       </Button>
     </Link>

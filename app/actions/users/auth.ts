@@ -9,7 +9,7 @@ const getServiceClient = () =>
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
 
-export async function changeUserEmail(id: string, email: string) {
+export async function changeUserEmail(id: number, email: string) {
   const supabase = getServiceClient();
 
   const { data: user, error: userError } = await supabase

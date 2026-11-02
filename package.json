@@ -17,10 +17,11 @@
     "@supabase/ssr": "^0.10.3",
     "apexcharts": "^5.16.0",
     "chart.js": "^4.5.1",
+    "fast-xml-parser": "^5.11.2",
     "framer-motion": "^12.41.0",
     "lottie-react": "^2.4.1",
     "lucide-react": "^1.23.0",
-    "next": "^16.3.0",
+    "next": "^16.4.3",
     "primeicons": "^7.0.0",
     "primelocale": "^2.3.2",
     "primereact": "^10.9.8",
@@ -29,7 +30,9 @@
     "react-apexcharts": "^2.1.1",
     "react-dom": "19.2.4",
     "resend": "^6.12.4",
-    "stripe": "^22.5.0"
+    "server-only": "^0.0.1",
+    "stripe": "^22.5.0",
+    "unpdf": "^1.9.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -37,7 +40,7 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "^16.4.3",
     "prettier": "^3.9.9",
     "tailwindcss": "^4",
     "typescript": "^5"

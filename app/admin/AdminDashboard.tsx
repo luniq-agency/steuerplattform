@@ -37,22 +37,7 @@ export default function AdminDashboard() {
     mounted.current = true;
 
     const fetchData = async () => {
-      try {
-        const [adminRes, clientRes, registerRes, taskRes] = await Promise.all([
-          adminsLoadAll(),
-          clientsLoadAll(userProfile.rolle, userProfile.id),
-          userProfile.rolle === 'admin'
-            ? registrationsLoadMonthly()
-            : agencyGetSignups(userProfile.id),
-          tasksLoadOpenLatest(userProfile.rolle, userProfile.id),
-        ]);
-        setAdmins(adminRes);
-        setClients(clientRes);
-        setRegistrations(registerRes);
-        setTasks(taskRes);
-        console.log(registerRes);
-      } catch (err) {}
-    };
+    }
     fetchData();
   }, [userProfile]);
 

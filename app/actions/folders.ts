@@ -1,12 +1,12 @@
 'use server';
 
 import { createClient } from '@/app/utils/supabase/server';
-import { DocumentFolder } from '../types/Database';
+import { DokumentOrdner } from '../types/docs';
 
-export async function folderCreate(data: Partial<DocumentFolder>) {
+export async function folderCreate(data: Partial<DokumentOrdner>) {
   const supabase = await createClient();
   const { data: created, error } = await supabase
-    .from('document_folder')
+    .from('dokumentordner')
     .insert(data)
     .select()
     .single();
@@ -14,10 +14,10 @@ export async function folderCreate(data: Partial<DocumentFolder>) {
   return created;
 }
 
-export async function folderDelete(id: string) {
+export async function folderDelete(id: number) {
   const supabase = await createClient();
   const { data: created, error } = await supabase
-    .from('document_folder')
+    .from('dokumentordner')
     .delete()
     .eq('id', id)
     .single();
@@ -32,10 +32,10 @@ export async function folderDelete(id: string) {
   return created;
 }
 
-export async function foldersLoadUser(id: string) {
+export async function foldersLoadUser(id: number) {
   const supabase = await createClient();
   const { data: created, error } = await supabase
-    .from('document_folder')
+    .from('dokumentordner')
     .select('*')
     .eq('user', id);
 
@@ -43,10 +43,10 @@ export async function foldersLoadUser(id: string) {
   return created || [];
 }
 
-export async function folderUpdate(id: string, data: Partial<DocumentFolder>) {
+export async function folderUpdate(id: number, data: Partial<DokumentOrdner>) {
   const supabase = await createClient();
   const { data: created, error } = await supabase
-    .from('document_folder')
+    .from('dokumentordner')
     .update(data)
     .eq('id', id)
     .select()

@@ -3,7 +3,7 @@
 import { createClient } from '@/app/utils/supabase/server';
 import { Benachrichtigung, User } from '../types/Database';
 
-export async function notificationCreate(data: Partial<Benachrichtigung>, recipient: User) {
+export async function putBenachrichtigung(data: Partial<Benachrichtigung>, recipient: User) {
   const supabase = await createClient();
 
   if (recipient.permission_notifications_push === true) {
@@ -33,7 +33,7 @@ export async function notificationDelete(id: string) {
   return deleted;
 }
 
-export async function notificationsLoadUser(id: string): Promise<Benachrichtigung[]> {
+export async function notificationsLoadUser(id: number): Promise<Benachrichtigung[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase
@@ -59,7 +59,7 @@ export async function notificationsMarkAllRead(id: string): Promise<Benachrichti
   return data || [];
 }
 
-export async function notificationUpdate(data: Partial<Benachrichtigung>, id: string) {
+export async function patchBenachrichtigung(data: Partial<Benachrichtigung>, id: string) {
   const supabase = await createClient();
 
   const { data: created, error } = await supabase

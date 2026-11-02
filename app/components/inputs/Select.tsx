@@ -7,6 +7,7 @@ import styles from './Inputs.module.css';
 import { X } from 'lucide-react';
 
 interface Props {
+  filter?: boolean;
   label?: string;
   maxWidth?: string | number | undefined;
   onChange: (value: string) => void;
@@ -24,11 +25,12 @@ interface UserProps {
   label?: string;
   onChange: (value: User) => void;
   options?: SelectItemOptionsType;
-  optionLabel: string;
+  optionLabel?: string;
   value: User | null;
 }
 
 export function SelectLabel({
+  filter = false,
   label,
   maxWidth,
   onChange,
@@ -55,7 +57,7 @@ export function SelectLabel({
     <Column gap={4} maxWidth={maxWidth}>
       {label && <label>{label}</label>}
       <Dropdown
-        className={styles.input}
+        filter={filter}
         itemTemplate={itemTemplate}
         onChange={(e) => onChange(e.value)}
         options={options}

@@ -6,7 +6,7 @@ import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationProvider';
 import PrimeReactLocaleProvider from './components/PrimeReactLocale';
 
-const headings = Space_Grotesk({
+const headings = Inter({
   variable: "--font-headings",
   subsets: ["latin"],
 });

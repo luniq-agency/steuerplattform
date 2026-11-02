@@ -1,17 +1,9 @@
 'use client';
 
 import { User } from '@/app/types/Database';
-import ClientTabs from '@/app/components/clients/ClientTabs';
 import { useEffect, useRef, useState } from 'react';
-import DividerBlock from '@/app/components/DividerBlock';
-import { BreadCrumb } from 'primereact/breadcrumb';
-import { formatDate } from '@/app/utils/formats';
-import { UserAvatarOther } from '@/app/components/UserAvatar';
 import { job_categories } from '@/app/constants/Constants';
-import ClientActions from '@/app/components/clients/ClientActions';
 import { useRouter } from 'next/navigation';
-import Row from '@/app/components/layout/Row';
-import { PrimaryButton } from '@/app/components/buttons/Buttons';
 import { Toast } from 'primereact/toast';
 
 interface Props {
@@ -71,52 +63,7 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
 
   return (
     <div className="page-content column">
-      <Toast ref={toast} />
-      <BreadCrumb home={home} model={items} />
-      <DividerBlock height={2} />
-      <div className="row space-between">
-        <div className="row gap-m">
-          <div style={{ width: 72 }}>
-            <UserAvatarOther
-              backgroundColor={job?.bg}
-              color={job?.color}
-              fontSize={32}
-              height={72}
-              user={user}
-              width={72}
-            />
-          </div>
-          <div className="column width-100">
-            <h1>
-              {user.nachname}, {user.vorname}
-            </h1>
-            <span>
-              Angemeldet seit: {formatDate(user.created_at)} •{' '}
-              {bearbeiter ? (
-                <span>
-                  Bearbeiter: {bearbeiter.vorname} {bearbeiter.nachname}
-                </span>
-              ) : (
-                <span>Selbst registriert</span>
-              )}
-            </span>
-          </div>
-        </div>
-        <Row gap={8} width="fit-content">
-          {hasChanges && <PrimaryButton label="Speichern" onClick={handleSave} />}
-          <ClientActions client={user} />
-        </Row>
-      </div>
-      <DividerBlock height={2} />
-      <div className="dashboard-container flex-grow">
-        <ClientTabs
-          onChange={(changed) => setHasChanges(changed)}
-          onSaveRef={(fn) => {
-            saveRef.current = fn;
-          }}
-          user={user}
-        />
-      </div>
+    
     </div>
   );
 }

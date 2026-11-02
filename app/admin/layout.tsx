@@ -5,6 +5,7 @@ import AdminSidebar from '@/app/components/sidebar/Sidebar';
 import { useAuth } from '../context/AuthContext';
 import HelpBox from '../components/support/HelpBox';
 import Topbar from '../components/sidebar/TopBar';
+import AdminDock from '../components/dock/AdminDock';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const { initialLoading } = useAuth();
@@ -26,12 +27,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   return (
     <main className="page-dashboard">
-      {showSidebar && <AdminSidebar />}
       <div className="page-admin">
         <Topbar />
         {children}
+        <AdminDock />
       </div>
-      {/*<HelpBox />*/}
     </main>
   );
 }

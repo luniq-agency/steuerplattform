@@ -34,10 +34,10 @@ export default function CertificateUploader({ user }: Props) {
     const payload = {
       email: user.email,
       user: user.id,
-      year,
+      year: Number(year),
     };
     try {
-      await certificateCreate(file, user.id, payload, year);
+      await certificateCreate(file, String(user.id), payload, year);
       router.refresh();
       toast.current?.show({
         severity: 'success',

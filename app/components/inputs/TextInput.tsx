@@ -10,8 +10,8 @@ interface Props {
 }
 
 const modeStyles: Record<NonNullable<Props['mode']>, React.CSSProperties> = {
-    light: { backgroundColor: 'white', borderColor: 'white', color: 'black' },
-    dark: { backgroundColor: '#2a2a2c', borderColor: '#2a2a2c', color: 'white' }
+    light: { backgroundColor: 'white', borderColor: 'var(--border-color)', color: 'black' },
+    dark: { backgroundColor: '#2a2a2c', borderColor: '#2a2a2c', color: 'white' },
 };
 
 export default function TextInput({ label, mode = "light", onChange, type = "text", value }: Props) {

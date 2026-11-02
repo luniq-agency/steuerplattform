@@ -1,3 +1,10 @@
+export const parseDate = (value?: string | Date | null): Date | null => {
+  if (!value) return null;
+  if (value instanceof Date) return value;
+  const [y, m, d] = value.slice(0, 10).split('-').map(Number);
+  return new Date(y, m - 1, d);
+};
+
 export function formatCurrency(number: number) {
   const formattedNumber = new Intl.NumberFormat('de-DE', {
     style: 'currency',
@@ -43,7 +50,7 @@ export function formatMonth(str: string | Date) {
   const date = new Date(str);
   const dayPart = date.toLocaleDateString('de-DE', {
     month: 'long',
-    year: 'numeric'
+    year: 'numeric',
   });
 
   return `${dayPart}`;
@@ -52,14 +59,23 @@ export function formatMonth(str: string | Date) {
 export function formatYear(str: string | Date) {
   const date = new Date(str);
   const dayPart = date.toLocaleDateString('de-DE', {
-    year: 'numeric'
+    year: 'numeric',
   });
 
   return `${dayPart}`;
 }
+
+export const monatKey = (d: Date) =>
+  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 
 export function stripHtml(html: string) {
   const formattedText = html?.replace(/<[^>]*>/g, '') ?? '';
 
   return formattedText;
 }
+
+export const toDateString = (date?: Date | string | null): string | null => {
+  const d = parseDate(date);
+  if (!d) return null;
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+};

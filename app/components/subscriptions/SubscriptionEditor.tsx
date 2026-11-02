@@ -24,6 +24,7 @@ import { DatePicker } from '../forms/datepicker/DatePicker';
 import { invoiceItemCreate } from '@/app/actions/invoiceitem';
 import { createStripePaymentLink } from '@/app/actions/stripe/payments';
 import { sendInvoiceEmail } from '@/app/actions/email';
+import { createStripeSubscription } from '@/app/actions/stripe/subscriptions';
 interface Props {
   user: User;
 }
@@ -95,54 +96,54 @@ export default function SubscriptionEditor({ user }: Props) {
     const plan = plans.find((p) => p.id === selectedSubscription);
     if (!plan) return;
     setSending(true);
+
     try {
-      const payload = {
-        user: user.id,
+      // 1. Interne Rechnung anlegen (für Historie und PDF)
+      const res = await invoiceCreate({
+        user: String(user.id),
         invoice_number: invoiceNumber,
         invoice_date: subStart,
-        invoice_date_due: subStart ? new Date(subStart.getTime() + 14 * 24 * 60 * 60 * 1000) : null,
+        invoice_date_due: new Date(subStart.getTime() + 14 * 24 * 60 * 60 * 1000),
         invoice_recipient_email: user.email,
         invoice_total_gross: plan.amount_total,
         invoice_total_net: plan.amount_net,
-        subscription: true,
         tax_amount: plan.amount_tax,
+        subscription: true,
         invoice_status: 'sent',
-      };
-      const res = await invoiceCreate(payload);
-      const desc = `${plan.name} ${formatMonth(subStart)}`;
+      });
 
-      const itemPayload = {
+      const item = await invoiceItemCreate({
         invoice: res.id,
         index: 1,
-        description: desc,
+        description: `${plan.name} ${formatMonth(subStart)}`,
         quantity: 1,
         price_single: plan.amount_total,
         price_total: plan.amount_total,
         taxes_amount: plan.amount_tax,
-      };
-      const item = await invoiceItemCreate(itemPayload);
+      });
 
-      // 3. Stripe Payment Link erzeugen (kein Stripe-eigenes Rechnungssystem)
-      const { paymentUrl } = await createStripePaymentLink(
-        res,
-        [item],
+      // 2. Echtes Stripe-Abo über Checkout (Kunde hinterlegt Zahlungsmethode)
+      const { paymentUrl } = await createStripeSubscription({
         user,
-        invoiceNumber,
-        plan.amount_total
-      );
+        planName: plan.name,
+        amountGross: plan.amount_total,
+        startDate: subStart,
+        invoiceId: res.id,
+      });
       if (!paymentUrl) throw new Error('Zahlungslink konnte nicht erstellt werden');
 
-      // 4. E-Mail mit Rechnung + Zahlungslink verschicken
-      await sendInvoiceEmail(res, [item], user, paymentUrl);
+      // 3. Fester Link statt kurzlebiger Session-URL
+      const stableUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/rechnung/bezahlen/${res.id}`;
 
-      // 5. Rechnungsstatus aktualisieren
-      await invoiceUpdate({ invoice_status: 'sent', payment_url: paymentUrl }, res.id);
+      // 4. E-Mail mit PDF und Link
+      await sendInvoiceEmail(res, [item], user, stableUrl);
+      await invoiceUpdate({ invoice_status: 'sent', payment_url: stableUrl }, res.id);
 
-      fetchData();
+      await fetchData();
       toast.current?.show({
         severity: 'success',
         summary: 'Abo erstellt',
-        detail: 'Die Rechnung wurde erstellt und versendet.',
+        detail: 'Der Kunde erhält eine E-Mail mit dem Zahlungslink.',
       });
       setVisible(false);
     } catch (err) {
@@ -150,7 +151,7 @@ export default function SubscriptionEditor({ user }: Props) {
       toast.current?.show({
         severity: 'error',
         summary: 'Fehler',
-        detail: 'Das Abo konnte nicht erstellt werden. Bitte probieren Sie es erneut.',
+        detail: 'Das Abo konnte nicht erstellt werden.',
       });
     } finally {
       setSending(false);

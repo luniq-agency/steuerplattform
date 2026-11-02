@@ -8,6 +8,8 @@ import { useAuth } from '@/app/context/AuthContext';
 import { Accordion, AccordionTab } from 'primereact/accordion';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import Home from '@/app/page';
+import { CalendarClock, ChartBar, Cog, Crown, File, HomeIcon, List, LogOut, Network, Users } from 'lucide-react';
 
 export default function AdminSidebar() {
   const { user, userProfile, logout } = useAuth();
@@ -43,7 +45,7 @@ export default function AdminSidebar() {
         <div className={styles.sidebarContent} style={{ flexGrow: 1 }}>
           <AdminSidebarButton
             collapsed={!expanded}
-            icon="pi pi-home"
+            icon={HomeIcon}
             label="Dashboard"
             target="/admin"
           />
@@ -53,27 +55,27 @@ export default function AdminSidebar() {
           </label>
           <AdminSidebarButton
             collapsed={!expanded}
-            icon="pi pi-users"
+            icon={Users}
             label="Kunden"
             target="/admin/kunden"
           />
           {userProfile.rolle === 'admin' && (
             <AdminSidebarButton
               collapsed={!expanded}
-              icon="pi pi-file-pdf"
+              icon={File}
               label="Rechnungen"
               target="/admin/rechnungen"
             />
           )}
           <AdminSidebarButton
             collapsed={!expanded}
-            icon="pi pi-list"
+            icon={List}
             label="Aufgaben"
             target="/admin/aufgaben"
           />
           <AdminSidebarButton
             collapsed={!expanded}
-            icon="pi pi-calendar-clock"
+            icon={CalendarClock}
             label="Tickets"
             target="/admin/tickets"
           />
@@ -87,19 +89,19 @@ export default function AdminSidebar() {
               )}
               <AdminSidebarButton
                 collapsed={!expanded}
-                icon="pi pi-crown"
+                icon={Crown}
                 label="Mitarbeiter"
                 target="/admin/admins"
               />
               <AdminSidebarButton
                 collapsed={!expanded}
-                icon="pi pi-sitemap"
+                icon={Network}
                 label="Agenturen"
                 target="/admin/agenturen"
               />
               <AdminSidebarButton
                 collapsed={!expanded}
-                icon="pi pi-chart-bar"
+                icon={ChartBar}
                 label="Statistiken"
                 target="/admin/statistiken"
               />
@@ -111,7 +113,7 @@ export default function AdminSidebar() {
                     headerTemplate={
                       <AdminSidebarButton
                         collapsed={!expanded}
-                        icon="pi pi-cog"
+                        icon={Cog}
                         label="Einstellungen"
                       />
                     }
@@ -124,7 +126,7 @@ export default function AdminSidebar() {
                     />*/}
                     <AdminSidebarButton
                       collapsed={!expanded}
-                      icon="pi pi-file"
+                      icon={File}
                       label="Dokumente"
                       target="/admin/einstellungen/dokumente"
                     />
@@ -138,15 +140,15 @@ export default function AdminSidebar() {
           <AdminSidebarButton
             action={logout}
             collapsed={!expanded}
-            icon="pi pi-sign-out"
+            icon={LogOut}
             label="Abmelden"
           />
         </div>
       </div>
       <div className={styles.navbar}>
-        <AdminNavbarButton icon="pi pi-home" label="Dashboard" target="/admin" />
-        <AdminNavbarButton icon="pi pi-users" label="Kunden" target="/admin/kunden" />
-        <AdminNavbarButton icon="pi pi-list" label="Aufgaben" target="/admin/aufgaben" />
+        <AdminNavbarButton icon={HomeIcon} label="Dashboard" target="/admin" />
+        <AdminNavbarButton icon={Users} label="Kunden" target="/admin/kunden" />
+        <AdminNavbarButton icon={List} label="Aufgaben" target="/admin/aufgaben" />
       </div>
     </>
   );

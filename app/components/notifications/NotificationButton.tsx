@@ -75,7 +75,7 @@ export default function NotificationButton({ user }: Props) {
         )}
       </OverlayPanel>
       <div className={styles.notificationWrapper} onClick={op.current?.toggle}>
-        <Bell size={24} />
+        <Bell color="var(--foreground)" size={24} />
         {notifications.length >= 1 && (
           <div className={styles.notificationsBadge}>
             <span>{notifications.length}</span>

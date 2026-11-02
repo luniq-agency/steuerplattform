@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import PageTicketErstellen from './PageTicketErstellen';
+import PageTicketErstellen from '../vorgaenge/neu/VorgangNeu';
 
 export const metadata: Metadata = {
   title: 'Neues Ticket erstellen | ADVACT',

@@ -115,15 +115,15 @@ export const family_options = [
 
 export const invoice_status = [
   {
+    bg: 'grey',
+    color: 'black',
     label: 'Entwurf',
-    severity: 'primary',
-    value: 'draft',
+    value: 'entwurf',
   },
   {
     bg: '#EED7FC',
     color: '#50253F',
     label: 'Gesendet',
-    severity: 'warning',
     value: 'sent',
   },
   {
@@ -282,12 +282,12 @@ export const ticket_status = [
   {
     label: 'Neu',
     severity: 'info',
-    value: 'new',
+    value: 'neu',
   },
   {
     label: 'Geöffnet',
     severity: 'primary',
-    value: 'opened',
+    value: 'offen',
   },
   {
     label: 'Warten auf Antwort',

@@ -43,7 +43,7 @@ export async function createSubscription(
   };
 }
 
-export async function subscriptionsGetForUser(id: string): Promise<Invoice[]> {
+export async function subscriptionsGetForUser(id: number): Promise<Invoice[]> {
   const supabase = await createClient();
 
   const { data, error } = await supabase

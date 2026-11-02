@@ -2,7 +2,6 @@
 
 import { documentCreate } from '@/app/actions/documents';
 import { uploadFileDirectly } from '@/app/actions/media/uploads';
-import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { useRef, useState } from 'react';
@@ -10,16 +9,20 @@ import { FileUploader } from '../forms/Uploaders';
 import { sanitizeFileName } from '@/app/utils/sanitize';
 import { PrimaryButton, SecondaryButton } from '../buttons/Buttons';
 import { Toast } from 'primereact/toast';
+import Button from '../buttons/Button';
+import { Upload } from 'lucide-react';
+import BelegUpload from '../belege/BelegUpload';
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
 interface Props {
-  folder: string | null;
+  folder: string | number | null;
+  onLocalFile?: (file: File, name: string) => void;
   onUpload: () => void;
   owner: string | number;
 }
 
-export default function DocumentUploader({ folder, onUpload, owner }: Props) {
+export default function DocumentUploader({ folder, onLocalFile, onUpload, owner }: Props) {
   const toast = useRef<Toast | null>(null);
 
   const [visible, setVisible] = useState(false);
@@ -60,11 +63,17 @@ export default function DocumentUploader({ folder, onUpload, owner }: Props) {
 
       const url = await uploadFileDirectly(documentFile.file, path);
 
+      if (onLocalFile) {
+        onLocalFile(documentFile.file, documentName || documentFile.file.name);
+        cancel();
+        return;
+      }
+
       await documentCreate({
-        document_file: url,
-        document_name: documentName,
-        file_type: documentFileType,
-        folder: folder || undefined,
+        file: url,
+        name: documentName,
+        ordner: folder || undefined,
+        type: documentFileType,
         user: String(owner),
       });
 
@@ -88,6 +97,7 @@ export default function DocumentUploader({ folder, onUpload, owner }: Props) {
     <>
       <Toast ref={toast} />
       <Dialog
+        draggable={false}
         header="Dokument hochladen"
         onHide={() => setVisible(false)}
         style={{ maxWidth: 400, width: '100%' }}
@@ -104,20 +114,23 @@ export default function DocumentUploader({ folder, onUpload, owner }: Props) {
             value={documentName}
           />
           <div className="row gap-s width-100 space-between">
-            <SecondaryButton label="Abbrechen" onClick={cancel} />
-            <PrimaryButton
+            <Button label="Abbrechen" onClick={cancel} mode="tertiary" size="medium" />
+            <Button
               disabled={!documentFile || !documentName || submitting}
               label={submitting ? 'Wird hochgeladen…' : 'Hochladen'}
               onClick={uploadDocument}
+              mode="secondary"
+              size="medium"
             />
           </div>
         </div>
       </Dialog>
       <Button
-        className="button-secondary"
-        icon="pi pi-upload"
+        icon={Upload}
         label="Dokument hochladen"
+        mode="secondary"
         onClick={() => setVisible(true)}
+        size="small"
       />
     </>
   );

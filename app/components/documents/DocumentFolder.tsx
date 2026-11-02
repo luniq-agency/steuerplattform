@@ -7,10 +7,11 @@ import { Button } from 'primereact/button';
 import { OverlayPanel } from 'primereact/overlaypanel';
 import { useRef, useState } from 'react';
 import { folderDelete, folderUpdate } from '@/app/actions/folders';
+import { DokumentOrdner } from '@/app/types/docs';
 
 interface Props {
   backgroundColor?: string;
-  folder: DocumentFolder;
+  folder: DokumentOrdner;
   onClick: () => void;
   onDelete: () => void;
   onDragOver?: (e: React.DragEvent) => void;

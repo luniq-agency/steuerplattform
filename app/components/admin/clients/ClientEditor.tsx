@@ -39,7 +39,7 @@ export default function ClientEditor({ user: userProp }: Props) {
 
   // CLIENT DATA
   const [clientDob, setClientDob] = useState<Date | null>(user?.dob ? new Date(user.dob) : null);
-  const [clientFamily, setClientFamily] = useState(user?.family_status || '');
+  const [clientFamily, setClientFamily] = useState(user?.familienstand || '');
   const [clientIban, setClientIban] = useState(user?.iban || '');
   const [clientJob, setClientJob] = useState(user?.job || '');
   const [clientJobType, setClientJobType] = useState(user?.job_status || '');
@@ -52,7 +52,7 @@ export default function ClientEditor({ user: userProp }: Props) {
 
   const originalDob = user?.dob ? new Date(user.dob).toDateString() : null;
   const currentDob = clientDob ? clientDob.toDateString() : null;
-  const originalFamily = family_options.find((t) => t.value === user?.family_status)?.label ?? '';
+  const originalFamily = family_options.find((t) => t.value === user?.familienstand)?.label ?? '';
 
   const isChanged =
     clientVorname !== user?.vorname ||
@@ -74,7 +74,7 @@ export default function ClientEditor({ user: userProp }: Props) {
         body: `Status auf '${status?.label}' geändert.`,
         created_at: new Date(),
         created_by: `${userProfile?.vorname} ${userProfile?.nachname}`,
-        user: user?.id,
+        user: String(user?.id),
       };
       setStatusChanged(true);
       await userUpdateCreate(updatePayload);
@@ -207,7 +207,7 @@ export function ClientContactEditor({ user }: Props) {
     if (!user || !clientId) return;
 
     try {
-      await clientUpdate(payload, clientId);
+      await clientUpdate(payload, String(clientId));
       toast.current?.show({
         severity: 'success',
         summary: 'Änderungen gespeichert',

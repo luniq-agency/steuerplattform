@@ -4,11 +4,12 @@
 }
 
 .cardHeader {
-  color: var(--text-tertiary);
-  font-size: 0.9rem;
-  font-weight: 400;
+  color: var(--text-secondary);
+  font-size: 0.6rem;
+  font-weight: 700;
   letter-spacing: 1px;
   line-height: 1.2em;
+  text-transform: uppercase;
 }
 
 .iconWrapper {
@@ -26,5 +27,6 @@
 .value {
   font-size: 2rem;
   font-weight: 700;
+  letter-spacing: -0.04em;
   line-height: 1.1em;
 }

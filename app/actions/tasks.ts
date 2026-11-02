@@ -1,9 +1,10 @@
 'use server';
 
 import { createClient } from '@/app/utils/supabase/server';
-import { Task, TaskUpdate, User } from '../types/Database';
+import { TaskUpdate, User } from '../types/Database';
+import { Task } from '../types/tasks';
 
-export async function taskClose(id: string) {
+export async function taskClose(id: number) {
   const supabase = await createClient();
 
   const { data: created, error } = await supabase
@@ -105,13 +106,10 @@ export async function tasksLoadOpenLatest(role: string, id: string): Promise<Tas
   return data || [];
 }
 
-export async function tasksLoadUser(id: string): Promise<Task[]> {
+export async function tasksLoadUser(id: number): Promise<Task[]> {
   const supabase = await createClient();
-
   const { data, error } = await supabase.from('task').select('*').eq('user', id);
-
   if (error) throw new Error(error.message);
-
   return data || [];
 }
 

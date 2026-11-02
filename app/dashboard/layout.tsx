@@ -1,4 +1,4 @@
-import DashboardSidebar from '../components/dashboard/DashboardSidebar';
+import DashboardSidebar from '../components/clients/dashboard/DashboardSidebar';
 import HelpBox from '../components/support/HelpBox';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {

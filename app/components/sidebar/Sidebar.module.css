@@ -5,7 +5,7 @@
 .navbarButton {
   background-color: transparent;
   border-radius: 10px;
-  color: var(--text-tertiary);
+  color: var(--foreground);
   display: flex;
   flex-direction: column;
   font-size: 10px;
@@ -16,7 +16,7 @@
 .sidebar {
   background-color: var(--background-sidebar);
   border-right: 1px solid var(--border-color);
-  color: var(--text-primary);
+  color: var(--foreground);
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -39,8 +39,8 @@
 .sidebarButton {
   background-color: transparent;
   border-radius: 10px;
-  color: inherit;
-  font-size: 14px;
+  color: var(--foreground);
+  font-size: 13px;
   padding: 0.5rem 0.5rem;
   transition: all 0.3s ease-out;
   white-space: nowrap;
@@ -48,16 +48,14 @@
 }
 
 .sidebarButton:hover {
-  background-color: rgba(0, 0, 0, 0.05);
-  color: var(--secondary);
+  background-color: var(--background-active);
 }
 
 .sidebarButtonActive {
-  background-color: transparent;
+  background-color: var(--background-active);
   border-radius: 10px;
-  color: var(--secondary);
   cursor: inherit;
-  font-size: 14px;
+  font-size: 13px;
   opacity: 1;
   padding: 0.5rem 0.5rem;
   transition: all 0.3s ease-out;

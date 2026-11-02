@@ -9,11 +9,10 @@ import { useRouter } from 'next/navigation';
 import { UserAvatarOther } from '../../UserAvatar';
 
 interface Props {
-  agents: AgencyStats[];
   users: User[];
 }
 
-export default function AgencyTable({ agents, users }: Props) {
+export default function AgencyTable({ users }: Props) {
   const router = useRouter();
 
   const nameTemplate = (rowData: AgencyStats) => {
@@ -49,7 +48,7 @@ export default function AgencyTable({ agents, users }: Props) {
       sortField="nachname"
       sortOrder={1}
       stripedRows
-      value={agents}
+      value={users}
     >
       <Column body={nameTemplate} header="Name" />
       <Column field="firma" header="Firma" />

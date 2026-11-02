@@ -12,9 +12,10 @@ import Image from 'next/image';
 import { imageUploadReplace } from '@/app/actions/image';
 import { useRouter } from 'next/navigation';
 import DocumentPreviewer from './DocumentPreviewer';
+import { Dokument } from '@/app/types/docs';
 
 interface Props {
-  document: Document;
+  document: Dokument;
   preview?: boolean;
   onSave: () => void;
   users?: User[];
@@ -37,7 +38,7 @@ export default function DocumentEditor({ document, onSave, preview, users }: Pro
       // Canvas verwenden um das Bild zu drehen und als Blob zu speichern
       const img = new window.Image();
       img.crossOrigin = 'anonymous';
-      img.src = document.document_file;
+      img.src = document.file;
 
       await new Promise((resolve) => (img.onload = resolve));
 
@@ -57,7 +58,7 @@ export default function DocumentEditor({ document, onSave, preview, users }: Pro
       );
 
       const file = new File([blob], 'rotated.webp', { type: 'image/webp' });
-      await imageUploadReplace(file, document.document_file, document.id);
+      await imageUploadReplace(file, document.file, document.id);
       setRotation(0);
       onSave();
       router.refresh();
@@ -70,21 +71,21 @@ export default function DocumentEditor({ document, onSave, preview, users }: Pro
   };
 
   const [documentName, setDocumentName] = useState('');
-  const [documentOwner, setDocumentOwner] = useState('');
+  const [documentOwner, setDocumentOwner] = useState<string | number>('');
   const [documentType, setDocumentType] = useState('');
 
   useEffect(() => {
     if (document) {
-      setDocumentName(document.document_name);
+      setDocumentName(document.name);
       setDocumentOwner(document.user);
-      setDocumentType(document.file_type);
+      setDocumentType(document.type);
     }
   }, [document]);
 
   const updateDocument = async () => {
     const payload = {
-      document_name: documentName,
-      file_type: documentType,
+      name: documentName,
+      type: documentType,
       user: documentOwner,
     };
     try {
@@ -112,7 +113,7 @@ export default function DocumentEditor({ document, onSave, preview, users }: Pro
     <div className="row gap-l height-100 width-100">
       <Toast ref={toast} />
       <div className="column gap-m width-100" style={{ maxWidth: 360 }}>
-        {document.file_type === 'image' && (
+        {document.type === 'image' && (
           <div className="column gap-m">
             <Button
               icon="pi pi-refresh"
@@ -164,14 +165,14 @@ export default function DocumentEditor({ document, onSave, preview, users }: Pro
         <Button label="Änderungen speichern" onClick={updateDocument} />
       </div>
       <div style={{ width: '100%', overflow: 'hidden' }}>
-        {document.file_type !== 'image' ? (
+        {document.type !== 'image' ? (
           <DocumentPreviewer doc={document} />
         ) : (
           <div style={{ height: '100%', objectFit: 'cover', position: 'relative', width: '100%' }}>
             <Image
               alt=""
               fill={true}
-              src={document?.document_file}
+              src={document?.file}
               style={{
                 objectFit: 'contain',
                 transform: `rotate(${rotation}deg)`,

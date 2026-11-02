@@ -1,6 +1,6 @@
 'use client';
 
-import { Client, Document, DocumentFolder, User } from '@/app/types/Database';
+import { Client, Document, User } from '@/app/types/Database';
 import DocumentFile, { DocumentListItem } from './DocumentFile';
 import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
@@ -23,8 +23,8 @@ import Image from 'next/image';
 import styles from './Documents.module.css';
 import DocumentEditor from './DocumentEditor';
 import { Toast } from 'primereact/toast';
-import { DataScroller } from 'primereact/datascroller';
 import DocumentUploader from './DocumentUploader';
+import { Dokument, DokumentOrdner } from '@/app/types/docs';
 
 interface Props {
   backgroundColor?: string;
@@ -43,21 +43,21 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
   const toast = useRef<Toast | null>(null);
 
   // STATES
-  const [draggingDocument, setDraggingDocument] = useState<Document | null>(null);
+  const [draggingDocument, setDraggingDocument] = useState<Dokument | null>(null);
   const [editing, setEditing] = useState(false);
   const [inspecting, setInspecting] = useState(false);
   const [visible, setVisible] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
   // FOLDERS
-  const [folders, setFolders] = useState<DocumentFolder[]>([]);
+  const [folders, setFolders] = useState<DokumentOrdner[]>([]);
   const [pendingFolder, setPendingFolder] = useState<{ id: string; name: string } | null>(null);
   const pendingInputRef = useRef<HTMLInputElement | null>(null);
-  const [selectedFolder, setSelectedFolder] = useState<string | null>(null);
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<string | number | null>(null);
+  const [selectedDocument, setSelectedDocument] = useState<Dokument | null>(null);
 
   // DOCUMENTS
-  const [documents, setDocuments] = useState<Document[]>([]);
+  const [documents, setDocuments] = useState<Dokument[]>([]);
   const [documentFile, setDocumentFile] = useState<{ file: File } | null>(null);
   const [documentName, setDocumentName] = useState('');
 
@@ -108,8 +108,8 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
     if (!selectedDocument) return;
 
     const link = document.createElement('a');
-    link.href = selectedDocument.document_file;
-    link.download = selectedDocument.document_name;
+    link.href = selectedDocument.file;
+    link.download = selectedDocument.name;
     link.target = '_blank';
     link.click();
   };
@@ -159,11 +159,11 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
     setTimeout(() => pendingInputRef.current?.focus(), 50);
   };
 
-  const dropOnFolder = async (folderId: string) => {
+  const dropOnFolder = async (folderId: string | number) => {
     if (!draggingDocument) return;
 
     try {
-      await documentUpdate({ folder: folderId }, draggingDocument.id);
+      await documentUpdate({ ordner: folderId }, draggingDocument.id);
       await fetchAll();
     } catch (err) {
       console.error(err);
@@ -175,7 +175,7 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
   const inspectorHeader = () => {
     return (
       <div className="row space-between" style={{ paddingRight: 16 }}>
-        <h3>{selectedDocument?.document_name}</h3>
+        <h3>{selectedDocument?.name}</h3>
         <div className="row gap-xs">
           <Button
             className="button-square"
@@ -196,7 +196,7 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
     );
   };
 
-  const selectDocument = (e: Document) => {
+  const selectDocument = (e: Dokument) => {
     setSelectedDocument(e);
     setInspecting(true);
   };
@@ -213,7 +213,7 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
   };
 
   const updateDocuments = async () => {
-    const res = await documentsLoadUser(owner || '');
+    const res = await documentsLoadUser(owner || 0);
     setDocuments(res);
   };
 
@@ -265,23 +265,23 @@ export default function DocumentViewer({ backgroundColor, header, client, hl, us
               <DocumentEditor document={selectedDocument} onSave={updateDocument} />
             </div>
           )}
-          {!editing && selectedDocument?.file_type === 'pdf' ? (
+          {!editing && selectedDocument?.type === 'pdf' ? (
             <iframe
               src={
-                selectedDocument?.document_file.endsWith('.pdf')
-                  ? selectedDocument?.document_file
-                  : `https://docs.google.com/viewer?url=${encodeURIComponent(selectedDocument.document_file)}&embedded=true`
+                selectedDocument?.file.endsWith('.pdf')
+                  ? selectedDocument?.file
+                  : `https://docs.google.com/viewer?url=${encodeURIComponent(selectedDocument.file)}&embedded=true`
               }
               style={{ border: 'none', height: '70vh', width: '100%' }}
             />
-          ) : !editing && selectedDocument?.file_type === 'image' ? (
+          ) : !editing && selectedDocument?.type === 'image' ? (
             <div
               style={{ height: '100%', objectFit: 'cover', position: 'relative', width: '100%' }}
             >
               <Image
                 alt=""
                 fill={true}
-                src={selectedDocument?.document_file || ''}
+                src={selectedDocument?.file || ''}
                 style={{ objectFit: 'contain' }}
               />
             </div>

@@ -13,6 +13,7 @@ import { usersLoadAll } from '@/app/actions/users';
 import { IconButton } from '../buttons/IconButton';
 import { Send } from 'lucide-react';
 import { documentsLoadUser } from '@/app/actions/documents';
+import { Dokument } from '@/app/types/docs';
 
 interface Props {
   ticket: Ticket;
@@ -23,7 +24,7 @@ export default function TicketPageClient({ ticket }: Props) {
   const { userProfile } = useAuth();
 
   // DATA
-  const [docs, setDocs] = useState<Document[]>([]);
+  const [docs, setDocs] = useState<Dokument[]>([]);
   const [entries, setEntries] = useState<TicketEntry[]>([]);
   const [users, setUsers] = useState<User[]>([]);
 
@@ -57,7 +58,7 @@ export default function TicketPageClient({ ticket }: Props) {
 
     const payload = {
       created_at: new Date(),
-      created_by: userProfile.id,
+      created_by: String(userProfile.id),
       content: message,
       ticket: ticket.id,
     };

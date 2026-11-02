@@ -35,6 +35,7 @@ interface Props {
   options?: SelectItemOptionsType;
   placeholder?: string;
   readonly?: boolean;
+  rows?: number;
   showCalendar?: boolean;
   url?: string;
   value?: string;
@@ -152,11 +153,11 @@ export function SocialMediaInput({ image, onChange, value }: Props) {
   );
 }
 
-export function TextAreaLabel({ label, onChange, value }: Props) {
+export function TextAreaLabel({ label, onChange, rows = 3, value }: Props) {
   return (
     <div className="column width-100 gap-xs">
       <label>{label}</label>
-      <InputTextarea onChange={(e) => onChange?.(e.target.value)} value={value ?? ''} />
+      <InputTextarea autoResize onChange={(e) => onChange?.(e.target.value)} rows={rows} value={value ?? ''} />
     </div>
   );
 }

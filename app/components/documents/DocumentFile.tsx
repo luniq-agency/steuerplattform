@@ -7,9 +7,10 @@ import { useRef } from 'react';
 import Image from 'next/image';
 import { document_options } from '@/app/constants/Constants';
 import { Skeleton } from 'primereact/skeleton';
+import { Dokument } from '@/app/types/docs';
 
 interface Props {
-  document: Document;
+  document: Dokument;
   draggable?: boolean;
   loading?: boolean;
   onClick: () => void;
@@ -39,7 +40,7 @@ export default function DocumentFile({
 
   const deleteFile = async () => {};
 
-  const fileIcon = document.file_type ? document_options.find((t) => t.value === document.file_type)?.icon : '/icons/image.svg';
+  const fileIcon = document.type ? document_options.find((t) => t.value === document.type)?.icon : '/icons/image.svg';
 
   if (!fileIcon) return;
 
@@ -57,7 +58,7 @@ export default function DocumentFile({
       style={{ backgroundColor: 'var(--background)' }}
     >
       <Image alt="" height={48} src={fileIcon} width={48} />
-      <span style={{ fontSize: 11 }}>{document.document_name}</span>
+      <span style={{ fontSize: 11 }}>{document.name}</span>
     </div>
   );
 }
@@ -83,7 +84,7 @@ export function DocumentListItem({
 
   const deleteFile = async () => {};
 
-  const fileIcon = document_options.find((t) => t.value === document.file_type)?.icon || '/icons/image.svg' ;
+  const fileIcon = document_options.find((t) => t.value === document.type)?.icon || '/icons/image.svg' ;
 
   return (
     <div
@@ -95,7 +96,7 @@ export function DocumentListItem({
       style={{padding: "0.25rem 0rem"}}
     >
       <Image alt="" height={16} src={fileIcon} width={16} />
-      <span style={{ fontSize: 14 }}>{document.document_name}</span>
+      <span style={{ fontSize: 14 }}>{document.name}</span>
     </div>
   );
 }

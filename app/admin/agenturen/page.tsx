@@ -6,6 +6,7 @@ import DividerBlock from '@/app/components/DividerBlock';
 import { Metadata } from 'next';
 import { agencyOverview } from '@/app/actions/stats';
 import { usersLoadAll } from '@/app/actions/users';
+import { agentsLoad } from '@/app/actions/users/agent';
 
 export const metadata: Metadata = {
   title: 'Agenturen | ADVACT',
@@ -13,8 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AdminAgenciesPage() {
-  const users = await usersLoadAll();
-  const agents = await agencyOverview();
+  const users = await agentsLoad();
 
   return (
     <div className="page-content">
@@ -24,7 +24,7 @@ export default async function AdminAgenciesPage() {
       </div>
       <DividerBlock height={2} />
       <div className="container">
-        <AgencyTable agents={agents} users={users} />
+        <AgencyTable users={users} />
       </div>
     </div>
   );
