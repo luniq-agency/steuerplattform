@@ -5,6 +5,7 @@ import { Resend } from 'resend';
 import { TemplateInvite } from '../components/emails/TemplateInvite';
 import { Email, Invoice, InvoiceItem, User } from '../types/Database';
 import { generateInvoicePDF } from './pdf';
+import { Rechnungsposten } from '../types/rechnung/Rechnungen';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -65,7 +66,7 @@ export async function sendEmailWithAttachment({
 
 export async function sendInvoiceEmail(
   invoice: Invoice,
-  items: InvoiceItem[],
+  items: Rechnungsposten[],
   recipient: User,
   link: string
 ) {

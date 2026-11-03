@@ -24,7 +24,7 @@ export async function proxy(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   // Geschützte Routen
-  const protectedRoutes = ['/admin', '/dashboard'];
+  const protectedRoutes = ['/admin', '/agentur', '/dashboard'];
   const excludedRoutes = ['/admin/konto-erstellen'];
 
   const isExcluded = excludedRoutes.some((route) => request.nextUrl.pathname.startsWith(route));

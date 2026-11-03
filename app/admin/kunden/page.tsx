@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Kunden from './Kunden';
 
 export const metadata: Metadata = {
   title: 'Kunden | ADVACT',
@@ -7,6 +8,6 @@ export const metadata: Metadata = {
 
 export default function AdminClientsPage() {
   return (
-    <div/>
+    <Kunden/>
   ); 
 }

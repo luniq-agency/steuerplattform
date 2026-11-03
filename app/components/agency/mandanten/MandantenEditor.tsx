@@ -11,23 +11,25 @@ import Grid from "@/app/components/layout/Grid";
 import Row from "@/app/components/layout/Row";
 import { family_options, job_categories } from "@/app/constants/Constants";
 import { useAuth } from "@/app/context/AuthContext";
-import { toDateString } from "@/app/utils/formats";
+import { parseDate, toDateString } from "@/app/utils/formats";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { Toast } from "primereact/toast";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ContextButton } from "../../buttons/Buttons";
 import { Dialog } from "primereact/dialog";
 import Column from "../../layout/Column";
 import { IconButton } from "../../buttons/IconButton";
 import { Copy } from "lucide-react";
 import { sendEmail } from "@/app/actions/email";
+import { User } from "@/app/types/Database";
 
 interface Props {
+    client?: User,
     header: string;
     onSave: () => void;
 }
 
-export default function MandantenEditor({ header, onSave }: Props) {
+export default function MandantenEditor({ client, header, onSave }: Props) {
     const { team, user, userProfile } = useAuth();
 
     // IMPORTS
@@ -58,6 +60,31 @@ export default function MandantenEditor({ header, onSave }: Props) {
     const [telefon, setTelefon] = useState('');
     const [vorname, setVorname] = useState('');
 
+    // INIT
+    useEffect(() => {
+        if (!client) return
+        const setData = () => {
+            setBeruf(client.beruf || '')
+            setBerufsstatus(client.berufsstatus || '')
+            setEmail(client.email || '')
+            setFamilienstand(client.familienstand || '')
+            setGeburtsdatum(parseDate(client.geburtsdatum));
+            setHausnummer(client.hausnummer || '')
+            setIban(client.iban || '')
+            setKinder(client.kinder || 0)
+            setNachname(client.nachname || '')
+            setNotizen(client.notizen || '')
+            setOrt(client.ort || '')
+            setPlz(client.plz || '')
+            setSteuerId(client.steuer_id || '')
+            setStrasse(client.strasse || '')
+            setTelefon(client.telefon || '')
+            setVorname(client.vorname || '')
+        }
+        setData();
+    }, [client])
+
+
     // ACTIONS
     const createClient = async () => {
         setSaving(true);
@@ -82,18 +109,17 @@ export default function MandantenEditor({ header, onSave }: Props) {
             vorname,
         }
 
+        const isSaved = saved || client?.id;
+
         try {
-            if (saved) {
-                await userUpdate(payload, Number(saved));
+            if (saved || client) {
+                await userUpdate(payload, Number(isSaved));
+                onSave();
             } else {
                 const res = await userCreate(payload);
                 setSaved(res.id);
+                onSave();
             }
-            toast.current?.show({
-                severity: 'success',
-                summary: 'Mandant gespeichert',
-                detail: 'Der Mandant wurde erfolgreich gespeichert.',
-            });
         } catch (err) {
             console.error(err);
             toast.current?.show({
@@ -142,7 +168,7 @@ export default function MandantenEditor({ header, onSave }: Props) {
                     <TextInputLabel label="Vorname" onChange={setVorname} value={vorname} />
                     <TextInputLabel label="Nachname" onChange={setNachname} value={nachname} />
                     <DatePicker label="Geburtsdatum" onChange={setGeburtsdatum} value={geburtsdatum} />
-                    <TextInputLabel label="Kundennummer (optional)" onChange={setKundennummer} value={kundennummer} />
+                    {!client && <TextInputLabel label="Kundennummer (optional)" onChange={setKundennummer} value={kundennummer} />}
                 </Grid>
             </DashboardContainer>
             <DividerBlock height={1} />

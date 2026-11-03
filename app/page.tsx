@@ -26,7 +26,7 @@ export default function Home() {
               <span>Melde dich jetzt mit deinem ADVACT-Konto an.</span>
               <DividerBlock height={2} />
               <SignInForm />
-              </Column>
+            </Column>
           </div>
         </Column>
         <div className="mobile-hidden" style={{ backgroundImage: bg, backgroundSize: 'cover', width: "100%" }} />

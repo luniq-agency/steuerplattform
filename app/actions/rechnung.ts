@@ -13,6 +13,18 @@ export type InvoiceInput = {
   rechnungsdatum: string | null;
   rechnungsnummer: string;
   steuersatz: number;
+  team?: number | null;
+  mandant?: number | null;
+  status?: string;
+  empfaenger?: string;
+  strasse?: string;
+  hausnummer?: string;
+  plz?: string;
+  ort?: string;
+  land?: string;
+  stripe_invoice_id?: string | null;
+  stripe_url?: string | null;
+  stripe_pdf?: string | null;
 };
 
 export async function saveInvoice(
@@ -22,7 +34,9 @@ export async function saveInvoice(
 ): Promise<{ id?: string; error?: string }> {
   const supabase = await createClient();
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
   if (!user) return { error: 'Nicht angemeldet' };
 
   // 1. Rechnung anlegen oder aktualisieren
@@ -32,11 +46,7 @@ export async function saveInvoice(
     const { error } = await supabase.from('rechnung').update(invoice).eq('id', id);
     if (error) return { error: error.message };
   } else {
-    const { data, error } = await supabase
-      .from('rechnung')
-      .insert(invoice)
-      .select('id')
-      .single();
+    const { data, error } = await supabase.from('rechnung').insert(invoice).select('id').single();
     if (error) return { error: error.message };
     id = data.id;
   }
@@ -53,9 +63,7 @@ export async function saveInvoice(
       gesamtbetrag: p.gesamtpreis,
     }));
 
-    const { error } = await supabase
-      .from('rechnungsposten')
-      .upsert(rows, { onConflict: 'id' });
+    const { error } = await supabase.from('rechnungsposten').upsert(rows, { onConflict: 'id' });
     if (error) return { id, error: error.message };
   }
 

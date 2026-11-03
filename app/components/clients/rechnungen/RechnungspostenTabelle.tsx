@@ -2,14 +2,12 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { InputNumber } from 'primereact/inputnumber';
 import { InputText } from 'primereact/inputtext';
-import { Invoice, InvoiceItem } from '@/app/types/Database';
 import { formatCurrency } from '@/app/utils/formats';
-import { invoiceItemDelete, invoiceItemsLoad } from '@/app/actions/invoiceitem';
 import { Button } from 'primereact/button';
-import { TempPosten } from '@/app/types/rechnung/Rechnungen';
+import { Rechnungsposten, TempPosten } from '@/app/types/rechnung/Rechnungen';
 
 interface Props<T extends TempPosten> {
-  positions: T[];
+  positions: T[] | Rechnungsposten[];
   onPositionsChange: (updater: (prev: T[]) => T[]) => void;
   onDelete: (item: T) => void;
 }
@@ -73,7 +71,7 @@ export default function RechnungspostenTabelle<T extends TempPosten>({
     <DataTable
       value={positions}
       dataKey="id"
-      emptyMessage="Noch keine Posten. Über + einen hinzufügen."
+      emptyMessage="Noch keine Posten angegeben."
       sortField="index"
       sortOrder={1}
     >

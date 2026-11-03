@@ -5,11 +5,30 @@ import Column from "../layout/Column";
 import { login, signInWithGoogle } from "@/app/actions/auth";
 import styles from "./Auth.module.css";
 import TextInput from "../inputs/TextInput";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail } from "lucide-react";
+import { useAuth } from "@/app/context/AuthContext";
+import { redirect } from "next/navigation";
 
 export default function SignInForm() {
+    const { userProfile } = useAuth();
 
+    // REDIRECT
+    useEffect(() => {
+        if (!userProfile) return
+        switch (userProfile?.rolle) {
+            case 'admin':
+            case 'partner':
+                redirect('/admin');
+                break;
+            case 'agency':
+                redirect('/agentur');
+                break;
+            case 'client':
+                redirect('/dashboard');
+                break;
+        }
+    })
     // INPUTS
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -52,8 +71,7 @@ export default function SignInForm() {
                 <Column alignItems="end">
                     <TextInput label="Passwort" onChange={setPassword} mode="dark" type="password" value={password} />
                 </Column>
-                <Button disabled={!email || !password} label="Anmelden" mode="primary" type="submit" width="100%" />
-
+                <Button disabled={!email || !password} label="Anmelden" mode="secondary" type="submit" width="100%" />
             </form>)}
             <span style={{ textAlign: 'center' }}>Du hast noch keinen Account? <a href="/registrieren"><strong>Jetzt registrieren</strong></a></span>
         </div>

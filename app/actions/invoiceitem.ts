@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { InvoiceItem } from '../types/Database';
+import { Rechnungsposten } from '../types/rechnung/Rechnungen';
 
 export async function invoiceItemCreate(data: Partial<InvoiceItem>) {
   const supabase = await createClient();
@@ -27,10 +28,10 @@ export async function invoiceItemDelete(id: string) {
   return deleted;
 }
 
-export async function invoiceItemsLoad(id: string): Promise<InvoiceItem[]> {
+export async function fetchRechnungsposten(id: string): Promise<Rechnungsposten[]> {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.from('invoice_items').select('*').eq('invoice', id);
+  const { data, error } = await supabase.from('rechnungsposten').select('*').eq('rechnung', id);
 
   if (error) throw new Error(error.message);
   return data;

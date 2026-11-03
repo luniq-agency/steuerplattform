@@ -60,3 +60,10 @@ export async function userUpdate(userData: Partial<User>, id: number) {
 
   return data;
 }
+
+export async function usersLoadByRole(role: string): Promise<User[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('user').select('*').eq('rolle', role);
+  if (error) throw new Error(error.message);
+  return data || [];
+}

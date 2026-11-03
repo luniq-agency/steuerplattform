@@ -12,6 +12,7 @@ export type Rechnung = {
   kundennummer: string;
   land: string;
   link: string;
+  mandant: number;
   ort: string;
   plz: string;
   rechnungsdatum: Date;

@@ -227,6 +227,7 @@ button {
 
 .content-wrapper {
   height: 100%;
+  overflow-y: auto;
 }
 
 .context-menu-header {
@@ -511,6 +512,13 @@ p-datepicker-next {
   background-color: var(--background-container);
   border: 1px solid var(--border-color);
   border-radius: 20px;
+}
+
+.p-dock-list-container {
+  backdrop-filter: blur(25px);
+  background-color: rgba(255, 255, 255, 0.25);
+  border: 0.1px solid rgba(255, 255, 255, 1);
+  padding: 0.5rem 1rem;
 }
 
 .p-dropdown {

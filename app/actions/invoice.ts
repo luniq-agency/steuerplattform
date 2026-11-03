@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { Invoice } from '../types/Database';
+import { Rechnung } from '../types/rechnung/Rechnungen';
 
 export async function invoiceCreate(data: Partial<Invoice>) {
   const supabase = await createClient();
@@ -42,14 +43,14 @@ export async function invoiceSend(id: string, email: string) {
   return sent;
 }
 
-export async function invoiceLoadSingle(id: string): Promise<Invoice> {
+export async function invoiceLoadSingle(id: string): Promise<Rechnung> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('rechnung').select('*').eq('id', id).single();
   if (error) throw new Error(error.message);
   return data;
 }
 
-export async function invoicesLoadAll(): Promise<Invoice[]> {
+export async function invoicesLoadAll(): Promise<Rechnung[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('rechnung').select('*');
   if (error) throw new Error(error.message);

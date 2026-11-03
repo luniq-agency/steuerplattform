@@ -4,10 +4,11 @@ import React from 'react';
 import { renderToBuffer } from '@react-pdf/renderer';
 import { InvoicePDF } from '@/app/components/pdf/InvoicePDF';
 import { Invoice, InvoiceItem, User } from '../types/Database';
+import { Rechnungsposten } from '../types/rechnung/Rechnungen';
 
 export async function generateInvoicePDF(
   invoice: Invoice,
-  items: InvoiceItem[],
+  items: Rechnungsposten[],
   recipient: User
 ): Promise<Buffer> {
 

@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { job_categories } from '@/app/constants/Constants';
 import { useRouter } from 'next/navigation';
 import { Toast } from 'primereact/toast';
+import DividerBlock from '@/app/components/DividerBlock';
+import MandantenEditor from '@/app/components/agency/mandanten/MandantenEditor';
 
 interface Props {
   bearbeiter?: User | null;
@@ -43,27 +45,18 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
     return () => document.removeEventListener('click', handleClick, true);
   }, [hasChanges, router]);
 
-  const items = [
-    { label: 'Kunden', url: '/admin/kunden' },
-    { label: `${user.nachname}, ${user.vorname}` },
-  ];
-
-  const home = { icon: 'pi pi-home', url: '/admin' };
-  const job = job_categories.find((t) => t.value === user.job_status);
-
-  const handleSave = () => {
-    saveRef.current?.();
-    setHasChanges(false);
+  const save = () => {
     toast.current?.show({
       severity: 'success',
-      summary: 'Änderungen gespeichert',
-      detail: 'Die Änderungen wurden erfolgreich gespeichert.',
+      summary: 'Kunde gespeichert',
+      detail: 'Der Kunde wurde erfolgreich gespeichert.',
     });
-  };
+  }
 
   return (
-    <div className="page-content column">
-    
+    <div className="page-content column" style={{ padding: 0 }}>
+      <Toast ref={toast} />
+      <MandantenEditor client={user} header={`${user.vorname} ${user.nachname}`} onSave={save} />
     </div>
   );
 }

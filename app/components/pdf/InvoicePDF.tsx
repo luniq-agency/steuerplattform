@@ -2,6 +2,7 @@
 import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 import { Invoice, InvoiceItem, User } from '@/app/types/Database';
 import { formatCurrency, formatDate } from '@/app/utils/formats';
+import { Rechnungsposten } from '@/app/types/rechnung/Rechnungen';
 
 const styles = StyleSheet.create({
   page: { padding: 40, fontSize: 11, fontFamily: 'Helvetica' },
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
 
 interface Props {
   invoice: Invoice;
-  items: InvoiceItem[];
+  items: Rechnungsposten[];
   recipient: User;
 }
 
@@ -97,10 +98,10 @@ export function InvoicePDF({ invoice, items, recipient }: Props) {
           {items.map((item, i) => (
             <View key={item.id} style={styles.tableRow}>
               <Text style={styles.col1}>{i + 1}</Text>
-              <Text style={styles.col2}>{item.description || '–'}</Text>
-              <Text style={styles.col3}>{item.quantity}</Text>
-              <Text style={styles.col4}>{formatCurrency(item.price_single || 0)}</Text>
-              <Text style={styles.col5}>{formatCurrency(item.price_total || 0)}</Text>
+              <Text style={styles.col2}>{item.beschreibung || '–'}</Text>
+              <Text style={styles.col3}>{item.menge}</Text>
+              <Text style={styles.col4}>{formatCurrency(item.einzelpreis || 0)}</Text>
+              <Text style={styles.col5}>{formatCurrency(item.gesamtpreis || 0)}</Text>
             </View>
           ))}
         </View>

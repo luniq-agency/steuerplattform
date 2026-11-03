@@ -12,5 +12,5 @@ export default async function AdminInvoicesPage() {
   const clients = await clientsLoadAdmin();
   const invoices = await invoicesLoadAll();
 
-  return <Rechnungen clients={clients} />;
+  return <Rechnungen clients={clients} invoices={invoices} />;
 }
