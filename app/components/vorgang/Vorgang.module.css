@@ -1,0 +1,5 @@
+.vorgangCard {
+    background-color: var(--background-container);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+}

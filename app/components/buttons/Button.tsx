@@ -16,7 +16,7 @@ interface Props {
 }
 
 const modeStyles: Record<NonNullable<Props['mode']>, React.CSSProperties> = {
-    primary: { backgroundColor: 'white', borderColor: 'white', color: 'black', minHeight: 40 },
+    primary: { backgroundColor: 'white', borderColor: 'white', color: 'black'},
     secondary: { backgroundColor: '#2a2a2c', borderColor: '#2a2a2c', color: 'white' },
     tertiary: { backgroundColor: '#ebebeb', borderColor: '#2a2a2c', color: 'black' }
 };

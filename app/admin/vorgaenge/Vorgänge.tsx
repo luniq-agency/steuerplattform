@@ -15,6 +15,7 @@ import { User } from '@/app/types/Database';
 import { Vorgang } from '@/app/types/vorgang';
 import { formatDate } from '@/app/utils/formats';
 import { Plus } from 'lucide-react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
@@ -23,7 +24,7 @@ import { useEffect, useMemo, useState } from 'react';
 
 const STATUS_OPTIONS = [{ label: 'Alle', value: '' }, ...ticket_status];
 
-export default function Aufgaben() {
+export default function Vorgänge() {
   const { userProfile } = useAuth();
   const router = useRouter();
 
@@ -90,7 +91,7 @@ export default function Aufgaben() {
 
   // ACTIONS
   const selectTicket = (rowData: Vorgang) => {
-    router.push(`/admin/aufgaben/${rowData.id}`);
+    router.push(`/admin/vorgaenge/${rowData.id}`);
   };
 
   // TEMPLATES
@@ -102,8 +103,10 @@ export default function Aufgaben() {
   return (
     <div className="page-content">
       <Row justifyContent="space-between">
-        <h1>Aufgaben</h1>
-        <Button icon={Plus} label="Aufgabe erstellen" mode="secondary" onClick={() => setCreating(true)} size="small" />
+        <h1>Vorgänge</h1>
+        <Link href="/admin/vorgaenge/neu">
+          <Button icon={Plus} label="Vorgang erstellen" mode="secondary" onClick={() => setCreating(true)} size="small" />
+        </Link>
       </Row>
       <DividerBlock height={2} />
 
@@ -122,7 +125,7 @@ export default function Aufgaben() {
       <DividerBlock height={1} />
       <Row alignItems="center" justifyContent="space-between">
         <span className="text-meta">
-          {filteredTasks.length} von {tasks.length} Aufgaben
+          {filteredTasks.length} von {tasks.length} Vorgängen
         </span>
         {filterAktiv && <Button label="Filter zurücksetzen" mode="tertiary" onClick={resetFilter} size="small" />}
       </Row>
@@ -130,7 +133,7 @@ export default function Aufgaben() {
 
       {!loading && (
         <DataTable
-          emptyMessage={filterAktiv ? 'Keine Aufgaben gefunden. Passe die Filter an.' : 'Es wurden noch keine Aufgaben erstellt.'}
+          emptyMessage={filterAktiv ? 'Keine Vorgänge gefunden. Passe die Filter an.' : 'Es wurden noch keine Aufgaben erstellt.'}
           onRowClick={(e) => selectTicket(e.data as Vorgang)}
           paginator
           rows={10}

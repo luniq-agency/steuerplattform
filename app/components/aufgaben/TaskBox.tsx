@@ -24,7 +24,7 @@ export default function TaskBox({ task, users }: Props) {
   const priority = priority_options.find((p) => p.value === task.priority);
 
   return (
-    <Link className={styles.taskBox} href={`/admin/aufgaben/${task.id}`}>
+    <Link className={styles.taskBox} href={`/admin/vorgaenge/${task.id}`}>
       <div className="row space-between">
         <span style={{ fontWeight: 600 }}>{task.title}</span>
         {task.due_date && (

@@ -89,6 +89,14 @@ body {
   height: 100vh;
 }
 
+.accordion-admin * .p-accordion-content {
+  border-color: var(--border-color);
+  border-radius: 0px 0px 20px 20px;
+  border-style: solid;
+  border-width: 0px 1px 1px 1px;
+  padding: 1rem;
+}
+
 .accordion-content > .p-accordion-content {
   background-color: transparent;
   padding: 0px 1rem;
@@ -415,6 +423,10 @@ label {
   width: 80px;
 }
 
+.mobile-menu-admin {
+  display: none;
+}
+
 .mobile-visible {
   display: none;
 }
@@ -423,16 +435,13 @@ p {
   margin-block-end: 1rem;
 }
 
-.p-accordion,
-.p-accordion-content {
-  border: none !important;
-}
-
 .p-accordion-content {
   padding: 0.5rem 0rem;
 }
 
 .p-accordion-header-link {
+  border-color: var(--border-color);
+  border-radius: 20px;
   display: flex;
   justify-content: space-between;
 }
@@ -443,6 +452,10 @@ p {
 
 .p-accordion-header-text {
   order: 1;
+}
+
+.p-accordion-tab {
+  margin-bottom: 1rem;
 }
 
 .p-column-filter-menu-button {
@@ -509,9 +522,10 @@ p-datepicker-next {
 }
 
 .p-dock-action {
-  background-color: var(--background-container);
+  background-color: var(--primary);
   border: 1px solid var(--border-color);
   border-radius: 20px;
+  cursor: pointer;
 }
 
 .p-dock-list-container {
@@ -519,6 +533,7 @@ p-datepicker-next {
   background-color: rgba(255, 255, 255, 0.25);
   border: 0.1px solid rgba(255, 255, 255, 1);
   padding: 0.5rem 1rem;
+  width: 100vw;
 }
 
 .p-dropdown {
@@ -643,7 +658,7 @@ p-datepicker-next {
 .p-tabview-panels {
   background: transparent;
   flex-grow: 1;
-  padding: 1rem;
+  padding: 1rem 0rem;
 }
 
 .p-tabview-title {
@@ -822,6 +837,18 @@ tr {
 
   .mobile-hidden {
     display: none;
+  }
+
+  .mobile-menu-admin {
+    background-color: var(--background-container);
+    border-top: 1px solid var(--border-color);
+    bottom: 0px;
+    display: flex;
+    flex-direction: row;
+    left: 0;
+    padding: 0.5rem;
+    position: fixed;
+    width: 100%;
   }
 
   .mobile-visible {

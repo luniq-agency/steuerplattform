@@ -9,13 +9,14 @@ import { useEffect, useState } from "react";
 import { Mail } from "lucide-react";
 import { useAuth } from "@/app/context/AuthContext";
 import { redirect } from "next/navigation";
+import ErrorMessage from "../ui/ErrorMessage";
 
 export default function SignInForm() {
     const { userProfile } = useAuth();
 
     // REDIRECT
     useEffect(() => {
-        if (!userProfile) return
+        if (!userProfile) return;
         switch (userProfile?.rolle) {
             case 'admin':
             case 'partner':
@@ -29,6 +30,7 @@ export default function SignInForm() {
                 break;
         }
     })
+
     // INPUTS
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -45,7 +47,12 @@ export default function SignInForm() {
 
         try {
             const result = await login(email, password);
-            if (result?.error) setError(result.error);
+            if (result?.error) {
+                setError(result.error);
+                setSubmitting(false);
+                return;
+            }
+            if (result?.ziel) window.location.assign(result.ziel);
         } catch (err) {
             setError(err as any);
             setSubmitting(false);

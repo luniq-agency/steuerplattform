@@ -71,7 +71,7 @@ export default function AdminSidebar() {
             collapsed={!expanded}
             icon={List}
             label="Aufgaben"
-            target="/admin/aufgaben"
+            target="/admin/vorgaenge"
           />
           <AdminSidebarButton
             collapsed={!expanded}
@@ -148,7 +148,7 @@ export default function AdminSidebar() {
       <div className={styles.navbar}>
         <AdminNavbarButton icon={HomeIcon} label="Dashboard" target="/admin" />
         <AdminNavbarButton icon={Users} label="Kunden" target="/admin/kunden" />
-        <AdminNavbarButton icon={List} label="Aufgaben" target="/admin/aufgaben" />
+        <AdminNavbarButton icon={List} label="Aufgaben" target="/admin/vorgaenge" />
       </div>
     </>
   );

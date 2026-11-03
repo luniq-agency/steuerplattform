@@ -18,7 +18,7 @@ const sizeStyles: Record<NonNullable<Props['size']>, React.CSSProperties> = {
 };
 
 export function ContextButton({
-  color = 'var(--primary)',
+  color = 'var(--foreground)',
   disabled,
   icon: Icon,
   label,

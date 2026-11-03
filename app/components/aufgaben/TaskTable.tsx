@@ -47,7 +47,7 @@ export default function TaskTable({ admins, tasks }: Props) {
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
 
   const selectTask = (rowData: Task) => {
-    router.push(`/admin/aufgaben/${rowData.id}`);
+    router.push(`/admin/vorgaenge/${rowData.id}`);
   };
 
   const show = () => {
@@ -139,7 +139,7 @@ export function TaskTableSmall({ admins, tasks }: Props) {
   const router = useRouter();
 
   const selectRow = (rowData: Task) => {
-    router.push(`/admin/aufgaben/${rowData.id}`);
+    router.push(`/admin/vorgaenge/${rowData.id}`);
   };
 
   const hasTasks = tasks.length >= 1;

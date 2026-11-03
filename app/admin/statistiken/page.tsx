@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import StatPageClient from '@/app/components/admin/stats/StatPageClient';
+import Statistiken from '@/app/admin/statistiken/Statistiken';
 
 export const metadata: Metadata = {
   title: 'Statistiken | ADVACT',
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <StatPageClient />;
+  return <Statistiken />;
 }

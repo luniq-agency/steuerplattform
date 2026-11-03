@@ -1,8 +1,29 @@
 import { createServerClient } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
+// Welche Rolle wohin gehört
+function zielFuerRolle(rolle?: string | null): string {
+  switch (rolle) {
+    case 'admin':
+    case 'partner':
+      return '/admin';
+    case 'agency':
+      return '/agentur';
+    case 'client':
+      return '/dashboard';
+    default:
+      return '/onboarding';
+  }
+}
+
+const PROTECTED_ROUTES = ['/admin', '/agentur', '/dashboard'];
+const EXCLUDED_ROUTES = ['/admin/konto-erstellen'];
+const AUTH_PAGES = ['/', '/login', '/signup'];
+
+const imBereich = (pfad: string, bereich: string) => pfad === bereich || pfad.startsWith(`${bereich}/`);
+
 export async function proxy(request: NextRequest) {
-  const response = NextResponse.next();
+  let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,9 +32,9 @@ export async function proxy(request: NextRequest) {
       cookies: {
         getAll: () => request.cookies.getAll(),
         setAll: (cookiesToSet) => {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            response.cookies.set(name, value, options)
-          );
+          cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+          response = NextResponse.next({ request });
+          cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
         },
       },
     }
@@ -23,26 +44,46 @@ export async function proxy(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Geschützte Routen
-  const protectedRoutes = ['/admin', '/agentur', '/dashboard'];
-  const excludedRoutes = ['/admin/konto-erstellen'];
+  const pfad = request.nextUrl.pathname;
 
-  const isExcluded = excludedRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
-  const isProtected =
-    !isExcluded && protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route));
+  // Weiterleitung, die erneuerte Session-Cookies mitnimmt
+  const weiterleiten = (ziel: string) => {
+    const redirect = NextResponse.redirect(new URL(ziel, request.url));
+    response.cookies.getAll().forEach((c) => redirect.cookies.set(c));
+    return redirect;
+  };
 
-  if (isProtected && !user) {
-    return NextResponse.redirect(new URL('/', request.url));
-  }
+  const isExcluded = EXCLUDED_ROUTES.some((r) => imBereich(pfad, r));
+  const bereich = isExcluded ? undefined : PROTECTED_ROUTES.find((r) => imBereich(pfad, r));
+  const isAuthPage = AUTH_PAGES.includes(pfad);
 
-  // Eingeloggte User von Login/Signup wegschicken
-  if (user && ['/login', '/signup'].includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
+  // Nichts zu prüfen
+  if (!bereich && !isAuthPage) return response;
+
+  // Geschützter Bereich ohne Login → Startseite (Login)
+  if (bereich && !user) return weiterleiten('/');
+
+  // Nicht eingeloggt auf Login-Seite → normal anzeigen
+  if (!user) return response;
+
+  // Rolle laden
+  const { data: profil } = await supabase
+    .from('user')
+    .select('rolle')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  const ziel = zielFuerRolle(profil?.rolle);
+
+  // Eingeloggt auf Login-Seite → in den eigenen Bereich
+  if (isAuthPage) return weiterleiten(ziel);
+
+  // Falscher Bereich → in den eigenen Bereich
+  if (bereich && !imBereich(ziel, bereich)) return weiterleiten(ziel);
 
   return response;
 }
 
 export const config = {
-  matcher: ['/((?!_next/static|_next/image|favicon.ico|icons).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico|icons|bilder|.*\\.(?:png|jpg|jpeg|svg|webp)$).*)'],
 };

@@ -5,6 +5,8 @@ import Button from '@/app/components/buttons/Button';
 import DividerBlock from '@/app/components/DividerBlock';
 import SearchBox from '@/app/components/forms/SearchBox';
 import Row from '@/app/components/layout/Row';
+import Tag from '@/app/components/ui/Tag';
+import { job_categories } from '@/app/constants/Constants';
 import { useAuth } from '@/app/context/AuthContext';
 import { User } from '@/app/types/Database';
 import { formatDate } from '@/app/utils/formats';
@@ -41,6 +43,12 @@ export default function Kunden() {
         router.push(`/admin/kunden/${u.id}`);
     }
 
+    // TEMPLATES
+    const berufsstatus = (rowData: User) => {
+        const status = job_categories.find((j) => j.value === rowData.berufsstatus);
+        return <Tag bgColor={status?.bg || 'blue'} color={status?.color || 'white'} text={status?.label || ''} />
+    }
+
     return (
         <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
             <Row alignItems="center" justifyContent="space-between">
@@ -53,8 +61,9 @@ export default function Kunden() {
                 </Row>
             </Row>
             <DividerBlock height={2} />
-            <DataTable onRowClick={(e) => selectClient(e.data as User)} paginator rows={15} sortField="nachname" sortOrder={1} stripedRows value={kunden}>
+            <DataTable onRowClick={(e) => selectClient(e.data as User)} paginator rows={12} sortField="nachname" sortOrder={1} stripedRows value={kunden}>
                 <Column body={(rowData) => <span>{rowData.nachname}, {rowData.vorname}</span>} header="Name" />
+                <Column body={berufsstatus} header="Berufsstatus" sortable sortField='berufsstatus' />
                 <Column body={(rowData) => <span>{formatDate(rowData.created_at)}</span>} header="Registriert seit" sortable sortField='created_at' />
             </DataTable>
         </div>

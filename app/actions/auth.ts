@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { redirect } from 'next/navigation';
+import { zielFuerRolle } from '../utils/roles';
 
 export async function getEmails() {
   const supabase = await createClient();
@@ -40,26 +41,13 @@ export async function login(email: string, password: string) {
     return { error: error.message };
   }
 
-  const { data: userData, error: roleError } = await supabase
+  const { data: userData } = await supabase
     .from('user')
-    .select('rolle, team_aktiv')
+    .select('rolle')
     .eq('user_id', data.user.id)
     .maybeSingle();
 
-  if (roleError) console.error('Role query error:', roleError);
-
-  switch (userData?.rolle) {
-    case 'admin':
-      redirect('/admin');
-    case 'agency':
-      redirect('/agentur');
-    case 'partner':
-      redirect('/admin');
-    case 'client':
-      redirect('/dashboard');
-    default:
-      redirect('/onboarding');
-  }
+  return { ziel: zielFuerRolle(userData?.rolle) };
 }
 
 export async function resetPassword(email: string) {

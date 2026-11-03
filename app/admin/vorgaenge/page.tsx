@@ -1,4 +1,4 @@
-import Aufgaben from './Aufgaben';
+import Vorgänge from './Vorgänge';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <Aufgaben />;
+  return <Vorgänge />;
 }

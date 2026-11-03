@@ -54,7 +54,7 @@ export default function AdminDashboard() {
         <StatCard header="Anmeldungen" icon={Users} value={registrations.length ?? 0} />
         <DashboardContainer
           header="Offene Aufgaben"
-          target="/admin/aufgaben"
+          target="/admin/vorgaenge"
           targetLabel="Alle ansehen"
         >
           <TaskTableSmall admins={admins} tasks={tasks} />

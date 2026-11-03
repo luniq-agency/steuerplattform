@@ -15,24 +15,10 @@ export default async function AdminTaskPage({ params }: { params: Promise<{ id: 
   const { id } = await params;
   const task = await fetchVorgangById(id);
 
-  const items = [
-    {
-      label: 'Aufgaben',
-      url: '/admin/aufgaben',
-    },
-    {
-      label: `${task.titel}`,
-    },
-  ];
-
-  const home = { icon: 'pi pi-home', url: '/admin' };
-
   if (!task) return;
 
   return (
     <div className="page-content">
-      <BreadCrumb home={home} model={items} />
-      <DividerBlock height={2} />
       <div className="row gap-m">
         <TaskEditor task={task} />
       </div>

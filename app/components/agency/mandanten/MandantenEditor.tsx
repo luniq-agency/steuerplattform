@@ -135,7 +135,7 @@ export default function MandantenEditor({ client, header, onSave }: Props) {
     const required = vorname && nachname;
 
     return (
-        <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
+        <div className="content-wrapper" style={{ height: '100%', padding: 0 }}>
             <Dialog draggable={false} header="Neuen Mandanten anlegen" onHide={() => setVisible(false)} style={{ maxWidth: 480 }} visible={visible}>
                 <p>Nach dem Anlegen des Mandanten senden wir eine Einladung an die E-Mail-Adresse.</p>
                 <p>Du kannst den Link auch direkt kopieren und so an deinen Mandanten senden.</p>

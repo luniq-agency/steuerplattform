@@ -102,11 +102,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const logout = async () => {
-    console.log('1: logout geklickt');
-
     const { error } = await supabase.auth.signOut({ scope: 'local' });
-    console.log('2: signOut fertig', error);
-
     clearState();
     window.location.assign('/');
   };
