@@ -257,14 +257,19 @@ export const tax_rates = [
 
 export const ticket_options = [
   {
-    description: 'Brief vom Finanzamt etc.',
-    label: 'Behördenkommunikation',
-    value: 'official',
+    description: '',
+    label: 'Deutsche Rentenversicherung',
+    value: 'rentenversicherung',
   },
   {
     description: 'Änderungswünsche, Verbesserungsvorschläge etc.',
-    label: 'Frage zu ADVACT',
-    value: 'general',
+    label: 'Krankenkasse',
+    value: 'krankenkasse',
+  },
+  {
+    description: 'Steuererklärung, Brief vom Finanzamt etc.',
+    label: 'Steuern',
+    value: 'steuern',
   },
   {
     description: 'Technische Probleme, Bugs & Fehler etc.',
@@ -272,10 +277,15 @@ export const ticket_options = [
     value: 'tech_support',
   },
   {
+    description: '',
+    label: 'Unternehmensberatung',
+    value: 'tech_support',
+  },
+  {
     description: 'Allgemeine Anliegen',
     label: 'Sonstiges',
-    value: 'other'
-  }
+    value: 'other',
+  },
 ];
 
 export const ticket_status = [
@@ -297,6 +307,6 @@ export const ticket_status = [
   {
     label: 'Geschlossen',
     severity: 'Success',
-    value: 'closed',
+    value: 'geschlossen',
   },
 ];

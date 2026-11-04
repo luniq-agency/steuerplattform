@@ -6,12 +6,12 @@ interface Props {
     vorgang: Vorgang;
 }
 
-export default function AgenturVorgang({vorgang}:Props) {
+export default function AgenturVorgang({ vorgang }: Props) {
 
     return (
-        <div className="content-wrapper" style={{ height: '100%'}}>
+        <div className="content-wrapper" style={{ height: '100%' }}>
             <h1>Vorgang</h1>
-            <DividerBlock height={1}/>
+            <DividerBlock height={1} />
             <TaskEditor task={vorgang} />
         </div>
     )

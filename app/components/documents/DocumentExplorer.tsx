@@ -10,9 +10,10 @@ import { documentUpdate } from '@/app/actions/documents';
 import { folderCreate } from '@/app/actions/folders';
 import { Dokument, DokumentOrdner } from '@/app/types/docs';
 import { formatDate } from '@/app/utils/formats';
-import { getFileIcon, getFileTypeLabel } from '@/app/utils/fileIcons';
+import { DateiIcon, dateiTypLabel, OrdnerIcon } from '@/app/utils/fileIcons';
 import styles from './Documents.module.css';
 import Row from '../layout/Row';
+import { User } from '@/app/types/Database';
 
 interface Props {
   documents: Dokument[];
@@ -22,6 +23,8 @@ interface Props {
   onSelectDoc: (value: Dokument) => void;
   onSelectFolder: (value: DokumentOrdner | null) => void;
   owner: number;
+  showOwner?: boolean;
+  users?: User[];
 }
 
 type ExplorerRow =
@@ -36,6 +39,8 @@ export default function DocumentExplorer({
   onSelectDoc,
   onSelectFolder,
   owner,
+  showOwner = false,
+  users
 }: Props) {
   const folderMenu = useRef<ContextMenu | null>(null);
   const pendingInputRef = useRef<HTMLInputElement | null>(null);
@@ -111,7 +116,7 @@ export default function DocumentExplorer({
       return (
         <div className={styles.nameCell}>
           <Row alignItems="center" gap={8}>
-            <Image alt="" height={24} src="/icons/folder.svg" width={24} />
+            <OrdnerIcon />
             <input
               ref={pendingInputRef}
               className={styles.nameInput}
@@ -143,7 +148,7 @@ export default function DocumentExplorer({
           onDrop={() => dropOnFolder(id)}
         >
           <Row alignItems="center" gap={8}>
-            <Image alt="" height={24} src="/icons/folder.svg" width={24} />
+            <OrdnerIcon />
             <span>{row.item.name}</span>
           </Row>
         </div>
@@ -158,7 +163,7 @@ export default function DocumentExplorer({
         onDragEnd={() => setDraggingDocument(null)}
       >
         <Row alignItems="center" gap={8}>
-          <Image alt="" height={24} src={getFileIcon(row.item.name)} width={24} />
+          <DateiIcon type={row.item.type} name={row.item.name} />
           <span>{row.item.name}</span>
         </Row>
       </div>
@@ -168,8 +173,15 @@ export default function DocumentExplorer({
   const dateTemplate = (row: ExplorerRow) =>
     row.kind === 'pending' || !row.item.created_at ? '–' : formatDate(row.item.created_at);
 
+  const ownerTemplate = (row: ExplorerRow) => {
+    if (row.kind != 'file' || !users) return;
+    const owner = users?.find((u) => u.id == row.item.user);
+    if (!owner) return;
+    return <span>{owner.nachname}, {owner.vorname}</span>
+  }
+
   const typeTemplate = (row: ExplorerRow) => {
-    if (row.kind === 'file') return getFileTypeLabel(row.item.name);
+    if (row.kind === 'file') return dateiTypLabel(row.item.type, row.item.name);
     return 'Ordner';
   };
 
@@ -196,6 +208,7 @@ export default function DocumentExplorer({
           value={rows}
         >
           <Column body={nameTemplate} header="Dateiname" sortable sortField='name' />
+          {showOwner && <Column body={ownerTemplate} header="Besitzer" sortable sortField='name' />}
           <Column body={dateTemplate} header="Hochgeladen am" sortable sortField="created_at" style={{ width: 180 }} />
           <Column body={typeTemplate} header="Dateityp" style={{ width: 120 }} />
         </DataTable>

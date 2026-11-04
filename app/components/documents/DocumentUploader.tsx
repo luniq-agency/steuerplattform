@@ -12,6 +12,9 @@ import { Toast } from 'primereact/toast';
 import Button from '../buttons/Button';
 import { Upload } from 'lucide-react';
 import BelegUpload from '../belege/BelegUpload';
+import { User } from '@/app/types/Database';
+import { SelectLabel, UserSelectLabel } from '../inputs/Select';
+import { TextInputLabel } from '../forms/FormElements';
 
 const MAX_FILE_SIZE = 20 * 1024 * 1024;
 
@@ -20,9 +23,11 @@ interface Props {
   onLocalFile?: (file: File, name: string) => void;
   onUpload: () => void;
   owner: string | number;
+  onBehalf?: boolean;
+  users?: User[];
 }
 
-export default function DocumentUploader({ folder, onLocalFile, onUpload, owner }: Props) {
+export default function DocumentUploader({ folder, onBehalf, onLocalFile, onUpload, owner, users }: Props) {
   const toast = useRef<Toast | null>(null);
 
   const [visible, setVisible] = useState(false);
@@ -32,6 +37,10 @@ export default function DocumentUploader({ folder, onLocalFile, onUpload, owner 
   const [documentFileType, setDocumentFileType] = useState('');
   const [documentName, setDocumentName] = useState('');
 
+  // SELECTIONS
+  const [selectedUser, setSelectedUser] = useState('');
+
+  // ACTIONS
   const cancel = () => {
     setVisible(false);
     setDocumentFile(null);
@@ -60,7 +69,6 @@ export default function DocumentUploader({ folder, onLocalFile, onUpload, owner 
     try {
       const sanitized = sanitizeFileName(documentFile.file.name);
       const path = `${owner}/${sanitized}`;
-
       const url = await uploadFileDirectly(documentFile.file, path);
 
       if (onLocalFile) {
@@ -74,7 +82,7 @@ export default function DocumentUploader({ folder, onLocalFile, onUpload, owner 
         name: documentName,
         ordner: folder || undefined,
         type: documentFileType,
-        user: String(owner),
+        user: onBehalf ? selectedUser : String(owner),
       });
 
       setDocumentFile(null);
@@ -93,6 +101,11 @@ export default function DocumentUploader({ folder, onLocalFile, onUpload, owner 
     }
   };
 
+  const clients = users?.map((a) => ({
+    ...a,
+    fullName: `${a.nachname}, ${a.vorname}`,
+  })).sort((a: User, b: User) => a.nachname.localeCompare(b.nachname));
+
   return (
     <>
       <Toast ref={toast} />
@@ -108,11 +121,13 @@ export default function DocumentUploader({ folder, onLocalFile, onUpload, owner 
             label={documentFile?.file.name || 'Datei auswählen'}
             onUpload={handleUpload}
           />
-          <InputText
-            onChange={(e) => setDocumentName(e.target.value)}
+          <TextInputLabel
+            label="Name des Dokuments"
+            onChange={setDocumentName}
             placeholder="Name (z. B. Steuererklärung 2024)"
             value={documentName}
           />
+          {onBehalf && <SelectLabel filter label="Mandant" onChange={setSelectedUser} optionLabel='fullName' optionValue='id' options={clients} value={selectedUser} />}
           <div className="row gap-s width-100 space-between">
             <Button label="Abbrechen" onClick={cancel} mode="tertiary" size="medium" />
             <Button

@@ -19,7 +19,7 @@ interface Props {
 export function UserAvatar({ backgroundColor, color, collapsed, fontSize, height, onClick, width }: Props) {
   const { userProfile } = useAuth();
 
-  const label = userProfile?.vorname[0];
+  const label = userProfile?.vorname ? userProfile?.vorname[0] : '';
   if (!userProfile?.avatar)
     return (
       <Avatar

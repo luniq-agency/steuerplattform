@@ -13,7 +13,7 @@ import Row from '../../layout/Row';
 
 export default function ClientSidebar() {
   const { logout, team, userProfile } = useAuth();
-
+  const isDev = process.env.NODE_ENV === 'development';
   if (!userProfile) return;
 
   return (
@@ -40,17 +40,19 @@ export default function ClientSidebar() {
         </label>
         <AdminSidebarButton icon={Folder} label="Alle Dokumente" target="/dashboard/dokumente" />
         <AdminSidebarButton icon={File} label="Rechnungen" target="/dashboard/rechnungen" />
-        <AdminSidebarButton icon={Receipt} label="Belege/Ausgaben" target="/dashboard/belege" />
+        {isDev && <AdminSidebarButton icon={Receipt} label="Belege/Ausgaben" target="/dashboard/belege" />}
         <DividerBlock height={1} />
+        {/*
         <label>
           <strong>Buchhaltung</strong>
         </label>
         <AdminSidebarButton icon={ChartArea} label="Überblick" target="/dashboard/ueberblick" />
         <DividerBlock height={1} />
+        */}
         <label>
           <strong>Verwaltung</strong>
         </label>
-        <AdminSidebarButton icon={Users} label="Mitarbeiter" target="/dashboard/mitarbeiter" />
+        {!team?.einzelkonto && <AdminSidebarButton icon={Users} label="Mitarbeiter" target="/dashboard/mitarbeiter" />}
         <AdminSidebarButton icon={BriefcaseBusiness} label="Kunden" target="/dashboard/kunden" />
         <DividerBlock height={1} />
         <label>

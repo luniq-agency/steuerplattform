@@ -63,6 +63,10 @@ export default function AgenturVorgänge({ onSubmit }: Props) {
         return <Tag severity={(statusObj?.severity as any) ?? 'info'} value={statusObj?.label ?? ''} />;
     };
 
+    // FILTER
+    const completed = tickets.filter((t) => t.status === 'abgeschlossen');
+    const open = tickets.filter((t) => t.status === 'offen' || t.status === 'neu');
+
     return (
         <>
             <Row alignItems="center" justifyContent='space-between'>
@@ -78,9 +82,9 @@ export default function AgenturVorgänge({ onSubmit }: Props) {
             </Row>
             <DividerBlock height={2} />
             <Row gap={16}>
-                <StatCard header="Offene Vorgänge" icon={CircleAlert} value={tickets.length} />
-                <StatCard header="Offene Vorgänge" icon={CircleAlert} value={tickets.length} />
-                <StatCard header="Offene Vorgänge" icon={CircleAlert} value={tickets.length} />
+                <StatCard header="Vorgänge insgesamt" icon={CircleAlert} value={tickets.length} />
+                <StatCard header="Vorgänge offen" icon={CircleAlert} value={open.length} />
+                <StatCard header="Vorgänge abgeschlossen" icon={CircleAlert} value={completed.length} />
             </Row>
             <DividerBlock height={2} />
             <DataTable

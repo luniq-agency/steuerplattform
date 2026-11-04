@@ -256,6 +256,8 @@ export type User = {
   kinder: number;
   linkedin: string;
   notizen: string;
+  onboarding_complete: boolean;
+  onboarding_missing: string;
   ort: string;
   permission_notifications_email: boolean;
   permission_notifications_push: boolean;

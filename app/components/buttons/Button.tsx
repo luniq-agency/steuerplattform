@@ -16,14 +16,14 @@ interface Props {
 }
 
 const modeStyles: Record<NonNullable<Props['mode']>, React.CSSProperties> = {
-    primary: { backgroundColor: 'white', borderColor: 'white', color: 'black'},
+    primary: { backgroundColor: 'var(--primary)', borderColor: 'white', color: 'white' },
     secondary: { backgroundColor: '#2a2a2c', borderColor: '#2a2a2c', color: 'white' },
     tertiary: { backgroundColor: '#ebebeb', borderColor: '#2a2a2c', color: 'black' }
 };
 
 const sizeStyles: Record<NonNullable<Props['size']>, React.CSSProperties> = {
     large: { borderRadius: 200, fontSize: 16, padding: '12px 24px' },
-    medium: { borderRadius: 8, fontSize: 14, padding: '8px 12px' },
+    medium: { borderRadius: 8, fontSize: 14, padding: '8px 16px' },
     small: { borderRadius: 8, fontSize: 12, padding: '6px 12px' },
 };
 

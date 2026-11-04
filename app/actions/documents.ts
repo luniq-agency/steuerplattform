@@ -82,6 +82,12 @@ export async function documentUpload(
   return data;
 }
 
+export async function fetchDocumentsFromList(id: number[]): Promise<Dokument[]> {
+  const supabase = await createClient();
+  const { data } = await supabase.from('dokument').select('*').in('id', id);
+  return data || [];
+}
+
 export async function documentsLoadAll(): Promise<Dokument[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('dokument').select('*');

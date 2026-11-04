@@ -1,17 +1,18 @@
 "use client"
 
+import Button from "../buttons/Button";
+import { Mail } from "lucide-react";
 import { signUp, signInWithGoogle } from "@/app/actions/auth";
 import styles from "./Auth.module.css";
 import { useState } from "react";
 import TextInput from "../inputs/TextInput";
-import Button from "../buttons/Button";
-import { Mail } from "lucide-react";
 
 export default function SignUpForm() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordRepeat, setPasswordRepeat] = useState('');
 
+    // STATES
     const [error, setError] = useState('');
     const [info, setInfo] = useState('');
     const [method, setMethod] = useState<'email' | 'google' | null>(null);

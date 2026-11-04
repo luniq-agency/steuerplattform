@@ -12,7 +12,7 @@ import { formatCurrency } from '@/app/utils/formats';
 interface Props {
   disclaimer?: string;
   header: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   mode?: 'currency' | 'plain';
   value: number;
 }

@@ -17,7 +17,7 @@ import { formatDate, formatDateWithTime, toDateString } from '@/app/utils/format
 import { UserAvatar } from '../../UserAvatar';
 import DividerBlock from '../../DividerBlock';
 import { DatePicker } from '../../forms/FormElements';
-import { PrimaryButton } from '../../buttons/Buttons';
+import { PrimaryButton, SecondaryButton } from '../../buttons/Buttons';
 import DashboardContainer from '../../layout/DashboardContainer';
 import Column from '../../layout/Column';
 import Row from '../../layout/Row';
@@ -25,6 +25,11 @@ import UserDisplay from '../../users/UserDisplay';
 import UserSelector from '../../forms/UserSelector';
 import DetailField from '../../forms/DetailField';
 import Button from '../../buttons/Button';
+import { Dokument } from '@/app/types/docs';
+import { fetchDocumentsFromList } from '@/app/actions/documents';
+import { Dialog } from 'primereact/dialog';
+import DocumentPreviewer from '../../documents/DocumentPreviewer';
+import Grid from '../../layout/Grid';
 
 // Status-Werte müssen zu ticket_status in Constants passen
 const STATUS_GESCHLOSSEN = 'geschlossen';
@@ -47,11 +52,16 @@ export default function TaskEditor({ task }: Props) {
   const toast = useRef<Toast | null>(null);
 
   // DATA
+  const [docs, setDocs] = useState<Dokument[]>([]);
   const [updates, setUpdates] = useState<Vorgangupdate[]>([]);
   const [users, setUsers] = useState<User[]>([]);
 
+  // SELECTIONS
+  const [selectedDoc, setSelectedDoc] = useState<Dokument | null>(null);
+
   // STATES
   const [submitting, setSubmitting] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   // INPUTS
   const [date, setDate] = useState<Date | undefined>(undefined);
@@ -63,7 +73,12 @@ export default function TaskEditor({ task }: Props) {
   useEffect(() => {
     if (!task) return;
     const load = async () => {
-      const [updateRes, userRes] = await Promise.all([fetchVorgangUpdates(task.id), usersLoadAll()]);
+      const [docRes, updateRes, userRes] = await Promise.all([
+        fetchDocumentsFromList(task.dokumente ?? []),
+        fetchVorgangUpdates(task.id),
+        usersLoadAll(),
+      ]);
+      setDocs(docRes);
       setUpdates(updateRes);
       setUsers(userRes);
     };
@@ -166,6 +181,12 @@ export default function TaskEditor({ task }: Props) {
     }
   };
 
+  // ACTIONS
+  const selectDoc = (d: Dokument) => {
+    setSelectedDoc(d);
+    setVisible(true);
+  }
+
   // CHECKS
   const unvollstaendig =
     (updateType === 'hold' && !date) ||
@@ -175,12 +196,22 @@ export default function TaskEditor({ task }: Props) {
   return (
     <div className="row gap-m width-100">
       <Toast ref={toast} />
+      <Dialog draggable={false} onHide={() => setVisible(false)} style={{ minHeight: 600, maxWidth: 1000 }} visible={visible}>
+        {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
+      </Dialog>
       <DashboardContainer header={task.titel}>
         <DetailField label="Beschreibung" value={task.beschreibung || '–'} />
         <DividerBlock height={1} />
-        <DetailField label="Erstellt am" value={formatDate(task.created_at)} />
+        <Grid columns={2} gap={16}>
+          <DetailField label="Erstellt am" value={formatDate(task.created_at)} />
+          <DetailField label="Fällig bis" value={task.due_date ? formatDate(task.due_date) : '–'} />
+        </Grid>
         <DividerBlock height={1} />
-        <DetailField label="Fällig bis" value={task.due_date ? formatDate(task.due_date) : '–'} />
+        <label>Dokumente</label>
+        <Row gap={8}>
+          {docs.map((d: Dokument, i) => <SecondaryButton key={d.id} label={`${d.name}`} onClick={() => selectDoc(d)} size="small"
+          />)}
+        </Row>
         <DividerBlock height={1} />
         <UserDisplay label="Erstellt von" user={creator} />
         <DividerBlock height={1} />

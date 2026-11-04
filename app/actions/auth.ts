@@ -3,6 +3,7 @@
 import { createClient } from '@/app/utils/supabase/server';
 import { redirect } from 'next/navigation';
 import { zielFuerRolle } from '../utils/roles';
+import { authFehler } from '../utils/authFehler';
 
 export async function getEmails() {
   const supabase = await createClient();
@@ -76,7 +77,7 @@ export async function signUp(email: string, password: string) {
 
   if (error) {
     console.error('SignUp error:', error);
-    return { error: error.message };
+    return { error: authFehler(error) };
   }
 
   // E-Mail-Bestätigung aktiv → noch keine Session, User muss Mail bestätigen
@@ -98,8 +99,8 @@ export async function signInWithGoogle() {
   });
 
   if (error) {
-    console.error('Google OAuth error:', error);
-    return { error: error.message };
+    console.error('SignUp error:', error);
+    return { error: authFehler(error) };
   }
 
   redirect(data.url);

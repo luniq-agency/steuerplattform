@@ -1,3 +1,7 @@
+.agencyTopbar {
+  display: none;
+}
+
 .navbar {
   display: none;
 }
@@ -112,6 +116,15 @@
 }
 
 @media only screen and (max-width: 768px) {
+  .agencyTopbar {
+    background-color: var(--background-sidebar);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 1rem;
+  }
+
   .navbar {
     background-color: var(--background-sidebar);
     border-top: 1px solid var(--border-color);

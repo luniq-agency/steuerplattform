@@ -1,5 +1,7 @@
 import { Metadata } from 'next';
 import OnboardingClient from '../components/auth/OnboardingClient';
+import Row from '../components/layout/Row';
+import Column from '../components/layout/Column';
 
 export const metadata: Metadata = {
   title: 'Onboarding | ADVACT',
@@ -7,11 +9,16 @@ export const metadata: Metadata = {
 };
 
 export default function OnboardingPage() {
+  const bg = 'url(/bilder/hero.jpg)';
+
   return (
     <main className="auth-page">
-      <div className="container" style={{ maxWidth: 480, minHeight: 500 }}>
-        <OnboardingClient />
-      </div>
+      <Row height="100%">
+        <Column alignItems='center' justifyContent='start' width="100%">
+          <OnboardingClient />
+        </Column>
+        <div className="mobile-hidden" style={{ backgroundImage: bg, backgroundSize: 'cover', width: "100%" }} />
+      </Row>
     </main>
   );
 }

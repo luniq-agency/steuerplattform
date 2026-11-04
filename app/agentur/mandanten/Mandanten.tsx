@@ -10,43 +10,66 @@ import { CircleCheck, Clock, Euro, Plus } from 'lucide-react';
 import Row from '@/app/components/layout/Row';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
-import { Calendar } from 'primereact/calendar';
-import { formatCurrency, formatDate } from '@/app/utils/formats';
-import { Rechnung } from '@/app/types/rechnung/Rechnungen';
-import { fetchInvoicesByTeam } from '@/app/actions/documents/rechnungen';
+import { formatDate } from '@/app/utils/formats';
 import StatCard from '@/app/components/cards/StatCard';
 import { createClient } from '@/app/utils/supabase/client';
-import { invoice_status, job_categories } from '@/app/constants/Constants';
+import { job_categories } from '@/app/constants/Constants';
 import StatusTag from '@/app/components/status/StatusTag';
 import { useRouter } from 'next/navigation';
-import { Kunde } from '@/app/types/clients';
-import { fetchKundenByTeam } from '@/app/actions/kunden';
-import { LAENDER_SORTIERT } from '@/app/constants/countries';
 import { fetchClientsForAgent } from '@/app/actions/agency/mandanten';
 import { User } from '@/app/types/Database';
 
+type Zeitraum = 'alle' | 'woche' | 'monat';
+
+const ZEITRAUM_OPTIONEN = [
+    { label: 'Alle Mandanten', value: 'alle' },
+    { label: 'Neu diese Woche', value: 'woche' },
+    { label: 'Neu diesen Monat', value: 'monat' },
+];
+
+// Montag 00:00 der aktuellen Woche
+const wochenStart = () => {
+    const d = new Date();
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() - ((d.getDay() + 6) % 7));
+    return d;
+};
+
+// 1. des aktuellen Monats, 00:00
+const monatsStart = () => {
+    const heute = new Date();
+    return new Date(heute.getFullYear(), heute.getMonth(), 1);
+};
+
+const seit = (k: User, start: Date) => !!k.created_at && new Date(k.created_at) >= start;
+
 export default function Mandanten() {
-    const { team, userProfile } = useAuth();
+    const { userProfile } = useAuth();
     const router = useRouter();
     const supabase = useMemo(() => createClient(), []);
 
-    // STATES
-    const [loading, setLoading] = useState(true);
-
     // DATA
     const [kunden, setKunden] = useState<User[]>([]);
+
+    // STATES
+    const [loading, setLoading] = useState(true);
+    const [zeitraum, setZeitraum] = useState<Zeitraum>('alle');
+
+    const neuWoche = useMemo(() => kunden.filter((k) => seit(k, wochenStart())), [kunden]);
+    const neuMonat = useMemo(() => kunden.filter((k) => seit(k, monatsStart())), [kunden]);
+
+    const angezeigt = zeitraum === 'woche' ? neuWoche : zeitraum === 'monat' ? neuMonat : kunden;
 
     // INIT: Rechnungen laden
     useEffect(() => {
         if (!userProfile) return;
         const fetchData = async () => {
-            setLoading(true);
             const res = await fetchClientsForAgent(userProfile.id);
             setKunden(res);
             setLoading(false);
         };
         fetchData();
-    }, [team]);
+    }, [userProfile]);
 
     // TEMPLATES
     const jobTemplate = (rowData: User) => {
@@ -75,8 +98,8 @@ export default function Mandanten() {
                 </Row>
             </Row>
             <DividerBlock height={2} />
-                        <SkeletonGrid columns="1fr 1fr 1fr" count={3} gap={16} height="72.5px" width="100%" />
-                                  <DividerBlock height={2} />
+            <SkeletonGrid columns="1fr 1fr 1fr" count={3} gap={16} height="72.5px" width="100%" />
+            <DividerBlock height={2} />
             <SkeletonGrid columns="1fr" count={1} gap={16} height="72.5px" width="100%" />
         </div>
     );
@@ -94,6 +117,8 @@ export default function Mandanten() {
             <DividerBlock height={2} />
             <Row gap={16}>
                 <StatCard header="Mandanten im Bestand" icon={CircleCheck} value={kunden.length} />
+                <StatCard header="Neu diese Woche" icon={CircleCheck} value={neuWoche.length} />
+                <StatCard header="Neu diesen Monat" icon={CircleCheck} value={neuMonat.length} />
             </Row>
             <DividerBlock height={2} />
             <DataTable onRowClick={(e) => selectClient(e.data as User)} value={kunden} emptyMessage="Du hast noch keine Mandanten angelegt.">

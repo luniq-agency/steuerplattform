@@ -1,0 +1,108 @@
+.stepper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.track {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+.segment {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--border-color, #e5e5e5);
+  overflow: hidden;
+}
+
+.fill {
+  height: 100%;
+  width: 100%;
+  background: var(--foreground, #1f1f1f);
+  border-radius: inherit;
+  transform-origin: left center;
+  transition: transform 420ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.count {
+  opacity: 0.6;
+  white-space: nowrap;
+}
+
+.label {
+  font-weight: 600;
+  animation: labelEin 300ms ease both;
+}
+
+/* Inhalt der Schritte */
+.enterVor,
+.enterZurueck {
+  animation-duration: 360ms;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+  animation-fill-mode: both;
+}
+
+.enterVor {
+  animation-name: einVonRechts;
+}
+
+.enterZurueck {
+  animation-name: einVonLinks;
+}
+
+@keyframes einVonRechts {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes einVonLinks {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes labelEin {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Weniger Bewegung, wenn der Nutzer das im System eingestellt hat */
+@media (prefers-reduced-motion: reduce) {
+  .fill {
+    transition: none;
+  }
+  .enterVor,
+  .enterZurueck,
+  .label {
+    animation: none;
+  }
+}

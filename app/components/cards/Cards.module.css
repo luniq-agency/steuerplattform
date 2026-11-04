@@ -12,6 +12,35 @@
   text-transform: uppercase;
 }
 
+.decisionCard {
+  align-items: center;
+  aspect-ratio: 1;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  text-align: center;
+  transition: all 0.3s ease-in-out;
+}
+
+.decisionCard:hover {
+  background-color: var(--primary-10);
+  border: 1px solid var(--primary);
+}
+
+.decisionCardBody {
+  font-size: 12px;
+}
+
+.decisionCardHeadline {
+  font-size: 18px;
+  font-weight: 600;
+}
+
 .iconWrapper {
   align-items: center;
   aspect-ratio: 1;
@@ -22,6 +51,11 @@
   height: 100%;
   justify-content: center;
   padding: 0.6rem;
+}
+
+.selected {
+  background-color: var(--primary-10);
+  border: 1px solid var(--primary);
 }
 
 .value {

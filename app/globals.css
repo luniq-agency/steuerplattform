@@ -9,7 +9,8 @@
   --background-active: #ececef;
   --foreground: #171717;
 
-  --primary: #48f5b6;
+  --primary: rgb(214, 107, 80);
+  --primary-10: rgba(214, 107, 80, 0.1);
   --primary-dark: #091e7c;
   --secondary: #48f5b6;
   --border-color: #ebebeb;
