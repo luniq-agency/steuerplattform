@@ -149,7 +149,13 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
                 <TextInputLabel label="Beruf" onChange={setBeruf} value={beruf} />
                 <SelectLabel label="Familienstand" onChange={setFamilienstand} optionLabel="label" optionValue="value" options={family_options} value={familienstand} />
                 <NumberInputLabel label="Anzahl Kinder" onNumberChange={setKinder} numberValue={kinder} />
+                <TextInputLabel label="IBAN" onChange={setIban} value={iban} />
                 <TextInputLabel label="Steuer-ID" onChange={setSteuerId} value={steuerId} />
+              </Grid>
+            </AccordionTab>
+            <AccordionTab header="Sonstiges">
+              <Grid columns={1} gap={16}>
+                <TextAreaLabel onChange={setNotizen} value={notizen} />
               </Grid>
             </AccordionTab>
           </Accordion>
