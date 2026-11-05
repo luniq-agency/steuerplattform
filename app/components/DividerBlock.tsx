@@ -3,5 +3,5 @@ interface Props {
 }
 
 export default function DividerBlock({ height }: Props) {
-  return <div style={{ height: `${height}rem` }} />;
+  return <div style={{ flexShrink: 0, height: `${height}rem` }} />;
 }

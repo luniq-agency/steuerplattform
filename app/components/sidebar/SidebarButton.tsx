@@ -54,7 +54,7 @@ export function AdminNavbarButton({ action, icon: Icon, label, target }: Props) 
   if (!target)
     return (
       <Button className={styles.navbarButton} onClick={action} style={{ gap: 8 }}>
-        {Icon && <Icon size={12} />}
+        {Icon && <Icon color="white" size={12} />}
         {label}
       </Button>
     );
@@ -62,7 +62,7 @@ export function AdminNavbarButton({ action, icon: Icon, label, target }: Props) 
   return (
     <Link href={target} style={{ width: '100%' }}>
       <Button className={styles.navbarButton} style={{ gap: 8 }}>
-        {Icon && <Icon size={12} />}
+        {Icon && <Icon color="white" size={12} />}
         {label}
       </Button>
     </Link>

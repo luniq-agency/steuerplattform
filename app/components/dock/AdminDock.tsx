@@ -13,37 +13,37 @@ export default function AdminDock() {
     const adminItems: MenuItem[] = [
         {
             label: 'Dashboard',
-            icon: () => <Home />,
+            icon: () => <Home strokeWidth={1.5} />,
             command: () => router.push('/admin'),
             target: '/admin'
         },
         {
             label: 'Kunden',
-            icon: () => <Users />,
+            icon: () => <Users strokeWidth={1.5} />,
             command: () => router.push('/admin/kunden'),
             target: '/admin/kunden'
         },
         {
             label: 'Rechnungen',
-            icon: () => <Receipt />,
+            icon: () => <Receipt strokeWidth={1.5} />,
             command: () => router.push('/admin/rechnungen'),
             target: '/admin/rechnungen'
         },
         {
             label: 'Abonnements',
-            icon: () => <Repeat />,
+            icon: () => <Repeat strokeWidth={1.5} />,
             command: () => router.push('/admin/abonnements'),
             target: '/admin/abonnements',
         },
         {
             label: 'Aufgaben',
-            icon: () => <List />,
+            icon: () => <List strokeWidth={1.5} />,
             command: () => router.push('/admin/vorgaenge'),
             target: '/admin/vorgaenge',
         },
         {
             label: 'Daten',
-            icon: () => <ChartArea />,
+            icon: () => <ChartArea strokeWidth={1.5} />,
             command: () => router.push('/admin/statistiken'),
             target: '/admin/statistiken',
         },
@@ -52,7 +52,7 @@ export default function AdminDock() {
     return (
         <>
             <div className="mobile-menu-admin">
-                {adminItems.map((a) => <AdminNavbarButton icon={a.icon} label={a.label || ''} target={a.target}/>)}
+                {adminItems.map((a, i) => <AdminNavbarButton icon={a.icon} key={i} label={a.label || ''} target={a.target} />)}
             </div>
             <Dock className="mobile-hidden" model={adminItems} position="bottom" />
         </>

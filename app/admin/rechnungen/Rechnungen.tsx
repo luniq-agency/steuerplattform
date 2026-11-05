@@ -12,6 +12,8 @@ import Link from 'next/link';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { formatCurrency, formatDate } from '@/app/utils/formats';
+import { invoice_status } from '@/app/constants/Constants';
+import Tag from '@/app/components/tag/Tag';
 
 interface Props {
   clients: User[];
@@ -23,6 +25,19 @@ export default function Rechnungen({ clients, invoices }: Props) {
 
   if (userProfile.rolle != 'admin') redirect('/admin');
 
+  // TEMPLATES
+  const clientTemplate = (rowData: Rechnung) => {
+    const user = clients.find((c) => c.id == rowData.mandant);
+    const name = user ? `${user.nachname}, ${user.vorname}` : '–';
+    return <span>{name}</span>
+  }
+
+  const statusTemplate = (rowData: Rechnung) => {
+    const status = invoice_status.find((i) => i.value == rowData.status);
+    if (!status) return;
+    return <Tag label={status.label} />
+  }
+
   return (
     <div className="page-content">
       <Row alignItems="center" justifyContent='space-between'>
@@ -31,11 +46,13 @@ export default function Rechnungen({ clients, invoices }: Props) {
           <Button icon={Plus} label="Neue Rechnung" mode="secondary" size="small" />
         </Link>
       </Row>
-      <DividerBlock height={2} />
+      <DividerBlock height={1} />
       <DataTable value={invoices}>
-        <Column header="#" />
+        <Column field="rechnungsnummer" header="#" />
+        <Column body={clientTemplate} header="Kunde" />
         <Column body={(rowData) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" />
         <Column body={(rowData) => formatDate(rowData.rechnungsdatum)} header="Rechnungsdatum" />
+        <Column body={statusTemplate} header="Status" />
       </DataTable>
     </div>
   );

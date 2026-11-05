@@ -6,6 +6,7 @@ import { foldersLoadUser } from "@/app/actions/folders";
 import { userUpdate } from "@/app/actions/users";
 import { fetchVorgaengeByClient } from "@/app/actions/vorgang/vorgang";
 import Button from "@/app/components/buttons/Button";
+import { ContextButton } from "@/app/components/buttons/Buttons";
 import DividerBlock from "@/app/components/DividerBlock";
 import DocumentExplorer from "@/app/components/documents/DocumentExplorer";
 import DocumentPreviewer from "@/app/components/documents/DocumentPreviewer";
@@ -18,6 +19,7 @@ import Column from "@/app/components/layout/Column";
 import DashboardContainer from "@/app/components/layout/DashboardContainer";
 import Grid from "@/app/components/layout/Grid";
 import Row from "@/app/components/layout/Row";
+import Loader from "@/app/components/loader/Loader";
 import { UserAvatarOther } from "@/app/components/UserAvatar";
 import { family_options, job_categories } from "@/app/constants/Constants";
 import { User } from "@/app/types/Database";
@@ -25,7 +27,9 @@ import { Dokument, DokumentOrdner } from "@/app/types/docs";
 import { Vorgang } from "@/app/types/vorgang";
 import { formatDate, parseDate, toDateString } from "@/app/utils/formats";
 import { useRouter } from "next/navigation";
+import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
+import { OverlayPanel } from "primereact/overlaypanel";
 import { TabPanel, TabView } from "primereact/tabview";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
@@ -37,6 +41,9 @@ interface Props {
 export default function Mandant({ user }: Props) {
   const saveRef = useRef<(() => void) | null>(null);
   const router = useRouter();
+
+  // REFS
+  const op = useRef<OverlayPanel | null>(null);
   const toast = useRef<Toast | null>(null);
 
   // DATA
@@ -87,6 +94,7 @@ export default function Mandant({ user }: Props) {
   const [selectedFolder, setSelectedFolder] = useState<DokumentOrdner | null>(null);
 
   // STATES
+  const [deleting, setDeleting] = useState(false);
   const [inspecting, setInspecting] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -163,6 +171,10 @@ export default function Mandant({ user }: Props) {
   const job = job_categories.find((t) => t.value === user.job_status);
 
   // ACTIONS
+  const confirmDelete = async () => {
+
+  }
+
   const handleSave = async () => {
     setSaving(true);
     const result = await userUpdate(current, user.id);
@@ -200,12 +212,31 @@ export default function Mandant({ user }: Props) {
     setInspecting(true);
   }
 
+  // DIALOG
+  const close = () => { }
+
+  const deleteUser = () => {
+    confirmDialog({
+      message: 'Bist du sicher, dass du den Mandanten löschen möchtest? Das kann nicht rückgängig gemacht werden!',
+      header: 'Mandant löschen',
+      icon: '',
+      defaultFocus: 'accept',
+      accept: confirmDelete,
+      reject: close,
+    });
+  };
+
   return (
     <div className="page-content column">
+      <ConfirmDialog style={{ maxWidth: 400 }} />
+      {deleting && <Loader text="Kunde wird gelöscht" />}
       <Toast ref={toast} />
       <Dialog onHide={() => setInspecting(false)} style={{ maxWidth: '90vw', minHeight: '90vh' }} visible={inspecting}>
         {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
       </Dialog>
+      <OverlayPanel ref={op}>
+        <ContextButton label="Kunde löschen" onClick={deleteUser} />
+      </OverlayPanel>
       <Row alignItems="center">
         <Row alignItems="center" gap={8}>
           <UserAvatarOther
@@ -222,7 +253,8 @@ export default function Mandant({ user }: Props) {
           </Column>
         </Row>
         <Row gap={8} width="fit-content">
-          {hasChanges && <Button label="Speichern" mode="secondary" onClick={handleSave} size="small" />}
+          <Button label="Aktionen" mode="tertiary" onClick={(e) => op.current?.toggle(e)} size="small" />
+          <Button disabled={!hasChanges} label="Speichern" mode="secondary" onClick={handleSave} size="small" />
         </Row>
       </Row>
       <DividerBlock height={1} />

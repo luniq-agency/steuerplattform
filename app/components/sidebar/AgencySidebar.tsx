@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { useAuth } from '@/app/context/AuthContext';
 import NotificationButton from '../notifications/NotificationButton';
 import { UserAvatar } from '../UserAvatar';
-import { Briefcase, BriefcaseBusiness, ChartArea, CheckCheck, File, FileQuestion, Files, Folder, Grid, Grid2X2, LogOut, Receipt, Repeat, Users } from 'lucide-react';
+import { Briefcase, BriefcaseBusiness, Calendar, ChartArea, CheckCheck, File, FileQuestion, Files, Folder, Grid, Grid2X2, LogOut, Receipt, Repeat, Users } from 'lucide-react';
 import Column from '../layout/Column';
 import Row from '../layout/Row';
 
@@ -50,6 +50,7 @@ export default function AgencySidebar() {
             <strong>Vorgänge</strong>
           </label>
           <AdminSidebarButton icon={CheckCheck} label="Alle Vorgänge" target="/agentur/vorgaenge" />
+          <AdminSidebarButton icon={Calendar} label="Kalender" target="/agentur/kalender" />
         </div>
         <div className={styles.sidebarContent}>
           <AdminSidebarButton action={logout} icon={LogOut} label="Abmelden" />

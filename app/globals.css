@@ -9,7 +9,7 @@
   --background-active: #ececef;
   --foreground: #171717;
 
-  --primary: rgb(214, 107, 80);
+  --primary: #d66b50;
   --primary-10: rgba(214, 107, 80, 0.1);
   --primary-dark: #091e7c;
   --secondary: #48f5b6;
@@ -475,6 +475,26 @@ p {
   padding: 0px;
 }
 
+.p-confirm-dialog-accept {
+  background-color: var(--primary);
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  padding: 8px 16px;
+}
+
+.p-confirm-dialog-message {
+  margin: 0px;
+}
+
+.p-confirm-dialog-reject {
+  background-color: #ebebeb;
+  border-radius: 8px;
+  color: black;
+  font-size: 14px;
+  padding: 8px 16px;
+}
+
 .p-column-title {
   color: var(--text-tertiary);
   font-size: 11px;
@@ -537,9 +557,10 @@ p-datepicker-next {
 }
 
 .p-dock-action {
-  background-color: var(--primary);
+  background: linear-gradient(90deg, var(--primary), #b93616);
   border: 1px solid var(--border-color);
   border-radius: 20px;
+  color: white;
   cursor: pointer;
 }
 

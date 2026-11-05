@@ -55,7 +55,7 @@ export default function AgenturVorgänge({ onSubmit }: Props) {
     // TEMPLATES
     const clientTemplate = (rowData: Vorgang) => {
         const mandant = mandanten.find((m) => m.id === rowData.user)
-        return <span>{mandant?.vorname} {mandant?.nachname}</span>
+        return <span>{mandant?.nachname}, {mandant?.vorname}</span>
     }
 
     const statusTemplate = (rowData: Ticket) => {

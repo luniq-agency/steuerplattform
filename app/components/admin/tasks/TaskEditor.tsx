@@ -193,7 +193,7 @@ export default function TaskEditor({ task }: Props) {
     (updateType === 'transfer' && !updateTarget);
 
   return (
-    <div className="row gap-m width-100">
+    <Row className="mobile-column">
       <Toast ref={toast} />
       <Dialog draggable={false} onHide={() => setVisible(false)} style={{ minHeight: 600, maxWidth: 1000 }} visible={visible}>
         {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
@@ -252,10 +252,9 @@ export default function TaskEditor({ task }: Props) {
           </div>
         )}
       </DashboardContainer>
-
       <DashboardContainer header="Verlauf">
         <Timeline align="left" content={customContent} marker={customMarker} value={updates} />
       </DashboardContainer>
-    </div>
+    </Row>
   );
 }

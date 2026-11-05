@@ -1,0 +1,16 @@
+.loader {
+  align-items: center;
+  backdrop-filter: blur(25px);
+  display: flex;
+  flex-direction: column;
+  font-size: 18px;
+  font-weight: 700;
+  gap: 1rem;
+  height: 100vh;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  z-index: 9999;
+}

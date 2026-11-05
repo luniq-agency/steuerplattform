@@ -121,6 +121,12 @@ export const invoice_status = [
     value: 'entwurf',
   },
   {
+    bg: 'grey',
+    color: 'black',
+    label: 'Offen',
+    value: 'offen',
+  },
+  {
     bg: '#EED7FC',
     color: '#50253F',
     label: 'Gesendet',

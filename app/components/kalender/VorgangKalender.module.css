@@ -1,0 +1,139 @@
+.kalender {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  border: 1px solid var(--border-color, #e5e5e5);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.wochentag {
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  opacity: 0.6;
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
+}
+
+.tag {
+  min-height: 110px;
+  padding: 6px;
+  border-right: 1px solid var(--border-color, #e5e5e5);
+  border-bottom: 1px solid var(--border-color, #e5e5e5);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.tag:nth-child(7n) {
+  border-right: none;
+}
+
+.fremderMonat {
+  background: #fafafa;
+}
+
+.fremderMonat .tagNummer {
+  opacity: 0.35;
+}
+
+.tagNummer {
+  font-size: 13px;
+  font-weight: 500;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.heute .tagNummer {
+  background: var(--foreground, #1f1f1f);
+  color: #fff;
+}
+
+.eintraege {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.eintrag {
+  font: inherit;
+  font-size: 12px;
+  text-align: left;
+  padding: 3px 6px;
+  border: none;
+  border-left: 3px solid #c4c4c4;
+  border-radius: 4px;
+  background: #f4f4f2;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: background 120ms ease;
+}
+
+.eintrag:hover {
+  background: #e9e9e6;
+}
+
+.eintragTitel {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ueberfaellig {
+  background: #fdeaea;
+  color: #b42318;
+}
+
+.mehr {
+  font-size: 11px;
+  opacity: 0.6;
+  padding-left: 4px;
+}
+
+.navButton {
+  background: #fff;
+  color: var(--foreground);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--border-color, #e5e5e5);
+  border-radius: 8px;
+  padding: 0px;
+  cursor: pointer;
+}
+
+.monatTitel {
+  min-width: 170px;
+  text-align: center;
+  margin: 0;
+}
+
+/* Schmale Bildschirme: nur Punkte statt Titel */
+@media (max-width: 767px) {
+  .tag {
+    min-height: 64px;
+  }
+  .eintrag {
+    font-size: 0;
+    height: 6px;
+    padding: 0;
+    border-left-width: 0;
+    background: currentColor;
+  }
+}
+
+.wrapper {
+  width: 100%;
+}

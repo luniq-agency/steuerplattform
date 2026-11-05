@@ -105,8 +105,8 @@ export default function AgenturDashboard() {
             <DividerBlock height={1} />
             <Grid columns={3} gap={16}>
                 <StatCard header="Mandanten im Bestand" value={clients.length} />
-                <StatCard header="Unvollständig" value={incomplete.length} />
-                <StatCard header="Bereit zur Übergabe" value={complete.length} />
+                <StatCard header="Offene Vorgänge" value={incomplete.length} />
+                <StatCard header="Abgeschlossene Vorgänge" value={complete.length} />
             </Grid>
             <DividerBlock height={1} />
             <Grid columns={2} gap={16} grow>
@@ -137,7 +137,7 @@ export default function AgenturDashboard() {
                     <VorgangTable mode="short" users={clients} vorgaenge={open} />
                 </DashboardContainer>
                 <DashboardContainer>
-                    <h2>Bereit zur Übergabe</h2>
+                    <h2>Abgeschlossene Vorgänge</h2>
                     <DividerBlock height={1} />
                     <VorgangTable mode="short" users={clients} vorgaenge={completed} />
                 </DashboardContainer>
