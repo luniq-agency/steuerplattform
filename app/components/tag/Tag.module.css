@@ -1,0 +1,10 @@
+.tag {
+  align-items: center;
+  border-radius: 6;
+  display: flex;
+  font-size: 12;
+  gap: 4;
+  padding: 2px 8px;
+  white-space: nowrap;
+  width: fit-content;
+}

@@ -1,9 +1,16 @@
 'use client';
 
 
+import { documentsLoadUser } from "@/app/actions/documents";
+import { foldersLoadUser } from "@/app/actions/folders";
 import { userUpdate } from "@/app/actions/users";
+import { fetchVorgaengeByClient } from "@/app/actions/vorgang/vorgang";
 import Button from "@/app/components/buttons/Button";
 import DividerBlock from "@/app/components/DividerBlock";
+import DocumentExplorer from "@/app/components/documents/DocumentExplorer";
+import DocumentPreviewer from "@/app/components/documents/DocumentPreviewer";
+import DocumentUploader from "@/app/components/documents/DocumentUploader";
+import DocumentViewer from "@/app/components/documents/DocumentViewer";
 import { DatePicker } from "@/app/components/forms/datepicker/DatePicker";
 import { NumberInputLabel, TextAreaLabel, TextInputLabel } from "@/app/components/forms/FormElements";
 import { SelectLabel } from "@/app/components/inputs/Select";
@@ -14,8 +21,12 @@ import Row from "@/app/components/layout/Row";
 import { UserAvatarOther } from "@/app/components/UserAvatar";
 import { family_options, job_categories } from "@/app/constants/Constants";
 import { User } from "@/app/types/Database";
+import { Dokument, DokumentOrdner } from "@/app/types/docs";
+import { Vorgang } from "@/app/types/vorgang";
 import { formatDate, parseDate, toDateString } from "@/app/utils/formats";
 import { useRouter } from "next/navigation";
+import { Dialog } from "primereact/dialog";
+import { TabPanel, TabView } from "primereact/tabview";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 
@@ -27,6 +38,11 @@ export default function Mandant({ user }: Props) {
   const saveRef = useRef<(() => void) | null>(null);
   const router = useRouter();
   const toast = useRef<Toast | null>(null);
+
+  // DATA
+  const [docs, setDocs] = useState<Dokument[]>();
+  const [folders, setFolders] = useState<DokumentOrdner[]>([]);
+  const [tickets, setTickets] = useState<Vorgang[]>([]);
 
   // STANDARD
   const [initial, setInitial] = useState(() => ({
@@ -66,7 +82,12 @@ export default function Mandant({ user }: Props) {
   const [telefon, setTelefon] = useState(initial.telefon);
   const [vorname, setVorname] = useState(initial.vorname);
 
+  // SELECTIONS
+  const [selectedDoc, setSelectedDoc] = useState<Dokument | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<DokumentOrdner | null>(null);
+
   // STATES
+  const [inspecting, setInspecting] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const current = {
@@ -88,6 +109,23 @@ export default function Mandant({ user }: Props) {
     vorname,
   };
 
+  // INIT
+  useEffect(() => {
+    if (!user) return;
+    const fetchData = async () => {
+      const [docRes, folderRes, ticketRes] = await Promise.all([
+        documentsLoadUser(user.id),
+        foldersLoadUser(user.id),
+        fetchVorgaengeByClient(user.id),
+      ])
+      setDocs(docRes);
+      setFolders(folderRes);
+      setTickets(ticketRes);
+    }
+    fetchData()
+  }, [user])
+
+  // CHECK
   const hasChanges = (Object.keys(initial) as (keyof typeof initial)[]).some(
     (key) => initial[key] !== current[key]
   );
@@ -124,6 +162,7 @@ export default function Mandant({ user }: Props) {
 
   const job = job_categories.find((t) => t.value === user.job_status);
 
+  // ACTIONS
   const handleSave = async () => {
     setSaving(true);
     const result = await userUpdate(current, user.id);
@@ -145,11 +184,30 @@ export default function Mandant({ user }: Props) {
     setSaving(false);
   };
 
+  const refresh = async () => {
+    const [docRes, folderRes, ticketRes] = await Promise.all([
+      documentsLoadUser(user.id),
+      foldersLoadUser(user.id),
+      fetchVorgaengeByClient(user.id),
+    ])
+    setDocs(docRes);
+    setFolders(folderRes);
+    setTickets(ticketRes);
+  }
+
+  const selectDoc = (d: Dokument) => {
+    setSelectedDoc(d);
+    setInspecting(true);
+  }
+
   return (
     <div className="page-content column">
       <Toast ref={toast} />
+      <Dialog onHide={() => setInspecting(false)} style={{ maxWidth: '90vw', minHeight: '90vh' }} visible={inspecting}>
+        {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
+      </Dialog>
       <Row alignItems="center">
-        <Row alignItems="center">
+        <Row alignItems="center" gap={8}>
           <UserAvatarOther
             backgroundColor={job?.bg}
             color={job?.color}
@@ -164,51 +222,67 @@ export default function Mandant({ user }: Props) {
           </Column>
         </Row>
         <Row gap={8} width="fit-content">
-          {hasChanges && <Button label="Speichern" mode="secondary" onClick={handleSave} size="small"/>}
+          {hasChanges && <Button label="Speichern" mode="secondary" onClick={handleSave} size="small" />}
         </Row>
       </Row>
-      <DividerBlock height={2} />
-      <DashboardContainer>
-        <h2>Allgemeine Angaben</h2>
-        <DividerBlock height={1} />
-        <Grid columns={2} gap={16}>
-          <TextInputLabel label="Vorname" onChange={setVorname} value={vorname} />
-          <TextInputLabel label="Nachname" onChange={setNachname} value={nachname} />
-          <DatePicker label="Geburtsdatum" onChange={setGeburtsdatum} value={geburtsdatum} />
-        </Grid>
-      </DashboardContainer>
       <DividerBlock height={1} />
-      <DashboardContainer>
-        <h2>Anschrift & Kontakt</h2>
-        <DividerBlock height={1} />
-        <Grid columns={2} gap={16}>
-          <TextInputLabel label="Strasse" onChange={setStrasse} value={strasse} />
-          <TextInputLabel label="Hausnummer" onChange={setHausnummer} value={hausnummer} />
-          <TextInputLabel label="PLZ" onChange={setPlz} value={plz} />
-          <TextInputLabel label="Ort" onChange={setOrt} value={ort} />
-          <TextInputLabel label="E-Mail" onChange={setEmail} value={email} />
-          <TextInputLabel label="Telefon" onChange={setTelefon} value={telefon} />
-        </Grid>
-      </DashboardContainer>
-      <DividerBlock height={1} />
-      <DashboardContainer>
-        <h2>Steuern & Berufsstatus</h2>
-        <DividerBlock height={1} />
-        <Grid columns={2} gap={16}>
-          <SelectLabel label="Berufsstatus" onChange={setBerufsstatus} optionLabel="label" optionValue="value" options={job_categories} value={berufsstatus} />
-          <TextInputLabel label="Beruf" onChange={setBeruf} value={beruf} />
-          <SelectLabel label="Familienstand" onChange={setFamilienstand} optionLabel="label" optionValue="value" options={family_options} value={familienstand} />
-          <NumberInputLabel label="Anzahl Kinder" onNumberChange={setKinder} numberValue={kinder} />
-          <TextInputLabel label="Steuer-ID" onChange={setSteuerId} value={steuerId} />
-          <TextInputLabel label="IBAN" onChange={setIban} value={iban} />
-        </Grid>
-      </DashboardContainer>
-      <DividerBlock height={1} />
-      <DashboardContainer>
-        <h2>Sonstiges</h2>
-        <DividerBlock height={1} />
-        <TextAreaLabel label="Notizen" onChange={setNotizen} value={notizen} />
-      </DashboardContainer>
+      <TabView>
+        <TabPanel header="Stammdaten">
+          <DashboardContainer>
+            <h2>Allgemeine Angaben</h2>
+            <DividerBlock height={1} />
+            <Grid columns={2} gap={16}>
+              <TextInputLabel label="Vorname" onChange={setVorname} value={vorname} />
+              <TextInputLabel label="Nachname" onChange={setNachname} value={nachname} />
+              <DatePicker label="Geburtsdatum" onChange={setGeburtsdatum} value={geburtsdatum} />
+            </Grid>
+          </DashboardContainer>
+          <DividerBlock height={1} />
+          <DashboardContainer>
+            <h2>Anschrift & Kontakt</h2>
+            <DividerBlock height={1} />
+            <Grid columns={2} gap={16}>
+              <TextInputLabel label="Strasse" onChange={setStrasse} value={strasse} />
+              <TextInputLabel label="Hausnummer" onChange={setHausnummer} value={hausnummer} />
+              <TextInputLabel label="PLZ" onChange={setPlz} value={plz} />
+              <TextInputLabel label="Ort" onChange={setOrt} value={ort} />
+              <TextInputLabel label="E-Mail" onChange={setEmail} value={email} />
+              <TextInputLabel label="Telefon" onChange={setTelefon} value={telefon} />
+            </Grid>
+          </DashboardContainer>
+          <DividerBlock height={1} />
+          <DashboardContainer>
+            <h2>Steuern & Berufsstatus</h2>
+            <DividerBlock height={1} />
+            <Grid columns={2} gap={16}>
+              <SelectLabel label="Berufsstatus" onChange={setBerufsstatus} optionLabel="label" optionValue="value" options={job_categories} value={berufsstatus} />
+              <TextInputLabel label="Beruf" onChange={setBeruf} value={beruf} />
+              <SelectLabel label="Familienstand" onChange={setFamilienstand} optionLabel="label" optionValue="value" options={family_options} value={familienstand} />
+              <NumberInputLabel label="Anzahl Kinder" onNumberChange={setKinder} numberValue={kinder} />
+              <TextInputLabel label="Steuer-ID" onChange={setSteuerId} value={steuerId} />
+              <TextInputLabel label="IBAN" onChange={setIban} value={iban} />
+            </Grid>
+          </DashboardContainer>
+          <DividerBlock height={1} />
+          <DashboardContainer>
+            <h2>Sonstiges</h2>
+            <DividerBlock height={1} />
+            <TextAreaLabel label="Notizen" onChange={setNotizen} value={notizen} />
+          </DashboardContainer>
+        </TabPanel>
+        <TabPanel header="Dokumente">
+          <Row justifyContent="space-between">
+            <h2>Dokumente</h2>
+            <DocumentUploader folder={selectedFolder?.id || null} onUpload={refresh} owner={user.id} />
+          </Row>
+          <DividerBlock height={1} />
+          <DocumentExplorer documents={docs || []} folders={folders || []} onDelete={refresh} onSelectDoc={(v) => selectDoc(v as Dokument)} onSelectFolder={refresh} owner={user.id} />
+        </TabPanel>
+        <TabPanel header="Vorgänge">
+
+        </TabPanel>
+      </TabView>
+
     </div>
   );
 }

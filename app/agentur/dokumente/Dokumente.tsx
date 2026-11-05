@@ -13,6 +13,7 @@ import SkeletonGrid from '../../components/ui/loading/SkeletonGrid';
 import { Dokument, DokumentOrdner } from '@/app/types/docs';
 import { fetchDokumenteAgency } from '@/app/actions/agency/agencyDokumente';
 import { User } from '@/app/types/Database';
+import Row from '@/app/components/layout/Row';
 
 export default function Dokumente() {
   const { userProfile } = useAuth();
@@ -82,7 +83,7 @@ export default function Dokumente() {
       >
         {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
       </Dialog>
-      <div className="row space-between">
+      <Row alignItems='center' justifyContent='space-between'>
         <h1>Dokumente</h1>
         <DocumentUploader
           folder={selectedFolder?.id || null}
@@ -91,7 +92,7 @@ export default function Dokumente() {
           owner={userProfile.id}
           users={mandanten}
         />
-      </div>
+      </Row>
       <DividerBlock height={2} />
       <DocumentExplorer
         documents={documents}

@@ -86,6 +86,10 @@ export function UserSelectLabel({ label, onChange, options, value }: UserProps) 
 
   const matchedValue = userOptions.find((o) => o.id === value?.id) ?? null;
 
+  const userTemplate = (option: SelectItemOptionsType) => {
+
+  }
+
   return (
     <Column gap={4}>
       <label>{label}</label>

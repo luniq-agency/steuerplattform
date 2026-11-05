@@ -98,8 +98,8 @@ export default function Mandanten() {
                 </Row>
             </Row>
             <DividerBlock height={2} />
-            <SkeletonGrid columns="1fr 1fr 1fr" count={3} gap={16} height="72.5px" width="100%" />
-            <DividerBlock height={2} />
+            <SkeletonGrid columns="1fr 1fr 1fr" count={3} gap={16} height="94.73px" width="100%" />
+            <DividerBlock height={1} />
             <SkeletonGrid columns="1fr" count={1} gap={16} height="72.5px" width="100%" />
         </div>
     );
@@ -120,7 +120,7 @@ export default function Mandanten() {
                 <StatCard header="Neu diese Woche" icon={CircleCheck} value={neuWoche.length} />
                 <StatCard header="Neu diesen Monat" icon={CircleCheck} value={neuMonat.length} />
             </Row>
-            <DividerBlock height={2} />
+            <DividerBlock height={1} />
             <DataTable onRowClick={(e) => selectClient(e.data as User)} value={kunden} emptyMessage="Du hast noch keine Mandanten angelegt.">
                 <Column body={nameTemplate} header="Name" sortable sortField='name' />
                 <Column body={jobTemplate} header="Berufsstatus" />

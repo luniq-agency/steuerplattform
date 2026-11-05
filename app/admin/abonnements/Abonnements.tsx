@@ -6,9 +6,10 @@ import DividerBlock from "@/app/components/DividerBlock";
 import Row from "@/app/components/layout/Row";
 import { Abonnement } from "@/app/types/abos";
 import { User } from "@/app/types/Database";
-import { formatCurrency } from "@/app/utils/formats";
+import { formatCurrency, formatDate } from "@/app/utils/formats";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import { useEffect, useState } from "react";
@@ -17,6 +18,7 @@ interface Props {
     clients: User[];
 }
 export default function Abonnements({ clients }: Props) {
+    const router = useRouter();
 
     // DATA
     const [abos, setAbos] = useState<Abonnement[]>([]);
@@ -29,7 +31,17 @@ export default function Abonnements({ clients }: Props) {
         fetchData();
     }, [])
 
+    // ACTIONS
+    const selectAbo = (a: Abonnement) => {
+        router.push(`/admin/abonnements/${a.id}`);
+    }
+
     // TEMPLATES
+    const clientTemplate = (rowData: Abonnement) => {
+        const user = clients.find((c) => c.id == rowData.mandant);
+        if (!user) return <span>–</span>
+        return <span>{user.nachname}, {user.vorname}</span>
+    }
 
 
     return (
@@ -41,10 +53,11 @@ export default function Abonnements({ clients }: Props) {
                 </Link>
             </Row>
             <DividerBlock height={2} />
-            <DataTable rows={15} stripedRows value={abos}>
+            <DataTable onRowClick={(e) => selectAbo(e.data as Abonnement)} rows={15} stripedRows value={abos}>
                 <Column field="bezeichnung" header="Bezeichnung" />
-                <Column body={(rowData) => formatCurrency(rowData.betrag_brutto || 0)} header="Kunde" />
+                <Column body={clientTemplate} header="Kunde" />
                 <Column body={(rowData) => formatCurrency(rowData.betrag_brutto || 0)} header="Betrag" />
+                <Column body={(rowData) => formatDate(rowData.startdatum)} header="Startdatum" />
             </DataTable>
         </div>
     )

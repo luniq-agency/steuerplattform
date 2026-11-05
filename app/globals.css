@@ -3,7 +3,7 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #f6f6f4;
+  --background: #fcf8f5;
   --background-container: #ffffff;
   --background-sidebar: #ffffff;
   --background-active: #ececef;
@@ -29,8 +29,8 @@
   --error-bg: #ffeceb;
   --success-text: #249427;
   --success-bg: #dcfff1;
-  --warning-text: #946f00;
-  --warning-bg: #fef7c8;
+  --warning-text: #9a5b00;
+  --warning-bg: #fff4e5;
 
   --text-primary: #242424;
   --text-secondary: #4d4f53;
@@ -250,6 +250,18 @@ button {
   background-color: var(--background-container);
   border: 1px solid var(--border-color);
   border-radius: 20px;
+}
+
+.deadline {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--text-color-secondary, #a1a1aa);
+}
+.deadline--urgent {
+  color: var(--error-text); /* Rot wie im Screenshot */
+}
+.deadline--empty {
+  opacity: 0.5;
 }
 
 .disabled {
@@ -500,6 +512,8 @@ p-datepicker-next {
 }
 
 .p-dialog-content {
+  display: flex;
+  flex-direction: column;
   padding: 1rem;
 }
 
@@ -687,6 +701,7 @@ p-datepicker-next {
   background-color: var(--background);
   display: flex;
   flex-direction: column;
+  height: 100%;
   padding: var(--padding-l);
   overflow-y: auto;
   width: 100%;

@@ -2,7 +2,7 @@
 
 import { SecondaryButton } from '@/app/components/buttons/Buttons';
 import { TextAreaLabel, TextInputLabel } from '@/app/components/forms/FormElements';
-import { SelectLabel, UserSelectLabel } from '@/app/components/inputs/Select';
+import { SelectLabel } from '@/app/components/inputs/Select';
 import { ticket_options } from '@/app/constants/Constants';
 import { useAuth } from '@/app/context/AuthContext';
 import { useEffect, useRef, useState } from 'react';
@@ -26,6 +26,8 @@ import { fetchClientsForAgent } from '@/app/actions/agency/mandanten';
 import DocumentUploader from '@/app/components/documents/DocumentUploader';
 import { uploadFileDirectly } from '@/app/actions/media/uploads';
 import { sanitizeFileName } from '@/app/utils/sanitize';
+import { UserSelectLabel } from '@/app/components/inputs/select/UserSelectLabel';
+import { DatePicker } from '@/app/components/forms/datepicker/DatePicker';
 
 type LokaleDatei = { id: string; file: File; name: string };
 
@@ -44,6 +46,7 @@ export default function AgenturVorgangNeu() {
   const [visible, setVisible] = useState(false);
 
   // INPUTS
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [lokaleDateien, setLokaleDateien] = useState<LokaleDatei[]>([]);
   const [selectedDocs, setSelectedDocs] = useState<Dokument[]>([]);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
@@ -129,6 +132,7 @@ export default function AgenturVorgangNeu() {
         beschreibung: ticketDescription,
         created_by: userProfile.id,
         dokumente: dokumentIds,
+        due_date: dueDate || undefined,
         kategorie: ticketCategory,
         last_updated: new Date(),
         opened_advact: false,
@@ -220,7 +224,7 @@ export default function AgenturVorgangNeu() {
             options={ticket_options}
             value={ticketCategory}
           />
-          <div />
+          <DatePicker label="Frist" onChange={setDueDate} value={dueDate} />
           <TextAreaLabel label="Beschreibung" onChange={setTicketDescription} rows={5} value={ticketDescription} />
           <div />
         </Grid>

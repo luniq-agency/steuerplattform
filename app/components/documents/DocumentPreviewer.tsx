@@ -50,5 +50,5 @@ export default function DocumentPreviewer({ doc }: Props) {
     );
   };
 
-  return <div style={{ height: '100%', width: '100%' }}>{vorschau()}</div>;
+  return <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1, height: "100%", width: '100%' }}>{vorschau()}</div>;
 }

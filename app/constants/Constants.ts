@@ -300,6 +300,11 @@ export const ticket_status = [
     value: 'offen',
   },
   {
+    label: 'Bereit zur Übergabe',
+    severity: 'info',
+    value: 'ready',
+  },
+  {
     label: 'Warten auf Antwort',
     severity: 'warning',
     value: 'answered',
