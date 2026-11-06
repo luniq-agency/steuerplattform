@@ -7,6 +7,7 @@ import { Metadata } from 'next';
 import { agencyOverview } from '@/app/actions/stats';
 import { usersLoadAll } from '@/app/actions/users';
 import { agentsLoad } from '@/app/actions/users/agent';
+import Row from '@/app/components/layout/Row';
 
 export const metadata: Metadata = {
   title: 'Agenturen | ADVACT',
@@ -18,14 +19,12 @@ export default async function AdminAgenciesPage() {
 
   return (
     <div className="page-content">
-      <div className="row space-between">
+      <Row alignItems='center' justifyContent='space-between'>
         <h1 className={styles.h1}>Agenturen</h1>
         <AdminCreateAgency />
-      </div>
+      </Row>
       <DividerBlock height={2} />
-      <div className="container">
-        <AgencyTable users={users} />
-      </div>
+      <AgencyTable users={users} />
     </div>
   );
 }

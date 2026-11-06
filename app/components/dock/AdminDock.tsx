@@ -1,6 +1,6 @@
 "use client"
 
-import { ChartArea, Home, List, Receipt, Repeat, Repeat1, Users } from 'lucide-react';
+import { Briefcase, ChartArea, Home, List, Receipt, Repeat, Repeat1, Users } from 'lucide-react';
 import { Dock } from 'primereact/dock';
 import { useRouter } from 'next/navigation';
 import type { MenuItem } from 'primereact/menuitem';
@@ -22,6 +22,12 @@ export default function AdminDock() {
             icon: () => <Users strokeWidth={1.5} />,
             command: () => router.push('/admin/kunden'),
             target: '/admin/kunden'
+        },
+        {
+            label: 'Agenturisten',
+            icon: () => <Briefcase strokeWidth={1.5} />,
+            command: () => router.push('/admin/agenturen'),
+            target: '/admin/agenturen'
         },
         {
             label: 'Rechnungen',

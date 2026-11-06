@@ -5,6 +5,11 @@ import { clientsLoadAgency } from '@/app/actions/clients';
 import { agencyLoad } from '@/app/actions/agency';
 import { usersLoadAll } from '@/app/actions/users';
 import AgencyActions from '@/app/components/agency/AgencyActions';
+import Row from '@/app/components/layout/Row';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
+import AgencyTable from '@/app/components/admin/agency/AgencyTable';
+import AgencyClientTable from '@/app/components/users/AgencyClientTable';
 
 export const metadata: Metadata = {
   title: 'Agentur | ADVACT',
@@ -17,36 +22,17 @@ export default async function AdminAgencyPage({ params }: { params: Promise<{ id
   const clients = await clientsLoadAgency(id);
   const users = await usersLoadAll();
 
-  const items = [
-    {
-      label: 'Agenturen',
-      url: '/admin/agenturen',
-    },
-    {
-      label: `${agency.nachname}, ${agency.vorname}`,
-    },
-  ];
-
-  const home = { icon: 'pi pi-home', url: '/admin' };
 
   if (!agency) return;
 
   return (
-    <div className="page-content">
-      <BreadCrumb home={home} model={items} />
-      <DividerBlock height={1} />
-      <div className="row space-between align-center">
-        <div className="column">
-          <h1>
-            {agency.nachname}, {agency.vorname}
-          </h1>
-          <span className="meta">{agency.firma}</span>
-        </div>
+    <div className="page-content" style={{ padding: 16 }}>
+      <Row alignItems='center' justifyContent='space-between'>
+        <h1>{agency.nachname}, {agency.vorname}</h1>
         <AgencyActions agent={agency} />
-      </div>
+      </Row>
       <DividerBlock height={1} />
-      <div className="dashboard-container">
-      </div>
-    </div>
+      <AgencyClientTable agent={agency} clients={clients} mode="admin" />
+    </div >
   );
 }

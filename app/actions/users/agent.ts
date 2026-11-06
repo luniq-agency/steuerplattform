@@ -12,7 +12,7 @@ export async function agentCreate(payload: Partial<User>): Promise<User> {
 
 export async function agentsLoad(): Promise<User[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('user').select('*').eq('rolle', 'agent');
+  const { data, error } = await supabase.from('user').select('*').eq('rolle', 'agency');
   if (error) throw new Error(error.message);
   return data || [];
 }

@@ -20,14 +20,6 @@ export default function AgencyTable({ users }: Props) {
 
     return (
       <div className="row gap-xs align-center">
-        <UserAvatarOther
-          backgroundColor="var(--primary)"
-          color="white"
-          fontSize={12}
-          height={32}
-          user={agent}
-          width={32}
-        />
         <span>
           {rowData.nachname}, {rowData.vorname}
         </span>

@@ -1,15 +1,14 @@
 'use client';
 
-import { agencyCreate } from '@/app/actions/agency';
-import { userCreate } from '@/app/actions/users';
 import { agentCreate } from '@/app/actions/users/agent';
 import { useAuth } from '@/app/context/AuthContext';
 import { useRouter } from 'next/navigation';
-import { Button } from 'primereact/button';
 import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { useRef, useState } from 'react';
+import Button from '../../buttons/Button';
+import { Plus } from 'lucide-react';
 
 export default function AdminCreateAgency() {
   const toast = useRef<Toast | null>(null);
@@ -96,20 +95,18 @@ export default function AdminCreateAgency() {
             <InputText onChange={(e) => setAgentCompany(e.target.value)} value={agentCompany} />
           </div>
           <Button
-            className="button-primary"
             disabled={!agentVorname || !agentNachname || !agentCompany || !agentEmail || submitting}
-            icon={submitting ? 'pi pi-spin pi-spinner' : undefined}
             label="Einladung versenden"
             onClick={sendInvite}
-            style={{ width: 'fit-content' }}
           />
         </div>
       </Dialog>
       <Button
-        className="button-primary"
-        icon="pi pi-plus"
+        icon={Plus}
         label="Agentur erstellen"
+        mode="secondary"
         onClick={() => setVisible(true)}
+        size="small"
       />
     </>
   );
