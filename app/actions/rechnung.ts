@@ -59,8 +59,8 @@ export async function saveInvoice(
       index: p.index,
       beschreibung: p.beschreibung,
       menge: p.menge,
-      einzelbetrag: p.einzelpreis,
-      gesamtbetrag: p.gesamtpreis,
+      einzelpreis: p.einzelpreis,
+      gesamtpreis: p.gesamtpreis,
     }));
 
     const { error } = await supabase.from('rechnungsposten').upsert(rows, { onConflict: 'id' });

@@ -53,6 +53,10 @@ export default function AgenturVorgänge({ onSubmit }: Props) {
     };
 
     // TEMPLATES
+    const actionTemplate = (rowData: Vorgang) => {
+
+    }
+
     const clientTemplate = (rowData: Vorgang) => {
         const mandant = mandanten.find((m) => m.id === rowData.user)
         return <span>{mandant?.nachname}, {mandant?.vorname}</span>
@@ -66,6 +70,8 @@ export default function AgenturVorgänge({ onSubmit }: Props) {
     // FILTER
     const completed = tickets.filter((t) => t.status === 'abgeschlossen');
     const open = tickets.filter((t) => t.status === 'offen' || t.status === 'neu');
+
+    // ACTIONS
 
     return (
         <>
@@ -99,6 +105,7 @@ export default function AgenturVorgänge({ onSubmit }: Props) {
                 <Column body={clientTemplate} header="Mandant" />
                 <Column body={(rowData) => formatDate(rowData.created_at)} header="Erstellt am" />
                 <Column body={statusTemplate} header="Status" />
+                <Column body={statusTemplate} header="" />
             </DataTable>
         </>
     );
