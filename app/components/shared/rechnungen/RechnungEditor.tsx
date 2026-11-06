@@ -260,7 +260,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const adminMode = userProfile?.rolle == 'admin'
 
     return (
-        <div className="content-wrapper" style={{ height: '100%', padding: 16, paddingBottom: 80 }}>
+        <div className="content-wrapper" style={{ height: '100%', padding: 16, paddingBottom: 120 }}>
             <Toast ref={toast} />
             <Row justifyContent="space-between">
                 <h1>{header}</h1>

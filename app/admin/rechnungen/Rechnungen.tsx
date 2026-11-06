@@ -1,6 +1,6 @@
 'use client';
 
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 import { useAuth } from '@/app/context/AuthContext';
 import { User } from '@/app/types/Database';
 import DividerBlock from '@/app/components/DividerBlock';
@@ -21,6 +21,7 @@ interface Props {
 }
 export default function Rechnungen({ clients, invoices }: Props) {
   const { userProfile } = useAuth();
+  const router = useRouter();
   if (!userProfile) return;
 
   if (userProfile.rolle != 'admin') redirect('/admin');
@@ -38,6 +39,11 @@ export default function Rechnungen({ clients, invoices }: Props) {
     return <Tag label={status.label} />
   }
 
+  // ACTIONS
+  const select = (rowData: Rechnung) => {
+    router.push(`/admin/rechnungen/${rowData.id}`)
+  }
+
   return (
     <div className="page-content">
       <Row alignItems="center" justifyContent='space-between'>
@@ -47,7 +53,7 @@ export default function Rechnungen({ clients, invoices }: Props) {
         </Link>
       </Row>
       <DividerBlock height={1} />
-      <DataTable value={invoices}>
+      <DataTable onRowClick={(v => select(v.data as Rechnung))} value={invoices}>
         <Column field="rechnungsnummer" header="#" />
         <Column body={clientTemplate} header="Kunde" />
         <Column body={(rowData) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" />
