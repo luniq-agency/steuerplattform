@@ -1,3 +1,9 @@
+export const esc = (value: unknown) =>
+  String(value ?? '').replace(
+    /[&<>"']/g,
+    (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!
+  );
+
 export function wrapEmailTemplate(bodyHtml: string): string {
   return `
 <div style="background-color: #f6f6f4; padding: 40px 20px; font-family: Arial, Helvetica, sans-serif;">

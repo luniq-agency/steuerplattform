@@ -60,18 +60,18 @@ export async function stripeKundeSicherstellen(
 }
 
 /** Steuersatz (z. B. 19) in Stripe finden oder einmalig anlegen. */
-export async function steuersatzId(prozent: number): Promise<string> {
+export async function steuersatzId(prozent: number, inklusive = false): Promise<string> {
   const vorhanden = await stripe().taxRates.list({ active: true, limit: 100 });
   const treffer = vorhanden.data.find(
-    (t) => t.percentage === prozent && !t.inclusive && t.country === 'DE'
+    (t) => t.percentage === prozent && t.inclusive === inklusive && t.country === 'DE'
   );
   if (treffer) return treffer.id;
 
   const neu = await stripe().taxRates.create({
     display_name: 'USt.',
-    description: `Umsatzsteuer ${prozent} %`,
+    description: `Umsatzsteuer ${prozent} %${inklusive ? ' (inkl.)' : ''}`,
     percentage: prozent,
-    inclusive: false,
+    inclusive: inklusive,
     country: 'DE',
     jurisdiction: 'DE',
   });

@@ -21,7 +21,7 @@ export default function Home() {
             <Column alignItems='center' gap={0} justifyContent='center'>
               <Image alt="ADVACT Logo" height={30} src="/advact-logo-black.png" width={80} />
               <DividerBlock height={1} />
-              <h2>Anmelden</h2>
+              <h1 className='h1-fancy'>Anmelden</h1>
               <DividerBlock height={0.5} />
               <span>Melde dich jetzt mit deinem ADVACT-Konto an.</span>
               <DividerBlock height={2} />

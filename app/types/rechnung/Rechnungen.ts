@@ -15,6 +15,7 @@ export type Rechnung = {
   mandant: number;
   ort: string;
   plz: string;
+  preise_inklusive: boolean;
   rechnungsdatum: Date;
   rechnungsnummer: string;
   sendedatum: Date;

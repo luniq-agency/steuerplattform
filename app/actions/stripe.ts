@@ -13,6 +13,7 @@ export type AdminRechnungInput = {
   bezahlziel: string | null; // 'YYYY-MM-DD'
   adresse: Adresse;
   idempotencyKey: string;    // pro Rechnung im Browser erzeugt, verhindert Doppelversand
+  preiseInklusive: boolean;
 };
 
 export type AdminRechnungErgebnis = {
@@ -49,7 +50,7 @@ export async function adminCreateInvoice(input: AdminRechnungInput): Promise<Adm
     const customerId = await stripeKundeSicherstellen(supabase, mandant, input.adresse);
 
     // 2. Rechnung als Entwurf (bei Wiederholung liefert der Idempotency-Key dieselbe Rechnung)
-    const taxRate = await steuersatzId(Math.round(input.steuersatz * 100));
+    const taxRate = await steuersatzId(Math.round(input.steuersatz * 100), input.preiseInklusive);
     const erstellt = await stripe().invoices.create(
       {
         customer: customerId,

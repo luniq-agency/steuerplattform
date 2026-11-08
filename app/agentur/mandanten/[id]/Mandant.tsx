@@ -26,6 +26,7 @@ import { User } from "@/app/types/Database";
 import { Dokument, DokumentOrdner } from "@/app/types/docs";
 import { Vorgang } from "@/app/types/vorgang";
 import { formatDate, parseDate, toDateString } from "@/app/utils/formats";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
@@ -260,6 +261,11 @@ export default function Mandant({ user }: Props) {
       <DividerBlock height={1} />
       <TabView>
         <TabPanel header="Stammdaten">
+          <Row justifyContent="space-between">
+            <h2>Stammdaten</h2>
+            <DocumentUploader folder={selectedFolder?.id || null} onUpload={refresh} owner={user.id} />
+          </Row>
+          <DividerBlock height={1} />
           <DashboardContainer>
             <h2>Allgemeine Angaben</h2>
             <DividerBlock height={1} />
@@ -311,7 +317,13 @@ export default function Mandant({ user }: Props) {
           <DocumentExplorer documents={docs || []} folders={folders || []} onDelete={refresh} onSelectDoc={(v) => selectDoc(v as Dokument)} onSelectFolder={refresh} owner={user.id} />
         </TabPanel>
         <TabPanel header="Vorgänge">
-
+          <Row justifyContent="space-between">
+            <h2>Vorgänge</h2>
+            <Link href={`/agentur/vorgaenge/neu?mandant=${user.id}`}>
+              <Button label="Neuer Vorgang" mode="secondary" size="small" />
+            </Link>
+          </Row>
+          <DividerBlock height={1} />
         </TabPanel>
       </TabView>
 

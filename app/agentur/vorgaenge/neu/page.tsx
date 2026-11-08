@@ -6,8 +6,9 @@ export const metadata: Metadata = {
     description: '',
 };
 
-export default function Page() {
-    return (
-        <AgenturVorgangNeu />
-    );
+export default async function Page({ searchParams }: { searchParams: Promise<{ mandant?: string }> }) {
+    const { mandant } = await searchParams;
+    const mandantId = mandant && /^\d+$/.test(mandant) ? Number(mandant) : null;
+
+    return <AgenturVorgangNeu vorauswahl={mandantId || undefined} />;
 }

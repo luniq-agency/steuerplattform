@@ -194,10 +194,13 @@ export default function DocumentUploader({ folder, onBehalf, onLocalFile, onUplo
               hinzufuegen(e.dataTransfer.files);
             }}
             style={{
+              alignItems: 'center',
               border: `2px dashed ${dragOver ? 'var(--foreground, #1f1f1f)' : 'var(--border-color, #e5e5e5)'}`,
               borderRadius: 12,
               cursor: 'pointer',
-              padding: 24,
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '40px 24px',
               textAlign: 'center',
               transition: 'border-color 150ms ease',
             }}

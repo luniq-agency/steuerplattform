@@ -1,7 +1,7 @@
 import './globals.css';
 import 'primeicons/primeicons.css';
 import 'primereact/resources/themes/lara-light-cyan/theme.css';
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Cactus_Classical_Serif, Inter, Space_Grotesk } from "next/font/google";
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationProvider';
 import PrimeReactLocaleProvider from './components/PrimeReactLocale';
@@ -16,9 +16,15 @@ const body = Inter({
   subsets: ["latin"],
 });
 
+const special = Cactus_Classical_Serif({
+  variable: "--font-special",
+  subsets: ["latin"],
+  weight: ['400'],
+});
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="de" className={`${body.variable} ${headings.variable} h-full antialiased`}>
+    <html lang="de" className={`${body.variable} ${headings.variable} ${special.variable} h-full antialiased`}>
       <body>
         <PrimeReactLocaleProvider>
           <AuthProvider>

@@ -31,7 +31,11 @@ import { DatePicker } from '@/app/components/forms/datepicker/DatePicker';
 
 type LokaleDatei = { id: string; file: File; name: string };
 
-export default function AgenturVorgangNeu() {
+interface Props {
+  vorauswahl?: number | null;
+}
+
+export default function AgenturVorgangNeu({ vorauswahl = null }: Props) {
   const { userProfile } = useAuth();
   const router = useRouter();
   const toast = useRef<Toast | null>(null);
@@ -62,6 +66,12 @@ export default function AgenturVorgangNeu() {
     if (!userProfile) return;
     fetchClientsForAgent(userProfile.id).then(setMandanten);
   }, [userProfile]);
+
+  useEffect(() => {
+    if (!vorauswahl || selectedUser || !mandanten.length) return;
+    const treffer = mandanten.find((m) => m.id === vorauswahl);
+    if (treffer) setSelectedUser(treffer);
+  }, [vorauswahl, mandanten]);
 
   // Dokumente und Ordner des aktuellen Besitzers laden
   useEffect(() => {

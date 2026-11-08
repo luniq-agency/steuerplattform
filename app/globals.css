@@ -10,6 +10,7 @@
   --foreground: #171717;
 
   --primary: #d66b50;
+  --primary-color: #d66b50;
   --primary-10: rgba(214, 107, 80, 0.1);
   --primary-dark: #091e7c;
   --secondary: #48f5b6;
@@ -350,6 +351,11 @@ h4 {
 
 h1 {
   font-size: 1.25rem;
+}
+
+.h1-fancy {
+  font-family: var(--font-special);
+  font-size: 2.5rem;
 }
 
 h2 {

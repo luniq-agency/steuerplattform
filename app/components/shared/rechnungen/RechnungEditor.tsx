@@ -25,6 +25,7 @@ import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
+import Column from "../../layout/Column";
 
 interface Props {
     admin?: boolean;
@@ -81,6 +82,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const [selectedUser, setSelectedUser] = useState('');
 
     // STATES
+    const [preiseInklusive, setPreiseInklusive] = useState(rechnung?.preise_inklusive ?? false);
     const [saving, setSaving] = useState(false);
 
     useEffect(() => {
@@ -134,9 +136,12 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const tempNetto = positions.reduce((sum, p) => sum + p.gesamtpreis, 0);
     const invoiceNetto = items.reduce((sum, p) => sum + p.gesamtpreis, 0)
 
-    const netto = rechnung ? invoiceNetto : tempNetto;
-    const steuern = Math.round(netto * steuersatz * 100) / 100;
-    const brutto = netto + steuern;
+    const summe = Math.round(positions.reduce((s, p) => s + p.gesamtpreis, 0) * 100) / 100;
+    const netto = preiseInklusive ? Math.round((summe / (1 + steuersatz)) * 100) / 100 : summe;
+    const steuern = preiseInklusive
+        ? Math.round((summe - netto) * 100) / 100
+        : Math.round(summe * steuersatz * 100) / 100;
+    const brutto = Math.round((netto + steuern) * 100) / 100;
 
     const clients = users.map((a) => ({
         ...a,
@@ -152,11 +157,11 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             mandantId: Number(selectedUser),
             positionen: positions,
             steuersatz,
+            preiseInklusive,
             bezahlziel: toDateString(bezahlziehl),
             adresse: { strasse, hausnummer, plz, ort, email },
             idempotencyKey: idempotencyKey.current,
         });
-
         setSaving(false);
 
         if (result.error) {
@@ -299,6 +304,23 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                     <TextInputLabel label="Ort" onChange={setOrt} value={ort} />
                     {!adminMode && <SelectLabel filter label="Land" onChange={setLand} optionLabel="name" optionValue="code" options={LAENDER_SORTIERT} value={land} />}
                     {!adminMode && <TextInputLabel label="Umsatzsteuer-Identifikation" onChange={setUst} value={ust} />}
+                    <Column gap={4}>
+                        <label>Preise</label>
+                        <Row gap={4} width="fit-content">
+                            <Button
+                                label="zzgl. USt."
+                                mode={!preiseInklusive ? 'secondary' : 'tertiary'}
+                                onClick={() => setPreiseInklusive(false)}
+                                size="medium"
+                            />
+                            <Button
+                                label="inkl. USt."
+                                mode={preiseInklusive ? 'secondary' : 'tertiary'}
+                                onClick={() => setPreiseInklusive(true)}
+                                size="medium"
+                            />
+                        </Row>
+                    </Column>
                 </Grid>
                 <DividerBlock height={1} />
                 <Button label={selectedKunde ? 'Kunde aktualisieren' : 'Kunde speichern'} mode="secondary" onClick={saveClient} size="small" />
