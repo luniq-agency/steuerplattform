@@ -729,7 +729,7 @@ p-datepicker-next {
   display: flex;
   flex-direction: column;
   height: 100%;
-  padding: var(--padding-l);
+  padding: var(--padding-l) var(--padding-l) 140px var(--padding-l);
   overflow-y: auto;
   width: 100%;
 }

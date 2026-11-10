@@ -30,7 +30,7 @@ export default function Row({
 }: Props) {
   return (
     <div
-      className={className ? className : styles.row}
+      className={className ? `${className} ${styles.row}` : styles.row}
       style={{
         alignItems,
         flexGrow: grow ? 1 : 0,

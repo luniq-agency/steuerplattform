@@ -4,10 +4,12 @@ import styles from "./Tag.module.css";
 interface Props {
     icon?: LucideIcon;
     label: string;
-    mode?: 'warning';
+    mode?: 'error' | 'success' | 'warning';
 }
 
 const modeStyles: Record<NonNullable<Props['mode']>, React.CSSProperties> = {
+    error: { backgroundColor: 'var(--error-bg)', color: 'var(--erro-text)'},
+    success: { backgroundColor: 'var(--success-bg)', color: 'var(--success-text)'},
     warning: { backgroundColor: 'var(--warning-bg)', color: 'var(--warning-text)' }
 };
 

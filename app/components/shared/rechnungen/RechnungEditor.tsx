@@ -269,13 +269,17 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             <Toast ref={toast} />
             <Row justifyContent="space-between">
                 <h1>{header}</h1>
-                <Button
-                    disabled={saving || (adminMode && (!selectedUser || positions.length === 0))}
-                    label={adminMode ? (saving ? 'Wird erstellt …' : 'Erstellen & versenden') : 'Speichern'}
-                    mode="secondary"
-                    onClick={adminMode ? adminCreateInvoiceHandler : createInvoice}
-                    size="small"
-                />
+                <Row gap={8}>
+                    {adminMode && <Button label="Aktionen" />}
+                    <Button
+                        disabled={saving || (adminMode && (!selectedUser || positions.length === 0))}
+                        label={adminMode ? (saving ? 'Wird erstellt …' : 'Erstellen & versenden') : 'Speichern'}
+                        mode="secondary"
+                        onClick={adminMode ? adminCreateInvoiceHandler : createInvoice}
+                        size="small"
+                    />
+                </Row>
+
             </Row>
             <DividerBlock height={1} />
             <DashboardContainer>

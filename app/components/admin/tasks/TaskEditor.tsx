@@ -198,63 +198,65 @@ export default function TaskEditor({ task }: Props) {
       <Dialog draggable={false} onHide={() => setVisible(false)} style={{ minHeight: 600, maxWidth: 1000 }} visible={visible}>
         {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
       </Dialog>
-      <DashboardContainer header={task.titel}>
-        <DetailField label="Beschreibung" value={task.beschreibung || '–'} />
-        <DividerBlock height={1} />
-        <Grid columns={2} gap={16}>
-          <DetailField label="Erstellt am" value={formatDate(task.created_at)} />
-          <DetailField label="Fällig bis" value={task.due_date ? formatDate(task.due_date) : '–'} />
-        </Grid>
-        <DividerBlock height={1} />
-        <label>Dokumente</label>
-        <Row gap={8}>
-          {docs.map((d: Dokument, i) => <SecondaryButton key={d.id} label={`${d.name}`} onClick={() => selectDoc(d)} size="small"
-          />)}
-        </Row>
-        <DividerBlock height={1} />
-        <UserDisplay label="Erstellt von" user={creator} />
-        <DividerBlock height={1} />
-        <UserDisplay label="Bearbeiter" user={assignee} />
-        <DividerBlock height={1} />
-        <UserDisplay label="Verknüpfter Kunde" user={client} />
-        <DividerBlock height={1} />
+      <Row className="mobile-column" gap={16}>
+        <DashboardContainer header={task.titel}>
+          <DetailField label="Beschreibung" value={task.beschreibung || '–'} />
+          <DividerBlock height={1} />
+          <Grid columns={2} gap={16}>
+            <DetailField label="Erstellt am" value={formatDate(task.created_at)} />
+            <DetailField label="Fällig bis" value={task.due_date ? formatDate(task.due_date) : '–'} />
+          </Grid>
+          <DividerBlock height={1} />
+          <label>Dokumente</label>
+          <Row gap={8}>
+            {docs.map((d: Dokument, i) => <SecondaryButton key={d.id} label={`${d.name}`} onClick={() => selectDoc(d)} size="small"
+            />)}
+          </Row>
+          <DividerBlock height={1} />
+          <UserDisplay label="Erstellt von" user={creator} />
+          <DividerBlock height={1} />
+          <UserDisplay label="Bearbeiter" user={assignee} />
+          <DividerBlock height={1} />
+          <UserDisplay label="Verknüpfter Kunde" user={client} />
+          <DividerBlock height={1} />
 
-        {geschlossen ? (
-          <div className="column gap-s">
-            <label>Update</label>
-            <span>Die Aufgabe wurde abgeschlossen.</span>
-          </div>
-        ) : (
-          <div className="column gap-s">
-            <label>Update</label>
-            <Dropdown
-              onChange={(e) => setUpdateType(e.value)}
-              optionLabel="label"
-              optionValue="value"
-              options={updateOptions}
-              value={updateType}
-            />
-            <DividerBlock height={0.25} />
-            {updateType === 'update' && (
-              <InputTextarea onChange={(e) => setUpdateText(e.target.value)} rows={5} value={updateText} />
-            )}
-            {updateType === 'hold' && (
-              <DatePicker label="Erinnerung am" minDate={new Date()} onDateChange={setDate} dateValue={date} />
-            )}
-            <DividerBlock height={0.5} />
-            <Button
-              disabled={!updateType || submitting || unvollstaendig}
-              label={submitting ? 'Wird gespeichert …' : 'Speichern'}
-              mode="secondary"
-              onClick={createUpdate}
-              size='medium'
-            />
-          </div>
-        )}
-      </DashboardContainer>
-      <DashboardContainer header="Verlauf">
-        <Timeline align="left" content={customContent} marker={customMarker} value={updates} />
-      </DashboardContainer>
+          {geschlossen ? (
+            <div className="column gap-s">
+              <label>Update</label>
+              <span>Die Aufgabe wurde abgeschlossen.</span>
+            </div>
+          ) : (
+            <div className="column gap-s">
+              <label>Update</label>
+              <Dropdown
+                onChange={(e) => setUpdateType(e.value)}
+                optionLabel="label"
+                optionValue="value"
+                options={updateOptions}
+                value={updateType}
+              />
+              <DividerBlock height={0.25} />
+              {updateType === 'update' && (
+                <InputTextarea onChange={(e) => setUpdateText(e.target.value)} rows={5} value={updateText} />
+              )}
+              {updateType === 'hold' && (
+                <DatePicker label="Erinnerung am" minDate={new Date()} onDateChange={setDate} dateValue={date} />
+              )}
+              <DividerBlock height={0.5} />
+              <Button
+                disabled={!updateType || submitting || unvollstaendig}
+                label={submitting ? 'Wird gespeichert …' : 'Speichern'}
+                mode="secondary"
+                onClick={createUpdate}
+                size='medium'
+              />
+            </div>
+          )}
+        </DashboardContainer>
+        <DashboardContainer header="Verlauf">
+          <Timeline align="left" content={customContent} marker={customMarker} value={updates} />
+        </DashboardContainer>
+      </Row>
     </Row>
   );
 }
