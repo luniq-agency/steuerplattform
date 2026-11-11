@@ -9,6 +9,7 @@ export type Rechnung = {
   erinnerung_gesendet?: boolean;
   hausnummer: string;
   id: string;
+  kategorie: 'gutschrift' | 'rechnung';
   kundennummer: string;
   land: string;
   link: string;

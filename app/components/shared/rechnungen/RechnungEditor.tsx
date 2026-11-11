@@ -27,6 +27,17 @@ import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import Column from "../../layout/Column";
 
+const rechnungTypes = [
+    {
+        label: 'Gutschrift',
+        value: 'gutschrift',
+    },
+    {
+        label: 'Rechnung',
+        value: 'rechnung'
+    }
+]
+
 interface Props {
     admin?: boolean;
     header?: string;
@@ -61,6 +72,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const [rechnungsnummer, setRechnungsnummer] = useState('');
     const [steuersatz, setSteuersatz] = useState(0.19);
     const [strasse, setStrasse] = useState('');
+    const [type, setType] = useState('rechnung');
     const [ust, setUst] = useState('');
 
     useEffect(() => {
@@ -73,6 +85,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             setPlz(rechnung.plz || '');
             setSelectedUser(String(rechnung.mandant));
             setStrasse(rechnung.strasse || '');
+            setType(rechnung.kategorie || 'Rechnung');
         }
         setData();
     }, [rechnung])
@@ -188,6 +201,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             betrag_steuern: steuern,
             bezahlziel: toDateString(bezahlziehl),
             created_by: userProfile.id,
+            kategorie: type,
             kunde: Number(selectedKunde) || null,
             rechnungsdatum: toDateString(rechnungsdatum),
             rechnungsnummer,
@@ -269,7 +283,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             <Toast ref={toast} />
             <Row justifyContent="space-between">
                 <h1>{header}</h1>
-                <Row gap={8}>
+                <Row gap={8} width="fit-content">
                     {adminMode && <Button label="Aktionen" />}
                     <Button
                         disabled={saving || (adminMode && (!selectedUser || positions.length === 0))}
@@ -279,7 +293,6 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                         size="small"
                     />
                 </Row>
-
             </Row>
             <DividerBlock height={1} />
             <DashboardContainer>
@@ -291,6 +304,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                     ) : (
                         <>
                             <TextInputLabel label="Rechnungsnummer" onChange={setRechnungsnummer} value={rechnungsnummer} />
+                            <SelectLabel label="Rechnung/Gutschrift" onChange={setType} options={rechnungTypes} value={type} />
                             <DatePicker label="Rechnungsdatum" onChange={setRechnungsdatum} value={rechnungsdatum} />
                         </>
                     )}

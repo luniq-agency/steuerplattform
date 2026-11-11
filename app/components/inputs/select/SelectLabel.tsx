@@ -13,8 +13,8 @@ interface Props {
     onClear?: () => void;
     options?: SelectItemOptionsType;
     optionDescription?: string;
-    optionLabel: string;
-    optionValue: string;
+    optionLabel?: string;
+    optionValue?: string;
     placeholder?: string;
     showClear?: boolean;
     value: string | number | null;
@@ -28,8 +28,8 @@ export function SelectLabel({
     onClear,
     optionDescription,
     options,
-    optionLabel,
-    optionValue,
+    optionLabel = "label",
+    optionValue = "value",
     placeholder,
     showClear = false,
     value,

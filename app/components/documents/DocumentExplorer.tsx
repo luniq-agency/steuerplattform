@@ -1,24 +1,30 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import Image from 'next/image';
-import { Button } from 'primereact/button';
+import Button from '../buttons/Button';
 import { ContextMenu } from 'primereact/contextmenu';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { Dialog } from 'primereact/dialog';
 import { documentUpdate } from '@/app/actions/documents';
-import { folderCreate } from '@/app/actions/folders';
+import { folderCreate, folderUpdate } from '@/app/actions/folders';
 import { Dokument, DokumentOrdner } from '@/app/types/docs';
 import { formatDate } from '@/app/utils/formats';
 import { DateiIcon, dateiTypLabel, OrdnerIcon } from '@/app/utils/fileIcons';
 import styles from './Documents.module.css';
 import Row from '../layout/Row';
 import { User } from '@/app/types/Database';
+import { ArrowLeft } from 'lucide-react';
+import LayoutColumn from "../layout/Column";
+import { UserSelectLabel } from '../inputs/select/UserSelectLabel';
+import TextInput from '../inputs/TextInput';
 
 interface Props {
   documents: Dokument[];
   folders: DokumentOrdner[];
   loading?: boolean;
+  onChange?: () => void;
+  onCreate?: () => void;
   onDelete: () => void;
   onSelectDoc: (value: Dokument) => void;
   onSelectFolder: (value: DokumentOrdner | null) => void;
@@ -28,43 +34,71 @@ interface Props {
 }
 
 type ExplorerRow =
-  | { kind: 'pending'; key: string }
-  | { kind: 'folder'; key: string; item: DokumentOrdner }
-  | { kind: 'file'; key: string; item: Dokument };
+  | { kind: 'folder'; key: string; name: string; item: DokumentOrdner }
+  | { kind: 'file'; key: string; name: string; item: Dokument };
+
+// Dialog: neuer Ordner oder Umbenennen
+type NameDialog = { modus: 'neu' } | { modus: 'umbenennen'; row: ExplorerRow } | null;
 
 export default function DocumentExplorer({
   documents,
   folders,
   loading,
+  onChange,
+  onCreate,
   onSelectDoc,
   onSelectFolder,
   owner,
   showOwner = false,
-  users
+  users,
 }: Props) {
   const folderMenu = useRef<ContextMenu | null>(null);
-  const pendingInputRef = useRef<HTMLInputElement | null>(null);
+  const rowMenu = useRef<ContextMenu | null>(null);
+  const nameInputRef = useRef<HTMLInputElement | null>(null);
 
   // STATES
+  const [contextRow, setContextRow] = useState<ExplorerRow | null>(null);
   const [draggingDocument, setDraggingDocument] = useState<Dokument | null>(null);
   const [dropTarget, setDropTarget] = useState<string | number | null>(null);
-  const [pendingFolder, setPendingFolder] = useState<{ name: string } | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<string | number | null>(null);
 
-  // CONTEXT MENU
-  const items = [{ label: 'Neuen Ordner anlegen', command: () => createFolder() }];
+  const [selectedOwner, setSelectedOwner] = useState<User | null>(null);
+
+  // DIALOG
+  const [dialog, setDialog] = useState<NameDialog>(null);
+  const [dialogName, setDialogName] = useState('');
+  const [dialogFehler, setDialogFehler] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [namen, setNamen] = useState<Record<string, string>>({}); // lokal geänderte Namen
 
   // ROWS: Ordner zuerst, dann Dateien, jeweils alphabetisch
+  const byName = (a: ExplorerRow, b: ExplorerRow) => a.name.localeCompare(b.name, 'de');
+
   const rows: ExplorerRow[] = [
-    ...(pendingFolder ? [{ kind: 'pending' as const, key: 'pending' }] : []),
     ...folders
       .filter((f) => f.parent === selectedFolder)
-      .sort((a, b) => a.name.localeCompare(b.name, 'de'))
-      .map((f) => ({ kind: 'folder' as const, key: `folder-${f.id}`, item: f })),
+      .map((f) => ({ kind: 'folder' as const, key: `folder-${f.id}`, name: namen[`folder-${f.id}`] ?? f.name ?? '', item: f }))
+      .sort(byName),
     ...documents
       .filter((d) => d.ordner === selectedFolder)
-      .sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '', 'de'))
-      .map((d) => ({ kind: 'file' as const, key: `file-${d.id}`, item: d })),
+      .map((d) => ({ kind: 'file' as const, key: `file-${d.id}`, name: namen[`file-${d.id}`] ?? d.name ?? '', item: d }))
+      .sort(byName),
+  ];
+
+  // CONTEXT MENUS
+  const items = [{ label: 'Neuen Ordner anlegen', icon: 'pi pi-folder-plus', command: () => openDialog({ modus: 'neu' }) }];
+  const rowItems = [
+    { label: 'Umbenennen', icon: 'pi pi-pencil', command: () => contextRow && openDialog({ modus: 'umbenennen', row: contextRow }) },
+    {
+      label: 'Öffnen',
+      icon: 'pi pi-folder-open',
+      command: () => {
+        if (contextRow?.kind === 'folder') openFolder(contextRow.item);
+        if (contextRow?.kind === 'file') onSelectDoc(contextRow.item);
+      },
+    },
+    { separator: true },
+    { label: 'Neuen Ordner anlegen', icon: 'pi pi-folder-plus', command: () => openDialog({ modus: 'neu' }) },
   ];
 
   // NAVIGATION
@@ -80,28 +114,56 @@ export default function DocumentExplorer({
     onSelectFolder(parent);
   };
 
-  // ACTIONS
-  const createFolder = () => {
-    setPendingFolder({ name: '' });
-    setTimeout(() => pendingInputRef.current?.focus(), 50);
+  // DIALOG
+  const openDialog = (d: Exclude<NameDialog, null>) => {
+    setDialog(d);
+    setDialogName(d.modus === 'umbenennen' ? d.row.name : '');
+    setDialogFehler('');
   };
 
-  const confirmFolder = async () => {
-    if (!owner || !pendingFolder) return;
-    const name = pendingFolder.name.trim() || 'Neuer Ordner';
+  const closeDialog = () => {
+    setDialog(null);
+    setDialogName('');
+    setDialogFehler('');
+  };
+
+  const confirmDialog = async () => {
+    if (!dialog || saving) return;
+    const name = dialogName.trim();
+    if (!name) return;
+
+    setSaving(true);
+    setDialogFehler('');
     try {
-      await folderCreate({ name, parent: selectedFolder, user: owner });
+      if (dialog.modus === 'neu') {
+        const besitzer = showOwner ? selectedOwner?.id : owner;
+        if (!besitzer) throw new Error(showOwner ? 'Bitte einen Mandanten auswählen.' : 'Kein Besitzer gesetzt (owner fehlt).');
+        await folderCreate({ name, parent: selectedFolder, user: besitzer });
+        onCreate?.();
+      } else {
+        const { row } = dialog;
+        if (name !== row.name) {
+          if (row.kind === 'folder') await folderUpdate(row.item.id, { name });
+          else await documentUpdate({ name }, row.item.id);
+          setNamen((prev) => ({ ...prev, [row.key]: name }));
+        }
+      }
+      onChange?.();
+      closeDialog();
     } catch (err) {
       console.error(err);
+      setDialogFehler(err instanceof Error ? err.message : 'Speichern fehlgeschlagen.');
     } finally {
-      setPendingFolder(null);
+      setSaving(false);
     }
   };
 
+  // VERSCHIEBEN
   const dropOnFolder = async (folderId: string | number) => {
     if (!draggingDocument) return;
     try {
       await documentUpdate({ ordner: folderId }, draggingDocument.id);
+      onChange?.();
     } catch (err) {
       console.error(err);
     } finally {
@@ -112,29 +174,6 @@ export default function DocumentExplorer({
 
   // TEMPLATES
   const nameTemplate = (row: ExplorerRow) => {
-    if (row.kind === 'pending') {
-      return (
-        <div className={styles.nameCell}>
-          <Row alignItems="center" gap={8}>
-            <OrdnerIcon />
-            <input
-              ref={pendingInputRef}
-              className={styles.nameInput}
-              placeholder="Neuer Ordner"
-              value={pendingFolder?.name ?? ''}
-              onChange={(e) => setPendingFolder({ name: e.target.value })}
-              onBlur={confirmFolder}
-              onClick={(e) => e.stopPropagation()}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') pendingInputRef.current?.blur();
-                if (e.key === 'Escape') setPendingFolder(null);
-              }}
-            />
-          </Row>
-        </div>
-      );
-    }
-
     if (row.kind === 'folder') {
       const id = row.item.id;
       return (
@@ -149,7 +188,7 @@ export default function DocumentExplorer({
         >
           <Row alignItems="center" gap={8}>
             <OrdnerIcon />
-            <span>{row.item.name}</span>
+            <span>{row.name}</span>
           </Row>
         </div>
       );
@@ -163,53 +202,116 @@ export default function DocumentExplorer({
         onDragEnd={() => setDraggingDocument(null)}
       >
         <Row alignItems="center" gap={8}>
-          <DateiIcon type={row.item.type} name={row.item.name} />
-          <span>{row.item.name}</span>
+          <DateiIcon type={row.item.type} name={row.name} />
+          <span>{row.name}</span>
         </Row>
       </div>
     );
   };
 
-  const dateTemplate = (row: ExplorerRow) =>
-    row.kind === 'pending' || !row.item.created_at ? '–' : formatDate(row.item.created_at);
+  const dateTemplate = (row: ExplorerRow) => (row.item.created_at ? formatDate(row.item.created_at) : '–');
 
   const ownerTemplate = (row: ExplorerRow) => {
-    if (row.kind != 'file' || !users) return;
-    const owner = users?.find((u) => u.id == row.item.user);
-    if (!owner) return;
-    return <span>{owner.nachname}, {owner.vorname}</span>
-  }
-
-  const typeTemplate = (row: ExplorerRow) => {
-    if (row.kind === 'file') return dateiTypLabel(row.item.type, row.item.name);
-    return 'Ordner';
+    if (!users) return null;
+    const besitzer = users.find((u) => u.id == row.item.user);
+    if (!besitzer) return null;
+    return <span>{besitzer.nachname}, {besitzer.vorname}</span>;
   };
+
+  const typeTemplate = (row: ExplorerRow) =>
+    row.kind === 'file' ? dateiTypLabel(row.item.type, row.item.name) : 'Ordner';
+
+  const dialogTitel =
+    dialog?.modus === 'neu'
+      ? 'Neuen Ordner anlegen'
+      : dialog?.row.kind === 'folder'
+        ? 'Ordner umbenennen'
+        : 'Dokument umbenennen';
 
   return (
     <div className="column height-100">
       <ContextMenu model={items} ref={folderMenu} breakpoint="767px" />
+      <ContextMenu model={rowItems} ref={rowMenu} breakpoint="767px" />
+      <Dialog
+        header={dialogTitel}
+        onHide={closeDialog}
+        onShow={() => {
+          nameInputRef.current?.focus();
+          nameInputRef.current?.select();
+        }}
+        style={{ width: 420, maxWidth: '90vw' }}
+        visible={!!dialog}
+        footer={
+          <Row gap={8} justifyContent="end">
+            <Button label="Abbrechen" onClick={closeDialog} mode="tertiary" size="small" />
+            <Button
+              disabled={!dialogName.trim() || saving}
+              label={saving ? 'Speichert …' : dialog?.modus === 'neu' ? 'Anlegen' : 'Speichern'}
+              mode="secondary"
+              onClick={confirmDialog}
+              size="small"
+            />
+          </Row>
+        }
+      >
+        <LayoutColumn gap={16}>
+          <TextInput
+            inputRef={nameInputRef}
+            label="Ordnername"
+            onChange={setDialogName}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') confirmDialog();
+            }}
+            value={dialogName}
+          />
+          {showOwner && dialog?.modus === 'neu' && (
+            <UserSelectLabel
+              label="Mandant"
+              onChange={setSelectedOwner}
+              options={users ?? []}
+              value={selectedOwner}
+            />
+          )}
+          {dialogFehler && <p style={{ color: '#b42318', margin: '8px 0 0' }}>{dialogFehler}</p>}
+        </LayoutColumn>
+      </Dialog>
 
-      {selectedFolder !== null && (
-        <Button icon="pi pi-arrow-left" label="Zurück" onClick={goUp} style={{ width: 'fit-content' }} text />
-      )}
+      <Row gap={8}>
+        {selectedFolder !== null && (
+          <Button icon={ArrowLeft} label="Zurück" onClick={goUp} />
+        )}
+      </Row>
 
-      <div onContextMenu={(e) => folderMenu.current?.show(e)} style={{ flexGrow: 1 }}>
+      <div
+        onContextMenu={(e) => {
+          // Rechtsklick auf Ordner/Datei → macht die Tabelle selbst
+          if ((e.target as HTMLElement).closest('.kontext-zeile')) return;
+          folderMenu.current?.show(e);
+        }}
+        style={{ flexGrow: 1 }}
+      >
         <DataTable
+          contextMenuSelection={contextRow ?? undefined}
           dataKey="key"
-          emptyMessage="Dieser Ordner ist leer. Rechtsklick → Neuen Ordner anlegen."
+          emptyMessage="Dieser Ordner ist leer."
           loading={loading}
+          onContextMenu={(e) => {
+            setContextRow(e.data as ExplorerRow);
+            rowMenu.current?.show(e.originalEvent);
+          }}
+          onContextMenuSelectionChange={(e) => setContextRow(e.value as ExplorerRow)}
           onRowClick={(e) => {
             const row = e.data as ExplorerRow;
             if (row.kind === 'folder') openFolder(row.item);
-            if (row.kind === 'file') onSelectDoc(row.item);
+            else onSelectDoc(row.item);
           }}
-          rowClassName={() => styles.explorerRow}
+          rowClassName={() => `${styles.explorerRow} kontext-zeile`}
           rowHover
           value={rows}
         >
-          <Column body={nameTemplate} header="Dateiname" sortable sortField='name' />
-          {showOwner && <Column body={ownerTemplate} header="Besitzer" sortable sortField='name' />}
-          <Column body={dateTemplate} header="Hochgeladen am" sortable sortField="created_at" style={{ width: 180 }} />
+          <Column body={nameTemplate} header="Dateiname" />
+          {showOwner && <Column body={ownerTemplate} header="Besitzer" />}
+          <Column body={dateTemplate} header="Hochgeladen am" style={{ width: 180 }} />
           <Column body={typeTemplate} header="Dateityp" style={{ width: 120 }} />
         </DataTable>
       </div>

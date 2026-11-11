@@ -537,10 +537,18 @@ p-datepicker-next {
   width: 100%;
 }
 
+.p-dialog-footer button {
+  margin: 0px !important;
+}
+
 .p-dialog-content {
   display: flex;
   flex-direction: column;
   padding: 1rem;
+}
+
+.p-dialog-footer {
+  padding: 0rem 1rem 1rem 1rem;
 }
 
 .p-dialog-header {

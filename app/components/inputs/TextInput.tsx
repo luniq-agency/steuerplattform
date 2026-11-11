@@ -2,8 +2,10 @@ import Column from "../layout/Column";
 import styles from "./Inputs.module.css";
 
 interface Props {
+    inputRef?: React.Ref<HTMLInputElement>;
     label?: string;
     onChange: (value: string) => void;
+    onKeyDown?: (e: React.KeyboardEvent<HTMLInputElement>) => void;
     mode?: 'light' | 'dark';
     type?: 'text' | 'email' | 'password';
     value: string;

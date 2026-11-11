@@ -2,7 +2,6 @@
 
 import { User } from '@/app/types/Database';
 import { Dokument, DokumentOrdner } from '@/app/types/docs';
-import { Vorgang, Vorgangupdate } from '@/app/types/vorgang';
 import { createClient } from '@/app/utils/supabase/server';
 
 export async function fetchDokumenteAgency(
@@ -22,30 +21,18 @@ export async function fetchDokumenteAgency(
     console.error('Mandanten konnten nicht geladen werden:', mandantenError);
     return leer;
   }
-
   if (!mandanten?.length) return leer;
 
-  // 2. Alle Vorgänge dieser Mandanten
-  const { data: dokumente, error } = await supabase
-    .from('dokument')
-    .select()
-    .in(
-      'user',
-      mandanten.map((m) => m.id)
-    )
+  const ids = mandanten.map((m) => m.id);
 
-  const { data: ordner, error: Ordnererror } = await supabase
-    .from('dokumentordner')
-    .select()
-    .in(
-      'user',
-      mandanten.map((m) => m.id)
-    )
+  // 2. Dokumente + Ordner dieser Mandanten (parallel)
+  const [{ data: dokumente, error: dokError }, { data: ordner, error: ordnerError }] = await Promise.all([
+    supabase.from('dokument').select('*').in('user', ids).order('created_at', { ascending: false }),
+    supabase.from('dokumentordner').select('*').in('user', ids),
+  ]);
 
-  if (error) {
-    console.error('Vorgänge konnten nicht geladen werden:', error);
-    return { mandanten, ordner: [], dokumente: [] };
-  }
+  if (dokError) console.error('Dokumente konnten nicht geladen werden:', dokError);
+  if (ordnerError) console.error('Ordner konnten nicht geladen werden:', ordnerError);
 
-  return { mandanten, ordner: [], dokumente: dokumente ?? [] };
+  return { mandanten, ordner: ordner ?? [], dokumente: dokumente ?? [] };
 }

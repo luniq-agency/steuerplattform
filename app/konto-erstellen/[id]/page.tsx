@@ -4,7 +4,6 @@ import DividerBlock from '../../components/DividerBlock';
 import Column from '../../components/layout/Column';
 import Row from '../../components/layout/Row';
 import InviteForm from '../../components/auth/InviteForm';
-import { supabaseAdmin } from '@/app/utils/supabase/admin';
 import { userLookup } from '@/app/actions/users';
 
 export const metadata: Metadata = {

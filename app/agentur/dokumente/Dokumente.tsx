@@ -98,6 +98,7 @@ export default function Dokumente() {
         documents={documents}
         folders={folders}
         loading={loading}
+        onCreate={updateDocuments}
         onDelete={updateDocuments}
         onSelectDoc={(doc) => {
           setSelectedDoc(doc);
