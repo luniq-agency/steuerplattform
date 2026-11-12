@@ -7,6 +7,8 @@ import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { useRouter } from 'next/navigation';
 import { UserAvatarOther } from '../../UserAvatar';
+import { user_status } from '@/app/constants/status';
+import Tag from '../../ui/Tag';
 
 interface Props {
   users: User[];
@@ -27,6 +29,13 @@ export default function AgencyTable({ users }: Props) {
     );
   };
 
+  const statusTemplate = (rowData: User) => {
+    const ref = rowData.user_id ? 'active' : 'inactive'
+    const tag = user_status.find((u) => u.value == ref)
+    if (!tag) return;
+    return <Tag bgColor={tag.bg} color={tag.color} text={tag?.label} />
+  }
+
   const selectAgent = (rowData: AgencyStats) => {
     router.push(`/admin/agenturen/${rowData.id}`);
   };
@@ -43,6 +52,7 @@ export default function AgencyTable({ users }: Props) {
       value={users}
     >
       <Column body={nameTemplate} header="Name" />
+      <Column body={statusTemplate} header="Status" />
       <Column field="firma" header="Firma" />
       <Column field="client_count" header="Kunden" />
       <Column body={(rowData) => formatDate(rowData.created_at)} header="Angemeldet seit" />

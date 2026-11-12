@@ -26,6 +26,7 @@ export async function inviteSignUp(email: string, password: string) {
 
   const { data: profil } = await supabase
     .from('user')
+    .insert({ setup_complete: true })
     .select('rolle')
     .eq('user_id', data.user!.id)
     .maybeSingle();

@@ -33,8 +33,11 @@ export default function AgencyClientTable({ agent, clients, mode = 'agency' }: P
         router.push(path)
     }
 
+    // TEXT
+    const emptyMessage = mode == 'admin' ? 'Der Agenturist hat noch keine Mandanten angelegt.' : 'Du hast noch keine Mandanten angelegt.'
+
     return (
-        <DataTable value={clients} emptyMessage="Du hast noch keine Mandanten angelegt." onRowClick={(v) => select(v.data as User)} paginator rows={12} sortField="nachname" sortOrder={1} stripedRows>
+        <DataTable value={clients} emptyMessage={emptyMessage} onRowClick={(v) => select(v.data as User)} paginator rows={12} sortField="nachname" sortOrder={1} stripedRows>
             <Column body={nameTemplate} header="Name" sortable sortField='name' style={{ width: "25%" }} />
             <Column body={jobTemplate} header="Berufsstatus" />
             <Column field="beruf" header="Beruf" />
