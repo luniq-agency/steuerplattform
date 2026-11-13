@@ -15,12 +15,10 @@ import { parseDate, toDateString } from "@/app/utils/formats";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
-import { ContextButton } from "../../buttons/Buttons";
 import { Dialog } from "primereact/dialog";
 import Column from "../../layout/Column";
 import { IconButton } from "../../buttons/IconButton";
 import { Copy } from "lucide-react";
-import { sendEmail } from "@/app/actions/email";
 import { User } from "@/app/types/Database";
 
 interface Props {
@@ -84,7 +82,6 @@ export default function MandantenEditor({ client, header, onSave }: Props) {
         setData();
     }, [client])
 
-
     // ACTIONS
     const createClient = async () => {
         setSaving(true);
@@ -135,7 +132,7 @@ export default function MandantenEditor({ client, header, onSave }: Props) {
     const required = vorname && nachname;
 
     return (
-        <div className="content-wrapper" style={{ height: '100%', padding: 0 }}>
+        <div className="content-wrapper" style={{ minHeight: '100%', overflowY: 'auto', padding: '16px 16px 200px 16px'}}>
             <Dialog draggable={false} header="Neuen Mandanten anlegen" onHide={() => setVisible(false)} style={{ maxWidth: 480 }} visible={visible}>
                 <p>Nach dem Anlegen des Mandanten senden wir eine Einladung an die E-Mail-Adresse.</p>
                 <p>Du kannst den Link auch direkt kopieren und so an deinen Mandanten senden.</p>

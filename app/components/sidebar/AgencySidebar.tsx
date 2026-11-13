@@ -10,19 +10,30 @@ import { UserAvatar } from '../UserAvatar';
 import { Briefcase, BriefcaseBusiness, Calendar, ChartArea, CheckCheck, File, FileQuestion, Files, Folder, Grid, Grid2X2, LogOut, Receipt, Repeat, Users } from 'lucide-react';
 import Column from '../layout/Column';
 import Row from '../layout/Row';
+import { OverlayPanel } from "primereact/overlaypanel";
+import { ContextButton } from "../buttons/Buttons";
+import { useRef } from "react";
+import Link from "next/link";
 
 export default function AgencySidebar() {
   const { logout, team, userProfile } = useAuth();
+
+  const op = useRef<OverlayPanel | null>(null);
 
   if (!userProfile) return;
 
   return (
     <>
+      <OverlayPanel ref={op}>
+        <Link href="/agentur/profil">
+          <ContextButton label="Mein Profil" />
+        </Link>
+      </OverlayPanel>
       <div className={styles.sidebar}>
         <div className={styles.sidebarTop}>
           <Image alt="ADVACT Logo" height={20} loading="eager" src="/advact-logo-black.png" width={100} />
           <DividerBlock height={1} />
-          <Row alignItems='center' gap={8}>
+          <Row alignItems='center' gap={8} onClick={(e) => op.current?.toggle(e)}>
             <UserAvatar fontSize={16} height={32} user={userProfile} width={32} />
             <Column gap={0} justifyContent='center'>
               <span className="grow" style={{ color: 'var(--foreground)', fontSize: 14, lineHeight: '1em' }}>

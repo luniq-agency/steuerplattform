@@ -7,7 +7,7 @@ interface Props {
   icon?: LucideIcon;
   label?: string;
   loading?: boolean;
-  onClick: (e?: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e?: React.MouseEvent<HTMLButtonElement>) => void;
   size?: 'small' | 'medium' | 'large';
 }
 

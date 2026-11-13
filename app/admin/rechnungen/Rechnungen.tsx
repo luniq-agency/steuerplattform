@@ -14,6 +14,8 @@ import { Column } from 'primereact/column';
 import { formatCurrency, formatDate } from '@/app/utils/formats';
 import { invoice_status } from '@/app/constants/Constants';
 import Tag from '@/app/components/tag/Tag';
+import Grid from '@/app/components/layout/Grid';
+import StatCard from '@/app/components/cards/StatCard';
 
 interface Props {
   clients: User[];
@@ -44,6 +46,9 @@ export default function Rechnungen({ clients, invoices }: Props) {
     router.push(`/admin/rechnungen/${rowData.id}`)
   }
 
+  // CALC
+  const total = invoices?.reduce((sum, d) => sum + (d.betrag_gesamt ?? 0), 0);
+
   return (
     <div className="page-content">
       <Row alignItems="center" justifyContent='space-between'>
@@ -52,6 +57,11 @@ export default function Rechnungen({ clients, invoices }: Props) {
           <Button icon={Plus} label="Neue Rechnung" mode="secondary" size="small" />
         </Link>
       </Row>
+      <DividerBlock height={1} />
+      <Grid columns={3}>
+        <StatCard header="Einkommen (2026)" mode="currency" value={total || 0} />
+        <StatCard header="Versendete Rechnungen" value={invoices?.length || 0} />
+      </Grid>
       <DividerBlock height={1} />
       <DataTable onRowClick={(v => select(v.data as Rechnung))} value={invoices}>
         <Column field="rechnungsnummer" header="#" />

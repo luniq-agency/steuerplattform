@@ -11,6 +11,7 @@ interface Props {
   grow?: boolean;
   height?: string | number;
   justifyContent?: 'start' | 'center' | 'end' | 'space-between';
+  onClick?: (e: any) => void;
   padding?: number | string;
   style?: CSSProperties;
   width?: string | number;
@@ -24,6 +25,7 @@ export default function Row({
   grow,
   height,
   justifyContent,
+  onClick,
   padding,
   style,
   width = '100%',
@@ -31,9 +33,11 @@ export default function Row({
   return (
     <div
       className={className ? `${className} ${styles.row}` : styles.row}
+      onClick={onClick}
       style={{
         alignItems,
         flexGrow: grow ? 1 : 0,
+        cursor: onClick ? 'pointer' : 'default',
         gap,
         height,
         justifyContent,
