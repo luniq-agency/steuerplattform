@@ -21,7 +21,6 @@ const modeStyles: Record<NonNullable<Props['mode']>, React.CSSProperties> = {
 
 export default function TextInput({ label, mode = "light", onChange, password = false, type = "text", value }: Props) {
     const modeStyle = modeStyles[mode];
-    const pw = type = "password";
 
     const toggle = () => { }
 
@@ -29,7 +28,7 @@ export default function TextInput({ label, mode = "light", onChange, password = 
         <Column gap={4}>
             {label && <label>{label}</label>}
             <input className={styles.input} onChange={(e) => onChange(e.target.value)} style={{ ...modeStyle }} type={type} value={value} />
-            {password && <IconButton icon={pw ? EyeClosed : Eye} onClick={toggle} />}
+            {password && <IconButton icon={EyeClosed} onClick={toggle} />}
         </Column>
     )
 }

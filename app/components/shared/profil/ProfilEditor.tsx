@@ -50,7 +50,7 @@ export default function ProfileEditor() {
                 </Column>
             </Dialog>
             <img height={150} src={avatar} width={150} />
-            <TextInput label="Vorname" onChange={setVorname} value={vorname} />
+            <TextInput label="Vorname" onChange={setVorname} type="text" value={vorname} />
             <TextInput label="Nachname" onChange={setVorname} value={nachname} />
             <TextInput label="E-Mail" onChange={setEmail} value={email} />
             <Column gap={4}>
