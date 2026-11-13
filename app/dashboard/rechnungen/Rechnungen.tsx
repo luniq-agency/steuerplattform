@@ -8,10 +8,8 @@ import Link from 'next/link';
 import Button from '@/app/components/buttons/Button';
 import { CircleCheck, Clock, Euro, Plus } from 'lucide-react';
 import Row from '@/app/components/layout/Row';
-import { DataTable } from 'primereact/datatable';
-import { Column } from 'primereact/column';
 import { Calendar } from 'primereact/calendar';
-import { formatCurrency, formatDate } from '@/app/utils/formats';
+import { SelectLabel } from '@/app/components/inputs/Select';
 import { Rechnung } from '@/app/types/rechnung/Rechnungen';
 import { fetchInvoicesByTeam } from '@/app/actions/documents/rechnungen';
 import StatCard from '@/app/components/cards/StatCard';
@@ -19,6 +17,8 @@ import { createClient } from '@/app/utils/supabase/client';
 import { invoice_status } from '@/app/constants/Constants';
 import StatusTag from '@/app/components/status/StatusTag';
 import { useRouter } from 'next/navigation';
+import RechnungTable from '@/app/components/invoices/RechnungTable';
+import SearchBox from '@/app/components/forms/SearchBox';
 
 type Statistik = {
   gesamt_anzahl: number;
@@ -92,20 +92,6 @@ export default function Rechnungen() {
     [rechnungen, monat]
   );
 
-  // TEMPLATES
-  const statusTemplate = (rowData: Rechnung) => {
-    const status = invoice_status.find((i) => i.value == rowData.status);
-    if (!status) return <span>–</span>
-    return (
-      <StatusTag bg={status.bg || 'blue'} color={status.color || 'white'} label={status?.label} />
-    )
-  }
-
-  // ACTIONS
-  const selectInvoice = (rowData: Rechnung) => {
-    router.push(`/dashboard/rechnungen/${rowData.id}`);
-  };
-
   if (loading || !userProfile) return (
     <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
       <Row alignItems="center" justifyContent="space-between">
@@ -160,15 +146,8 @@ export default function Rechnungen() {
           value={stats?.offen_summe ?? 0}
         />
       </Row>
-      <DividerBlock height={2} />
-
-      <DataTable onRowClick={(e) => selectInvoice(e.data as Rechnung)} value={rechnungenImMonat} emptyMessage="Keine Rechnungen in diesem Monat.">
-        <Column field="rechnungsnummer" header="#" />
-        <Column field="empfaenger" header="Empfänger" />
-        <Column body={(rowData: Rechnung) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" />
-        <Column body={(rowData: Rechnung) => formatDate(rowData.rechnungsdatum)} header="Datum" />
-        <Column body={statusTemplate} header="Status" />
-      </DataTable>
+      <DividerBlock height={1} />
+      <RechnungTable rechnungen={rechnungenImMonat} />
     </div>
   );
 }

@@ -25,7 +25,8 @@
   --border-radius-l: 10px;
   --border-radius-xl: 20px;
 
-  --success-bg: ;
+  --neutral-bg: #c6edfb;
+  --neutral-text: #1a5265;
   --error-text: #ee5447;
   --error-bg: #ffeceb;
   --success-text: #249427;

@@ -121,8 +121,8 @@ export const invoice_status = [
     value: 'entwurf',
   },
   {
-    bg: 'grey',
-    color: 'black',
+    bg: 'var(--neutral-bg)',
+    color: 'var(--neutral-text)',
     label: 'Offen',
     value: 'offen',
   },
@@ -133,8 +133,8 @@ export const invoice_status = [
     value: 'sent',
   },
   {
-    bg: 'green',
-    color: 'white',
+    bg: 'var(--success-bg)',
+    color: 'var(--neutral-text)',
     label: 'Bezahlt',
     mode: 'success',
     severity: 'success',
