@@ -1,23 +1,12 @@
 'use client';
 
 import { User } from '@/app/types/Database';
-import { client_status, job_categories } from '@/app/constants/Constants';
-import { FilterMatchMode } from 'primereact/api';
 import { formatDate } from '@/app/utils/formats';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
-import { Tag } from 'primereact/tag';
-import { useEffect, useRef, useState } from 'react';
-import { Toast } from 'primereact/toast';
-import { useRouter } from 'next/navigation';
 import { Button } from 'primereact/button';
 import Link from 'next/link';
-import { Dropdown } from 'primereact/dropdown';
 import { UserAvatarOther } from '@/app/components/UserAvatar';
-import { clientsLoadAgency, clientsLoadAll, clientUpdate } from '@/app/actions/clients';
-import { Dialog } from 'primereact/dialog';
-import { agencyLoadAll } from '@/app/actions/agency';
-import { userUpdate } from '@/app/actions/users';
 
 interface Props {
     clients: User[];

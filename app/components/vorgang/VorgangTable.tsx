@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 
 interface Props {
     mode?: 'short' | 'detailed';
+    role?: string;
     users: User[];
     vorgaenge: Vorgang[];
 }
@@ -28,7 +29,7 @@ const formatDeadline = (date: Date) => {
         .trim();                     // -> "10. Jan" bzw. "10. Jan 2027"
 };
 
-export default function VorgangTable({ mode = 'detailed', users, vorgaenge }: Props) {
+export default function VorgangTable({ mode = 'detailed', role = 'agentur', users, vorgaenge }: Props) {
     const router = useRouter();
     // TEMPLATES
     const deadlineTemplate = (rowData: Vorgang) => {
@@ -77,7 +78,7 @@ export default function VorgangTable({ mode = 'detailed', users, vorgaenge }: Pr
 
     // ACTIONS
     const select = (v: Vorgang) => {
-        router.push(`/agentur/vorgaenge/${v.id}`)
+        router.push(`/${role}/vorgaenge/${v.id}`)
     }
 
     if (mode === 'short') return (

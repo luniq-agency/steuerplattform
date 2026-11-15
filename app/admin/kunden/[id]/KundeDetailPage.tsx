@@ -21,6 +21,13 @@ import { Vorgang } from "@/app/types/vorgang";
 import VorgangCard from "@/app/components/vorgang/VorgangCard";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import DocumentExplorer from "@/app/components/documents/DocumentExplorer";
+import { Dokument, DokumentOrdner } from "@/app/types/docs";
+import { documentsLoadUser } from "@/app/actions/documents";
+import { foldersLoadUser } from "@/app/actions/folders";
+import { fetchVorgaengeByClient } from "@/app/actions/vorgang/vorgang";
+import { Dialog } from "primereact/dialog";
+import DocumentPreviewer from "@/app/components/documents/DocumentPreviewer";
 
 interface Props {
   bearbeiter?: User | null;
@@ -60,7 +67,24 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
   }, [hasChanges, router]);
 
   // DATA
+  const [docs, setDocs] = useState<Dokument[]>([]);
+  const [folders, setFolders] = useState<DokumentOrdner[]>([]);
   const [tickets, setTickets] = useState<Vorgang[]>([]);
+
+  useEffect(() => {
+    if (!user) return
+    const fetchData = async () => {
+      const [docRes, folderRes, ticketRes] = await Promise.all([
+        documentsLoadUser(user.id),
+        foldersLoadUser(user.id),
+        fetchVorgaengeByClient(user.id),
+      ])
+      setDocs(docRes),
+        setFolders(folderRes),
+        setTickets(ticketRes)
+    }
+    fetchData()
+  }, [user])
 
   // INPUTS
   const [beruf, setBeruf] = useState(user?.beruf || '');
@@ -80,8 +104,12 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
   const [telefon, setTelefon] = useState(user?.telefon || '');
   const [vorname, setVorname] = useState(user?.vorname || '');
 
+  // SELECTIONS
+  const [selectedDoc, setSelectedDoc] = useState<Dokument | null>(null);
+
   // STATES
   const [saving, setSaving] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   // ACTIONS
   const saveClient = async () => {
@@ -114,8 +142,27 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
     setSaving(false);
   }
 
+
+  // DOCS
+  const refreshDocs = async () => {
+    const docRes = await documentsLoadUser(user.id);
+    const folderRes = await foldersLoadUser(user.id);
+    setDocs(docRes);
+    setFolders(folderRes);
+  }
+
+  const selectDoc = (d: Dokument) => {
+    setSelectedDoc(d);
+    setVisible(true);
+  }
+
+  const selectFolder = () => {}
+
   return (
-    <div className="page-content column" style={{ padding: 16 }}>
+    <div className="page-content column">
+      <Dialog onHide={() => setVisible(false)} style={{ maxWidth: "90vw", minHeight: "90vh" }} visible={visible}>
+        {selectedDoc && <DocumentPreviewer doc={selectedDoc} />}
+      </Dialog>
       <Toast ref={toast} />
       <Row justifyContent="space-between">
         <h1>{user?.nachname}, {user?.vorname}</h1>
@@ -124,6 +171,8 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
       <DividerBlock height={1} />
       <TabView scrollable>
         <TabPanel header="Daten">
+          <h2>Stammdaten</h2>
+          <DividerBlock height={1} />
           <Accordion className="accordion-admin">
             <AccordionTab header="Allgemeine Angaben">
               <Grid columns={2} gap={16}>
@@ -170,8 +219,14 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
           <DividerBlock height={1} />
           {tickets.length > 0 ? tickets.map((t, i) => <VorgangCard key={i} level="admin" vorgang={t} />) : <span>Bisher wurden noch keine Vorgänge für diesen Kunden angelegt.</span>}
         </TabPanel>
+        <TabPanel header="Dokumente">
+          <h2>Dokumente</h2>
+          <DividerBlock height={1} />
+          <DocumentExplorer documents={docs} folders={folders} onDelete={refreshDocs} onSelectDoc={selectDoc} onSelectFolder={selectFolder} owner={user.id} />
+        </TabPanel>
         <TabPanel header="Rechnungen">
-
+          <h2>Rechnungen</h2>
+          <DividerBlock height={1} />
         </TabPanel>
       </TabView>
 

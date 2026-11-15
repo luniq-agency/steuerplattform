@@ -19,6 +19,10 @@ import Grid from '../components/layout/Grid';
 import DashboardContainer from '../components/layout/DashboardContainer';
 import { ListCheck, Users } from 'lucide-react';
 import { agencyGetSignups } from '../actions/stats/agency';
+import { usersLoadByRole } from '../actions/users';
+import { fetchVorgaengeAdmin, fetchVorgaengeAll } from '../actions/vorgang/vorgang';
+import { Vorgang } from '../types/vorgang';
+import VorgangTable from '../components/vorgang/VorgangTable';
 
 export default function AdminDashboard() {
   const mounted = useRef(false);
@@ -29,14 +33,19 @@ export default function AdminDashboard() {
   const [admins, setAdmins] = useState<User[]>([]);
   const [clients, setClients] = useState<User[]>([]);
   const [registrations, setRegistrations] = useState<Registration[]>([]);
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Vorgang[]>([]);
 
   // INIT
   useEffect(() => {
     if (!userProfile || mounted.current) return;
     mounted.current = true;
-
     const fetchData = async () => {
+      const [clientRes, taskRes] = await Promise.all([
+        usersLoadByRole('client'),
+        fetchVorgaengeAdmin()
+      ])
+      setClients(clientRes);
+      setTasks(taskRes);
     }
     fetchData();
   }, [userProfile]);
@@ -57,7 +66,7 @@ export default function AdminDashboard() {
           target="/admin/vorgaenge"
           targetLabel="Alle ansehen"
         >
-          <TaskTableSmall admins={admins} tasks={tasks} />
+          <VorgangTable role="admin" users={clients} vorgaenge={tasks} />
         </DashboardContainer>
         <DashboardContainer
           header="Letzte Anmeldungen"

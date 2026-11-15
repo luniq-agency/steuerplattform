@@ -29,6 +29,16 @@ export async function fetchVorgangById(id: string | number): Promise<Vorgang> {
   return data;
 }
 
+export async function fetchVorgaengeAdmin(): Promise<Vorgang[]> {
+  const supabase = await createClient();
+  const { data } = await supabase
+    .from('vorgang')
+    .select()
+    .eq('completed_agency', true)
+    .neq('status', 'geschlossen');
+  return data || [];
+}
+
 export async function fetchVorgaengeAll(): Promise<Vorgang[]> {
   const supabase = await createClient();
   const { data } = await supabase.from('vorgang').select();
