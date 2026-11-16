@@ -4,7 +4,7 @@ import { fetchRechnungsposten } from "@/app/actions/invoiceitem";
 import { createKunde, fetchKundeById, fetchKundenByTeam, updateKunde } from "@/app/actions/kunden";
 import { saveInvoice } from "@/app/actions/rechnung";
 import { adminCreateInvoice } from "@/app/actions/stripe";
-import { userLookup, usersLoadByRole } from "@/app/actions/users";
+import { userCreate, userLookup, usersLoadByRole, userUpdate } from "@/app/actions/users";
 import Button from "@/app/components/buttons/Button";
 import { IconButton } from "@/app/components/buttons/IconButton";
 import RechnungspostenTabelle from "@/app/components/clients/rechnungen/RechnungspostenTabelle";
@@ -151,14 +151,14 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
         if (!selectedKunde) return;
         const fetchData = async () => {
             const res = await fetchKundeById(selectedKunde);
-            setEmail(res.email);
-            setHausnummer(res.hausnummer);
-            setLand(res.land);
-            setName(res.name);
-            setOrt(res.ort);
-            setPlz(res.plz);
-            setStrasse(res.strasse);
-            setUst(res.ust);
+            setEmail(res.email || '');
+            setHausnummer(res.hausnummer || '');
+            setLand(res.land || '');
+            setName(res.name || '');
+            setOrt(res.ort || '');
+            setPlz(res.plz || '');
+            setStrasse(res.strasse || '');
+            setUst(res.ust || '');
         }
         fetchData();
     }, [selectedKunde])
@@ -275,8 +275,16 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             plz,
             strasse
         };
+        const userPayload = {
+            email,
+            hausnummer,
+            ort,
+            plz,
+            strasse
+        }
         try {
             selectedKunde ? await updateKunde(payload, selectedKunde) : await createKunde(payload);
+            selectedUser ? await userUpdate(userPayload, selectedUser) : await userCreate(userPayload);
             toast.current?.show({
                 severity: 'success',
                 summary: 'Kunde gespeichert',

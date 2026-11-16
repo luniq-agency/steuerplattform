@@ -96,7 +96,7 @@ export default function Rechnungen({ clients, invoices }: Props) {
         {filterAktiv && <Button label="Filter zurücksetzen" mode="tertiary" onClick={resetFilter} size="small" />}
       </Row>
       <DividerBlock height={1} />
-      <RechnungTable rechnungen={gefiltert || []} />
+      <RechnungTable rechnungen={gefiltert || []} role="admin"/>
     </div>
   );
 }
