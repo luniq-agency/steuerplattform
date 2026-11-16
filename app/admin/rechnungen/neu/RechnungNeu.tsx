@@ -1,7 +1,12 @@
 import RechnungEditor from "@/app/components/shared/rechnungen/RechnungEditor";
+import { User } from "@/app/types/Database";
 
-export default function RechnungNeu() {
+interface Props {
+    user?: User
+}
+
+export default function RechnungNeu({ user }: Props) {
     return (
-        <RechnungEditor />
+        <RechnungEditor mandant={user} />
     )
 }

@@ -4,7 +4,7 @@ import styles from "./Tag.module.css";
 interface Props {
     icon?: LucideIcon;
     label: string;
-    mode?: 'error' | 'success' | 'warning';
+    mode?: string | 'error' | 'success' | 'warning';
 }
 
 const modeStyles: Record<NonNullable<Props['mode']>, React.CSSProperties> = {

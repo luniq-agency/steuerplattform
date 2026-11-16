@@ -20,12 +20,15 @@ import { useAuth } from "@/app/context/AuthContext";
 import { Kunde } from "@/app/types/clients";
 import { User } from "@/app/types/Database";
 import { Rechnung, Rechnungsposten, TempPosten } from "@/app/types/rechnung/Rechnungen";
-import { formatCurrency, toDateString } from "@/app/utils/formats";
-import { Plus } from "lucide-react";
+import { formatCurrency, parseDate, toDateString } from "@/app/utils/formats";
+import { Plus, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Toast } from "primereact/toast";
 import { useEffect, useRef, useState } from "react";
 import Column from "../../layout/Column";
+import { OverlayPanel } from "primereact/overlaypanel";
+import { ContextButton } from "../../buttons/Buttons";
+import { Dialog } from "primereact/dialog";
 
 const rechnungTypes = [
     {
@@ -41,15 +44,18 @@ const rechnungTypes = [
 interface Props {
     admin?: boolean;
     header?: string;
+    mandant?: User;
     rechnung?: Rechnung;
 }
-export default function RechnungEditor({ admin = false, header = 'Neue Rechnung erstellen', rechnung }: Props) {
+
+export default function RechnungEditor({ admin = false, header = 'Neue Rechnung erstellen', rechnung, mandant }: Props) {
     const { team, user, userProfile } = useAuth();
     const router = useRouter();
 
     const idempotencyKey = useRef(crypto.randomUUID());
 
     // IMPORTS
+    const op = useRef<OverlayPanel | null>(null)
     const toast = useRef<Toast | null>(null);
 
     // DATA
@@ -75,28 +81,50 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const [type, setType] = useState('rechnung');
     const [ust, setUst] = useState('');
 
+    // INIT
     useEffect(() => {
         if (!rechnung) return;
         const setData = async () => {
             const posten = await fetchRechnungsposten(rechnung.id);
-            setItems(posten);
+            setPositions(
+                posten.map((p, i) => ({
+                    id: String(p.id),
+                    index: i + 1,
+                    beschreibung: p.beschreibung ?? '',
+                    menge: Number(p.menge) || 0,
+                    einzelpreis: Number(p.einzelpreis) || 0,
+                    gesamtpreis: Number(p.gesamtpreis) || 0,
+                }))
+            );
+            setId(String(rechnung.id));
+            setBezahlziel(parseDate(rechnung.bezahlziel));
             setHausnummer(rechnung.hausnummer || '');
             setOrt(rechnung.ort || '');
             setPlz(rechnung.plz || '');
-            setSelectedUser(String(rechnung.mandant));
+            setPreiseInklusive(rechnung.preise_inklusive ?? false);
+            setRechnungsdatum(parseDate(rechnung.rechnungsdatum));
+            setRechnungsnummer(rechnung.rechnungsnummer || '');
+            setSelectedKunde(rechnung.mandant ? String(rechnung.mandant) : null);
+            if (rechnung.mandant) setSelectedUser(Number(rechnung.mandant));
+            setSteuersatz(Number(rechnung.steuersatz) || 0.19);
             setStrasse(rechnung.strasse || '');
-            setType(rechnung.kategorie || 'Rechnung');
-        }
+            setType(rechnung.kategorie || 'rechnung');
+        };
         setData();
-    }, [rechnung])
+    }, [rechnung]);
+
+    useEffect(() => {
+        if (mandant && !rechnung) setSelectedUser(mandant.id);
+    }, [mandant, rechnung]);
 
     // SELECTIONS
     const [selectedKunde, setSelectedKunde] = useState<string | null>(null);
-    const [selectedUser, setSelectedUser] = useState('');
+    const [selectedUser, setSelectedUser] = useState<number | null>(mandant?.id ?? null);
 
     // STATES
     const [preiseInklusive, setPreiseInklusive] = useState(rechnung?.preise_inklusive ?? false);
     const [saving, setSaving] = useState(false);
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         if (!team) return;
@@ -146,9 +174,6 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     }, [selectedUser])
 
     // CALCULATIONS
-    const tempNetto = positions.reduce((sum, p) => sum + p.gesamtpreis, 0);
-    const invoiceNetto = items.reduce((sum, p) => sum + p.gesamtpreis, 0)
-
     const summe = Math.round(positions.reduce((s, p) => s + p.gesamtpreis, 0) * 100) / 100;
     const netto = preiseInklusive ? Math.round((summe / (1 + steuersatz)) * 100) / 100 : summe;
     const steuern = preiseInklusive
@@ -280,11 +305,23 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
 
     return (
         <div className="content-wrapper" style={{ height: '100%', padding: 16, paddingBottom: 120 }}>
+            <Dialog header="Rechnung löschen" onHide={() => setVisible(false)} style={{ maxWidth: 480 }} visible={visible}>
+                <Column gap={16}>
+                    <span>Bist du sicher, dass du die Rechnung löschen möchtest? Das kann nicht rückgängig gemacht werden!</span>
+                    <Row alignItems="center" gap={8} justifyContent="end">
+                        <Button label="Abbrechen" mode="tertiary" onClick={() => setVisible(false)} />
+                        <Button label="Rechnung löschen" mode="primary" />
+                    </Row>
+                </Column>
+            </Dialog>
+            <OverlayPanel ref={op}>
+                <ContextButton icon={Trash} label="Rechnung löschen" onClick={() => { op.current?.hide(); setVisible(true) }} />
+            </OverlayPanel>
             <Toast ref={toast} />
             <Row justifyContent="space-between">
                 <h1>{header}</h1>
                 <Row gap={8} width="fit-content">
-                    {adminMode && <Button label="Aktionen" />}
+                    {adminMode && <Button label="Aktionen" mode="tertiary" onClick={(e) => op.current?.toggle(e)} size="small" />}
                     <Button
                         disabled={saving || (adminMode && (!selectedUser || positions.length === 0))}
                         label={adminMode ? (saving ? 'Wird erstellt …' : 'Erstellen & versenden') : 'Speichern'}
@@ -350,7 +387,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                     <IconButton icon={Plus} onClick={addPosition} round />
                 </Row>
                 <DividerBlock height={1} />
-                <RechnungspostenTabelle onDelete={removePosition} positions={rechnung ? items : positions} onPositionsChange={setPositions} />
+                <RechnungspostenTabelle onDelete={removePosition} positions={positions} onPositionsChange={setPositions} />
                 <DividerBlock height={1} />
                 <Row justifyContent="end" gap={24}>
                     <span style={{ fontSize: 18, fontWeight: 700 }}>Zwischensumme:</span>

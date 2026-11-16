@@ -5,7 +5,7 @@ import { DatePicker } from "@/app/components/forms/datepicker/DatePicker";
 import { NumberInputLabel, TextAreaLabel, TextInputLabel } from "@/app/components/forms/FormElements";
 import { SelectLabel } from "@/app/components/inputs/Select";
 import Grid from "@/app/components/layout/Grid";
-import { User } from '@/app/types/Database';
+import { Certificate, User } from '@/app/types/Database';
 import { useEffect, useRef, useState } from 'react';
 import { family_options, job_categories } from '@/app/constants/Constants';
 import { useRouter } from 'next/navigation';
@@ -28,6 +28,14 @@ import { foldersLoadUser } from "@/app/actions/folders";
 import { fetchVorgaengeByClient } from "@/app/actions/vorgang/vorgang";
 import { Dialog } from "primereact/dialog";
 import DocumentPreviewer from "@/app/components/documents/DocumentPreviewer";
+import DocumentUploader from "@/app/components/documents/DocumentUploader";
+import RechnungTable from "@/app/components/invoices/RechnungTable";
+import { Rechnung } from "@/app/types/rechnung/Rechnungen";
+import { invoicesLoadUser } from "@/app/actions/invoice";
+import CertificateFile from "@/app/components/documents/CertificateFile";
+import { Zertifikat } from "@/app/types/certificates";
+import { certificatesLoadUser, certificateUpdate } from "@/app/actions/certificates";
+import CertificateUploader from "@/app/components/certificates/CertificateUploader";
 
 interface Props {
   bearbeiter?: User | null;
@@ -69,19 +77,25 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
   // DATA
   const [docs, setDocs] = useState<Dokument[]>([]);
   const [folders, setFolders] = useState<DokumentOrdner[]>([]);
+  const [rechnungen, setRechungen] = useState<Rechnung[]>([]);
   const [tickets, setTickets] = useState<Vorgang[]>([]);
+  const [zertifikate, setZertifikate] = useState<Zertifikat[]>([]);
 
   useEffect(() => {
     if (!user) return
     const fetchData = async () => {
-      const [docRes, folderRes, ticketRes] = await Promise.all([
+      const [docRes, folderRes, rechnungRes, ticketRes, zertRes] = await Promise.all([
         documentsLoadUser(user.id),
         foldersLoadUser(user.id),
+        invoicesLoadUser(user.id),
         fetchVorgaengeByClient(user.id),
+        certificatesLoadUser(user.id)
       ])
-      setDocs(docRes),
-        setFolders(folderRes),
-        setTickets(ticketRes)
+      setDocs(docRes);
+      setFolders(folderRes);
+      setRechungen(rechnungRes);
+      setTickets(ticketRes);
+      setZertifikate(zertRes);
     }
     fetchData()
   }, [user])
@@ -106,6 +120,7 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
 
   // SELECTIONS
   const [selectedDoc, setSelectedDoc] = useState<Dokument | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<DokumentOrdner | null>(null);
 
   // STATES
   const [saving, setSaving] = useState(false);
@@ -144,6 +159,11 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
 
 
   // DOCS
+  const refreshCertificates = async () => {
+    const res = await certificatesLoadUser(user.id)
+    setZertifikate(res);
+  }
+
   const refreshDocs = async () => {
     const docRes = await documentsLoadUser(user.id);
     const folderRes = await foldersLoadUser(user.id);
@@ -156,7 +176,9 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
     setVisible(true);
   }
 
-  const selectFolder = () => {}
+  const selectFolder = (f: DokumentOrdner) => {
+    setSelectedFolder(f);
+  }
 
   return (
     <div className="page-content column">
@@ -171,7 +193,9 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
       <DividerBlock height={1} />
       <TabView scrollable>
         <TabPanel header="Daten">
-          <h2>Stammdaten</h2>
+          <Row alignItems="center" minHeight={30}>
+            <h2>Stammdaten</h2>
+          </Row>
           <DividerBlock height={1} />
           <Accordion className="accordion-admin">
             <AccordionTab header="Allgemeine Angaben">
@@ -220,13 +244,32 @@ export default function KundeDetailPage({ bearbeiter, user }: Props) {
           {tickets.length > 0 ? tickets.map((t, i) => <VorgangCard key={i} level="admin" vorgang={t} />) : <span>Bisher wurden noch keine Vorgänge für diesen Kunden angelegt.</span>}
         </TabPanel>
         <TabPanel header="Dokumente">
-          <h2>Dokumente</h2>
+          <Row alignItems="center" justifyContent="space-between">
+            <h2>Dokumente</h2>
+            <DocumentUploader folder={selectedFolder?.id || null} onUpload={refreshDocs} owner={user.id} />
+          </Row>
           <DividerBlock height={1} />
-          <DocumentExplorer documents={docs} folders={folders} onDelete={refreshDocs} onSelectDoc={selectDoc} onSelectFolder={selectFolder} owner={user.id} />
+          <DocumentExplorer documents={docs} folders={folders} onDelete={refreshDocs} onSelectDoc={selectDoc} onSelectFolder={(v) => selectFolder(v as DokumentOrdner)} owner={user.id} />
+        </TabPanel>
+        <TabPanel header="Zertifikatsdatei">
+          <Row alignItems="center" justifyContent="space-between">
+            <h2>Zertifikatsdateien</h2>
+            <CertificateUploader onUpload={refreshCertificates} user={user} />
+          </Row>
+          <DividerBlock height={1} />
+          <Grid columns={4} gap={16}>
+            {zertifikate.map((c, i) => <CertificateFile certificate={c} key={i} onDelete={refreshCertificates} />)}
+          </Grid>
         </TabPanel>
         <TabPanel header="Rechnungen">
-          <h2>Rechnungen</h2>
+          <Row alignItems="center" justifyContent="space-between">
+            <h2>Rechnungen</h2>
+            <Link href={`/admin/rechnungen/neu?user=${user.id}`}>
+              <Button label="Neue Rechnung" mode="secondary" size="small" />
+            </Link>
+          </Row>
           <DividerBlock height={1} />
+          <RechnungTable rechnungen={rechnungen || []} role="admin" />
         </TabPanel>
       </TabView>
 

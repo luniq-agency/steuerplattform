@@ -1,19 +1,20 @@
 'use client';
 
-import { Button } from 'primereact/button';
 import { certificateCreate } from '@/app/actions/certificates';
-import styles from './Certificates.module.css';
 import { Toast } from 'primereact/toast';
 import { User } from '@/app/types/Database';
 import { useRef, useState } from 'react';
 import { formatYear } from '@/app/utils/formats';
 import { useRouter } from 'next/navigation';
+import Button from '../buttons/Button';
+import { Upload } from 'lucide-react';
 
 interface Props {
+  onUpload?: () => void;
   user: User;
 }
 
-export default function CertificateUploader({ user }: Props) {
+export default function CertificateUploader({ onUpload, user }: Props) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const router = useRouter();
   const toast = useRef<Toast | null>(null);
@@ -32,20 +33,15 @@ export default function CertificateUploader({ user }: Props) {
 
     const year = formatYear(new Date());
     const payload = {
-      email: user.email,
+      name: `Zertifikatsdatei ${user.vorname} ${user.nachname} ${year}`,
       user: user.id,
       year: Number(year),
     };
     try {
       await certificateCreate(file, String(user.id), payload, year);
-      router.refresh();
-      toast.current?.show({
-        severity: 'success',
-        summary: 'Zertifikat hochgeladen',
-        detail: 'Das Zertifikat wurde erfolgreich hochgeladen.',
-      });
       setSubmitting(false);
       setFile(null);
+      onUpload && onUpload();
     } catch (err) {
       console.error(err);
       toast.current?.show({
@@ -73,11 +69,12 @@ export default function CertificateUploader({ user }: Props) {
         type="file"
       />
       <Button
-        className="button-secondary"
         disabled={submitting}
+        icon={Upload}
         label={file ? file.name : 'Zertifikat hochladen'}
+        mode="secondary"
         onClick={file ? upload : startUpload}
-        style={{ position: 'relative' }}
+        size="small"
       />
     </>
   );

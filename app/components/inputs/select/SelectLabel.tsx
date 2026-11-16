@@ -9,7 +9,7 @@ interface Props {
     filter?: boolean;
     label?: string;
     maxWidth?: string | number | undefined;
-    onChange: (value: string) => void;
+    onChange: (value: any) => void;
     onClear?: () => void;
     options?: SelectItemOptionsType;
     optionDescription?: string;

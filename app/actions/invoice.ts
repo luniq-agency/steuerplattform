@@ -57,9 +57,9 @@ export async function invoicesLoadAll(): Promise<Rechnung[]> {
   return data;
 }
 
-export async function invoicesLoadUser(id: string): Promise<Invoice[]> {
+export async function invoicesLoadUser(id: number): Promise<Rechnung[]> {
   const supabase = await createClient();
-  const { data, error } = await supabase.from('rechnung').select('*').eq('user', id);
+  const { data, error } = await supabase.from('rechnung').select('*').eq('mandant', id);
   if (error) throw new Error(error.message);
   return data;
 }

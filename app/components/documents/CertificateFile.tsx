@@ -70,7 +70,7 @@ export default function CertificateFile({ certificate, onDelete}: Props) {
       <div
         className={styles.wrapper}
         onContextMenu={(e) => certificateActions.current?.show(e)}
-        style={{ backgroundColor: 'var(--background)' }}
+        style={{ backgroundColor: 'var(--button-secondary)' }}
       >
         <Image alt="" height={48} src="/icons/pfx.svg" width={48} />
         {editing ? (
@@ -85,7 +85,7 @@ export default function CertificateFile({ certificate, onDelete}: Props) {
             value={editingName}
           />
         ) : (
-          <span style={{ fontSize: 11 }}>{certificate.year}</span>
+          <span style={{ fontSize: 11 }}>{certificate.name}</span>
         )}
       </div>
     </>

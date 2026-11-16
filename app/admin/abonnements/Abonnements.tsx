@@ -7,7 +7,6 @@ import DividerBlock from "@/app/components/DividerBlock";
 import Grid from "@/app/components/layout/Grid";
 import Row from "@/app/components/layout/Row";
 import Tag from "@/app/components/tag/Tag";
-import { invoice_status } from "@/app/constants/Constants";
 import { abo_status } from "@/app/constants/status/invoices";
 import { Abonnement } from "@/app/types/abos";
 import { User } from "@/app/types/Database";
@@ -51,9 +50,8 @@ export default function Abonnements({ clients }: Props) {
     const statusTemplate = (rowData: Abonnement) => {
         const status = abo_status.find((c) => c.value == rowData.status);
         if (!status) return <span>–</span>
-        return <Tag label={status.label} />
+        return <Tag label={status.label} mode={status.level || 'warning'} />
     }
-
 
     // CALC
     const total = abos.reduce((sum, d) => sum + (d.betrag_brutto ?? 0), 0);

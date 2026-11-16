@@ -1,10 +1,12 @@
 export const abo_status = [
-    {
-        label: 'Aktiv',
-        value: 'active'
-    },
-    {
-        label: 'Inaktiv',
-        value: 'inactive'
-    }
-]
+  {
+    label: 'Aktiv',
+    level: 'success',
+    value: 'aktiv',
+  },
+  {
+    label: 'Inaktiv',
+    level: 'error',
+    value: 'inaktiv',
+  },
+];

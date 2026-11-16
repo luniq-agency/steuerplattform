@@ -8,10 +8,12 @@ import { useRouter } from "next/navigation";
 
 
 interface Props {
+    emptyMessage?: string;
     rechnungen: Rechnung[];
+    role?: string;
 }
 
-export default function RechnungTable({ rechnungen }: Props) {
+export default function RechnungTable({ emptyMessage = "Keine Rechungen gefunden", rechnungen, role = "agentur" }: Props) {
     const router = useRouter();
 
     // TEMPLATES
@@ -25,11 +27,11 @@ export default function RechnungTable({ rechnungen }: Props) {
 
     // ACTIONS
     const selectInvoice = (rowData: Rechnung) => {
-        router.push(`/dashboard/rechnungen/${rowData.id}`);
+        router.push(`/${role}/rechnungen/${rowData.id}`);
     };
 
     return (
-        <DataTable onRowClick={(e) => selectInvoice(e.data as Rechnung)} value={rechnungen} emptyMessage="Keine Rechnungen in diesem Monat.">
+        <DataTable onRowClick={(e) => selectInvoice(e.data as Rechnung)} value={rechnungen} emptyMessage={emptyMessage}>
             <Column field="rechnungsnummer" header="#" sortable sortField="rechnungsnummer" style={{ width: 150 }} />
             <Column field="empfaenger" header="Empfänger" />
             <Column body={(rowData: Rechnung) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" sortable sortField="betrag_gesamt" style={{ width: 200 }} />

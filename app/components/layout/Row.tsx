@@ -11,6 +11,7 @@ interface Props {
   grow?: boolean;
   height?: string | number;
   justifyContent?: 'start' | 'center' | 'end' | 'space-between';
+  minHeight?: string | number;
   onClick?: (e: any) => void;
   padding?: number | string;
   style?: CSSProperties;
@@ -25,6 +26,7 @@ export default function Row({
   grow,
   height,
   justifyContent,
+  minHeight,
   onClick,
   padding,
   style,
@@ -41,6 +43,7 @@ export default function Row({
         gap,
         height,
         justifyContent,
+        minHeight,
         padding,
         width,
         ...style
