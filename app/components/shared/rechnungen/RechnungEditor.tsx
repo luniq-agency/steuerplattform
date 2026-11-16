@@ -29,6 +29,7 @@ import Column from "../../layout/Column";
 import { OverlayPanel } from "primereact/overlaypanel";
 import { ContextButton } from "../../buttons/Buttons";
 import { Dialog } from "primereact/dialog";
+import { invoiceDelete } from "@/app/actions/invoice";
 
 const rechnungTypes = [
     {
@@ -53,6 +54,8 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const router = useRouter();
 
     const idempotencyKey = useRef(crypto.randomUUID());
+
+    const path = admin ? 'admin' : 'dashboard';
 
     // IMPORTS
     const op = useRef<OverlayPanel | null>(null)
@@ -256,6 +259,12 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
         setSaving(false);
     };
 
+    const deleteInvoice = async () => {
+        if (!rechnung) return;
+        await invoiceDelete(rechnung.id);
+        router.push(`/${path}/rechungen`)
+    }
+
     const saveClient = async () => {
         const payload = {
             email,
@@ -310,7 +319,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                     <span>Bist du sicher, dass du die Rechnung löschen möchtest? Das kann nicht rückgängig gemacht werden!</span>
                     <Row alignItems="center" gap={8} justifyContent="end">
                         <Button label="Abbrechen" mode="tertiary" onClick={() => setVisible(false)} />
-                        <Button label="Rechnung löschen" mode="primary" />
+                        <Button label="Rechnung löschen" mode="primary" onClick={deleteInvoice} />
                     </Row>
                 </Column>
             </Dialog>
