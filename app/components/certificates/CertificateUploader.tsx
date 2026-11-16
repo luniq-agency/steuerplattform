@@ -33,7 +33,7 @@ export default function CertificateUploader({ onUpload, user }: Props) {
 
     const year = formatYear(new Date());
     const payload = {
-      name: `Zertifikatsdatei ${user.vorname} ${user.nachname} ${year}`,
+      name: file.name,
       user: user.id,
       year: Number(year),
     };
