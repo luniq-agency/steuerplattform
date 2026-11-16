@@ -6,54 +6,53 @@ import { useRef, useState } from 'react';
 import { ContextMenu } from 'primereact/contextmenu';
 import { InputText } from 'primereact/inputtext';
 import { certificateDelete, certificateUpdate } from '@/app/actions/certificates';
+import { zertifikatUrl } from '@/app/actions/certificates/url';
 import { Zertifikat } from '@/app/types/certificates';
 
 interface Props {
   certificate: Zertifikat;
+  onChange?: () => void;
   onDelete: () => void;
 }
 
-export default function CertificateFile({ certificate, onDelete}: Props) {
+export default function CertificateFile({ certificate, onChange, onDelete }: Props) {
   const certificateActions = useRef<ContextMenu | null>(null);
   const certificateInputRef = useRef<HTMLInputElement | null>(null);
   const [editing, setEditing] = useState(false);
   const [editingName, setEditingName] = useState('');
 
   const items = [
+    { label: 'Herunterladen', icon: 'pi pi-download', command: () => certificateDownload() },
     {
-      label: 'Herunterladen',
-      command: () => certificateDownload(),
+      label: 'Jahr ändern',
+      icon: 'pi pi-pencil',
+      command: () => {
+        setEditingName(String(certificate.year ?? ''));
+        setEditing(true);
+        setTimeout(() => certificateInputRef.current?.select(), 50);
+      },
     },
-    {
-      label: 'Umbenennen',
-      command: () => setEditing(true),
-    },
-    {
-      label: 'Löschen',
-      command: () => deleteCertificate(),
-    },
+    { label: 'Löschen', icon: 'pi pi-trash', command: () => deleteCertificate() },
   ];
 
   // ACTIONS
-  const certificateDownload = () => {
-    if (!certificate) return;
-
-    const fileName = `Zertifikat ${certificate.user} ${certificate.year}`;
-
-    const link = document.createElement('a');
-    link.href = certificate.file;
-    link.download = String(certificate.user);
-    link.target = '_blank';
-    link.click();
+  const certificateDownload = async () => {
+    const res = await zertifikatUrl(certificate.id);
+    if (res.error || !res.url) {
+      console.error(res.error);
+      alert(res.error ?? 'Download fehlgeschlagen.');
+      return;
+    }
+    window.location.assign(res.url); // signierter Link mit Download-Header
   };
 
   const confirmEdit = async () => {
-    const payload = {
-      year: Number(editingName),
-    };
-
+    setEditing(false);
+    const jahr = Number(editingName);
+    if (!jahr || jahr === certificate.year) return;
     try {
-      await certificateUpdate(certificate.id, payload);
+      await certificateUpdate(certificate.id, { year: jahr });
+      onChange?.();
     } catch (err) {
       console.error(err);
     }
@@ -70,17 +69,21 @@ export default function CertificateFile({ certificate, onDelete}: Props) {
       <div
         className={styles.wrapper}
         onContextMenu={(e) => certificateActions.current?.show(e)}
+        onDoubleClick={certificateDownload}
         style={{ backgroundColor: 'var(--button-secondary)' }}
       >
         <Image alt="" height={48} src="/icons/pfx.svg" width={48} />
         {editing ? (
           <InputText
+            autoFocus
+            inputMode="numeric"
             onBlur={confirmEdit}
-            onChange={(e) => setEditingName(e.target.value || '')}
+            onChange={(e) => setEditingName(e.target.value.replace(/\D/g, '').slice(0, 4))}
             onKeyDown={(e) => {
               if (e.key === 'Enter') certificateInputRef.current?.blur();
               if (e.key === 'Escape') setEditing(false);
             }}
+            ref={certificateInputRef}
             style={{ fontSize: 11 }}
             value={editingName}
           />
