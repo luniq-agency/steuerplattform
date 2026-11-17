@@ -11,7 +11,7 @@ import StatCard from '../components/cards/StatCard';
 import { Task, User } from '@/app/types/Database';
 import { adminsLoadAll } from '@/app/actions/admin';
 import { clientsLoadAll } from '@/app/actions/clients';
-import { Registration, registrationsLoadMonthly } from '@/app/actions/stats';
+import { clientStatsLoad, Registration, registrationsLoadMonthly } from '@/app/actions/stats';
 import { tasksLoadOpenLatest } from '@/app/actions/tasks';
 import { useProfilePolling } from '@/app/hooks/useProfilePolling';
 import { ClientTableSmall } from '../components/clients/ClientTableSmall';
@@ -40,11 +40,13 @@ export default function AdminDashboard() {
     if (!userProfile || mounted.current) return;
     mounted.current = true;
     const fetchData = async () => {
-      const [clientRes, taskRes] = await Promise.all([
+      const [clientRes, statRes, taskRes] = await Promise.all([
         usersLoadByRole('client'),
-        fetchVorgaengeAdmin()
+        clientStatsLoad('month'),
+        fetchVorgaengeAdmin(),
       ])
       setClients(clientRes);
+      setRegistrations(statRes);
       setTasks(taskRes);
     }
     fetchData();
@@ -60,7 +62,7 @@ export default function AdminDashboard() {
       <DividerBlock height={1} />
       <Grid columns={2} gap={16}>
         <StatCard header="Offene Aufgaben" icon={ListCheck} value={tasks.length} />
-        <StatCard header="Anmeldungen" icon={Users} value={registrations.length ?? 0} />
+        <StatCard header="Anmeldungen (Dieser Monat)" icon={Users} value={registrations.length ?? 0} />
         <DashboardContainer
           header="Offene Aufgaben"
           target="/admin/vorgaenge"

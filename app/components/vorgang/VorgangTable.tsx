@@ -5,6 +5,8 @@ import { Column } from "primereact/column";
 import { DataTable } from "primereact/datatable";
 import Tag from "../tag/Tag";
 import { useRouter } from "next/navigation";
+import { TriangleAlert } from "lucide-react";
+import Row from "../layout/Row";
 
 interface Props {
     mode?: 'short' | 'detailed';
@@ -31,6 +33,7 @@ const formatDeadline = (date: Date) => {
 
 export default function VorgangTable({ mode = 'detailed', role = 'agentur', users, vorgaenge }: Props) {
     const router = useRouter();
+
     // TEMPLATES
     const deadlineTemplate = (rowData: Vorgang) => {
         if (!rowData.due_date) return <span className="deadline deadline--empty">–</span>;
@@ -53,6 +56,12 @@ export default function VorgangTable({ mode = 'detailed', role = 'agentur', user
         );
     };
 
+    const nameTemplate = (rowData: Vorgang) => {
+        const user = users.find((u) => u.id == rowData.user);
+        if (!user) return <span>–</span>;
+        return <span>{user.nachname}, {user.vorname}</span>
+    }
+
     const statusTemplate = (rowData: Vorgang) => {
         const status = ticket_status.find((t) => t.value == rowData.status);
         if (!status) return null;
@@ -62,7 +71,8 @@ export default function VorgangTable({ mode = 'detailed', role = 'agentur', user
     const userTemplate = (rowData: Vorgang) => {
         const user = users.find((u) => u.id == rowData.user);
         if (!user) return <span>–</span>;
-        return <span>{user.nachname}, {user.vorname}</span>;
+        const missing = !user.setup_complete;
+        return (<Row alignItems="center" gap={4}>{missing && <TriangleAlert color="red" size={14} />} <span>{rowData.titel} </span></Row>);
     };
 
     const deadlineColumn = (
@@ -82,7 +92,7 @@ export default function VorgangTable({ mode = 'detailed', role = 'agentur', user
     }
 
     if (mode === 'short') return (
-        <DataTable onRowClick={(v) => select(v.data as Vorgang)} value={vorgaenge}>
+        <DataTable onRowClick={(v) => select(v.data as Vorgang)} rows={10} value={vorgaenge}>
             <Column field="titel" header="Vorgang" style={{ width: "40%" }} />
             <Column body={userTemplate} header="Mandant" />
             {deadlineColumn}
@@ -91,7 +101,7 @@ export default function VorgangTable({ mode = 'detailed', role = 'agentur', user
 
     return (
         <DataTable onRowClick={(v) => select(v.data as Vorgang)} value={vorgaenge}>
-            <Column field="titel" header="Vorgang" style={{ width: "40%" }} />
+            <Column body={nameTemplate} header="Vorgang" style={{ width: "40%" }} />
             <Column body={userTemplate} header="Mandant" />
             <Column body={statusTemplate} field="status" header="Status" />
             {deadlineColumn}

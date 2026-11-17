@@ -34,7 +34,6 @@ export async function fetchVorgaengeAdmin(): Promise<Vorgang[]> {
   const { data } = await supabase
     .from('vorgang')
     .select()
-    .eq('completed_agency', true)
     .neq('status', 'geschlossen');
   return data || [];
 }

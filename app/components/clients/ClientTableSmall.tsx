@@ -39,7 +39,7 @@ export function ClientTableSmall({clients}:Props) {
       emptyMessage="Keine Kunden gefunden."
       value={clients
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-        .slice(0, 5)}
+        .slice(0, 10)}
     >
       <Column body={userTemplate} header="Kunde" />
       <Column body={actionTemplate} header="Aktionen" />

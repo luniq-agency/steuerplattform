@@ -8,6 +8,14 @@ export interface Registration {
   count: number;
 }
 
+function monatsGrenzen(now = new Date()) {
+  const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-01`;
+  return {
+    start: fmt(new Date(now.getFullYear(), now.getMonth(), 1)),
+    ende: fmt(new Date(now.getFullYear(), now.getMonth() + 1, 1)), // Dezember → Januar des Folgejahres
+  };
+}
+
 export async function agencyOverview(): Promise<AgencyStats[]> {
   const supabase = await createClient();
 
@@ -48,25 +56,22 @@ export async function clientStatsLoad(view: 'month' | 'year' | 'all') {
   const now = new Date();
 
   if (view === 'month') {
-    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const { start, ende } = monatsGrenzen(now);
     const { data, error } = await supabase
       .from('stats_clients_daily')
       .select('*')
-      .gte('day', `${now.getFullYear()}-${month}-01`)
-      .lt('day', `${now.getFullYear()}-${String(now.getMonth() + 2).padStart(2, '0')}-01`)
+      .gte('day', start)
+      .lt('day', ende)
       .order('day', { ascending: true });
     if (error) throw error;
     return data;
   }
 
-  const query = supabase
+  let query = supabase
     .from('stats_clients_monthly')
     .select('*')
     .order('month', { ascending: true });
-
-  if (view === 'year') {
-    query.gte('month', `${now.getFullYear()}-01-01`);
-  }
+  if (view === 'year') query = query.gte('month', `${now.getFullYear()}-01-01`);
 
   const { data, error } = await query;
   if (error) throw error;
