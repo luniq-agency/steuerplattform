@@ -62,7 +62,6 @@ export default function AdminVorgangNeu({ vorauswahl = null }: Props) {
     // Dokumente gehören dem gewählten Mandanten, ohne Auswahl dem Agenturmitarbeiter
     const dokumentBesitzer = selectedUser?.id ?? userProfile?.id;
 
-    // INIT: Mandanten laden
     useEffect(() => {
         if (!userProfile) return;
         usersLoadByRole('client').then(setMandanten);
