@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import AdminVorgangNeu from './VorgangNeu';
 
 export const metadata: Metadata = {
   title: 'Vorgang erstellen | ADVACT',
@@ -7,6 +8,6 @@ export const metadata: Metadata = {
 
 export default function Page() {
   return (
-    <div />
+    <AdminVorgangNeu />
   )
 }

@@ -4,6 +4,9 @@ import { useRef, useState } from 'react';
 import Button from '../buttons/Button';
 import { ContextMenu } from 'primereact/contextmenu';
 import { DataTable } from 'primereact/datatable';
+import { Download } from 'lucide-react';
+import { dokumenteDownload } from '@/app/actions/documents/url';
+import { dateienHerunterladen } from '@/app/utils/download';
 import { Column } from 'primereact/column';
 import { Dialog } from 'primereact/dialog';
 import { documentUpdate } from '@/app/actions/documents';
@@ -18,6 +21,7 @@ import { ArrowLeft } from 'lucide-react';
 import LayoutColumn from "../layout/Column";
 import { UserSelectLabel } from '../inputs/select/UserSelectLabel';
 import TextInput from '../inputs/TextInput';
+import DividerBlock from '../DividerBlock';
 
 interface Props {
   documents: Dokument[];
@@ -55,6 +59,9 @@ export default function DocumentExplorer({
   const folderMenu = useRef<ContextMenu | null>(null);
   const rowMenu = useRef<ContextMenu | null>(null);
   const nameInputRef = useRef<HTMLInputElement | null>(null);
+
+  const [auswahl, setAuswahl] = useState<ExplorerRow[]>([]);
+  const [downloadStatus, setDownloadStatus] = useState('');
 
   // STATES
   const [contextRow, setContextRow] = useState<ExplorerRow | null>(null);
@@ -97,6 +104,12 @@ export default function DocumentExplorer({
         if (contextRow?.kind === 'file') onSelectDoc(contextRow.item);
       },
     },
+    {
+      label: 'Herunterladen',
+      icon: 'pi pi-download',
+      visible: contextRow?.kind === 'file',
+      command: () => contextRow?.kind === 'file' && herunterladen([contextRow.item]),
+    },
     { separator: true },
     { label: 'Neuen Ordner anlegen', icon: 'pi pi-folder-plus', command: () => openDialog({ modus: 'neu' }) },
   ];
@@ -105,6 +118,7 @@ export default function DocumentExplorer({
   const openFolder = (folder: DokumentOrdner) => {
     setSelectedFolder(folder.id);
     onSelectFolder(folder);
+    setAuswahl([]);
   };
 
   const goUp = () => {
@@ -112,6 +126,7 @@ export default function DocumentExplorer({
     const parent = folders.find((f) => f.id === current?.parent) ?? null;
     setSelectedFolder(parent?.id ?? null);
     onSelectFolder(parent);
+    setAuswahl([]);
   };
 
   // DIALOG
@@ -157,6 +172,29 @@ export default function DocumentExplorer({
       setSaving(false);
     }
   };
+
+  // HERUNTERLADEN
+  const herunterladen = async (docs: Dokument[]) => {
+    if (!docs.length || downloadStatus) return;
+    setDownloadStatus('Wird vorbereitet …');
+    try {
+      const res = await dokumenteDownload(docs.map((d) => Number(d.id)));
+      if (res.error || !res.dateien) throw new Error(res.error);
+
+      const ordnerName = folders.find((f) => f.id === selectedFolder)?.name;
+      await dateienHerunterladen(res.dateien, `${ordnerName ?? 'Dokumente'}.zip`, (fertig, gesamt) =>
+        setDownloadStatus(`${fertig} / ${gesamt} geladen …`)
+      );
+      setAuswahl([]);
+    } catch (err) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'Download fehlgeschlagen.');
+    } finally {
+      setDownloadStatus('');
+    }
+  };
+
+  const ausgewaehlteDocs = auswahl.filter((r) => r.kind === 'file').map((r) => r.item as Dokument);
 
   // VERSCHIEBEN
   const dropOnFolder = async (folderId: string | number) => {
@@ -276,12 +314,27 @@ export default function DocumentExplorer({
         </LayoutColumn>
       </Dialog>
 
-      <Row gap={8}>
-        {selectedFolder !== null && (
-          <Button icon={ArrowLeft} label="Zurück" onClick={goUp} />
+      <Row alignItems="center" gap={16} justifyContent="start">
+        {selectedFolder && <Button icon={ArrowLeft} label="Zurück" onClick={goUp} />}
+        {ausgewaehlteDocs.length > 0 && (
+          <Row gap={8}>
+            <Button
+              disabled={!!downloadStatus}
+              icon={Download}
+              label={
+                downloadStatus ||
+                (ausgewaehlteDocs.length === 1 ? 'Herunterladen' : `${ausgewaehlteDocs.length} Dokumente herunterladen`)
+              }
+              mode="tertiary"
+              onClick={() => herunterladen(ausgewaehlteDocs)}
+              size="small"
+            />
+            <Button label="Auswahl zurücksetzen" mode='tertiary' onClick={() => setAuswahl([])} size='small' />
+          </Row>
         )}
       </Row>
 
+      <DividerBlock height={1} />
       <div
         onContextMenu={(e) => {
           // Rechtsklick auf Ordner/Datei → macht die Tabelle selbst
@@ -291,15 +344,15 @@ export default function DocumentExplorer({
         style={{ flexGrow: 1 }}
       >
         <DataTable
-          contextMenuSelection={contextRow ?? undefined}
           dataKey="key"
           emptyMessage="Dieser Ordner ist leer."
+          isDataSelectable={(e) => (e.data as ExplorerRow).kind === 'file'}
+          onSelectionChange={(e) => setAuswahl(e.value as ExplorerRow[])}
           loading={loading}
           onContextMenu={(e) => {
             setContextRow(e.data as ExplorerRow);
             rowMenu.current?.show(e.originalEvent);
           }}
-          onContextMenuSelectionChange={(e) => setContextRow(e.value as ExplorerRow)}
           onRowClick={(e) => {
             const row = e.data as ExplorerRow;
             if (row.kind === 'folder') openFolder(row.item);
@@ -307,8 +360,11 @@ export default function DocumentExplorer({
           }}
           rowClassName={() => `${styles.explorerRow} kontext-zeile`}
           rowHover
+          selection={auswahl}
+          selectionMode="checkbox"
           value={rows}
         >
+          <Column headerStyle={{ width: 48 }} selectionMode="multiple" />
           <Column body={nameTemplate} header="Dateiname" />
           {showOwner && <Column body={ownerTemplate} header="Besitzer" />}
           <Column body={dateTemplate} header="Hochgeladen am" style={{ width: 180 }} />
