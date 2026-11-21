@@ -116,6 +116,7 @@ export default function Rechnungen() {
           <Calendar
             dateFormat="MM yy"
             locale="de"
+            monthNavigator
             onChange={(e) => e.value && setMonat(e.value as Date)}
             value={monat}
             view="month"
@@ -147,7 +148,7 @@ export default function Rechnungen() {
         />
       </Row>
       <DividerBlock height={1} />
-      <RechnungTable rechnungen={rechnungenImMonat} />
+      <RechnungTable rechnungen={rechnungenImMonat} role="dashboard"/>
     </div>
   );
 }

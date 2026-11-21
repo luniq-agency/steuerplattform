@@ -3,7 +3,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { createClient } from '@/app/utils/supabase/client';
 import type { User } from '@supabase/supabase-js';
-import { signOut } from '../actions/auth';
 import type { Client, User as UserProfile } from '../types/Database';
 import { Team } from '../types/teams';
 

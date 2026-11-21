@@ -1,5 +1,5 @@
 import { clientsLoadAdmin } from '@/app/actions/clients';
-import { invoicesLoadAll } from '@/app/actions/invoice';
+import { invoicesLoadTeam } from '@/app/actions/invoice';
 import { Metadata } from 'next';
 import Rechnungen from './Rechnungen';
 
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function AdminInvoicesPage() {
   const clients = await clientsLoadAdmin();
-  const invoices = await invoicesLoadAll();
+  const invoices = await invoicesLoadTeam(7);
 
   return <Rechnungen clients={clients} invoices={invoices} />;
 }

@@ -2,6 +2,7 @@
 
 import { createClient } from '@/app/utils/supabase/server';
 import { User } from '@/app/types/Database';
+import { Kunde } from '@/app/types/clients';
 
 export async function clientsLoad(user: User): Promise<User[]> {
   const supabase = await createClient();

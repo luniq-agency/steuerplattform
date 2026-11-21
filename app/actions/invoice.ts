@@ -24,7 +24,7 @@ export async function invoiceLoadLatest(): Promise<Invoice[]> {
     .from('rechnung')
     .select('*')
     .order('created_at', { ascending: false })
-    .select()
+    .select();
 
   if (error) throw new Error(error.message);
   return data || [];
@@ -53,6 +53,13 @@ export async function invoiceLoadSingle(id: string): Promise<Rechnung> {
 export async function invoicesLoadAll(): Promise<Rechnung[]> {
   const supabase = await createClient();
   const { data, error } = await supabase.from('rechnung').select('*');
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function invoicesLoadTeam(team: number): Promise<Rechnung[]> {
+  const supabase = await createClient();
+  const { data, error } = await supabase.from('rechnung').select('*').eq('team', team);
   if (error) throw new Error(error.message);
   return data;
 }

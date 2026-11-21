@@ -30,7 +30,6 @@ export default function Rechnungen({ clients, invoices }: Props) {
   const { userProfile } = useAuth();
   const router = useRouter();
 
-
   // FILTER
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');

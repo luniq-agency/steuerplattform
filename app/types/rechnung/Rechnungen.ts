@@ -10,6 +10,7 @@ export type Rechnung = {
   hausnummer: string;
   id: string;
   kategorie: 'gutschrift' | 'rechnung';
+  kunde: number | null;
   kundennummer: string;
   land: string;
   link: string;

@@ -30,6 +30,7 @@ import { OverlayPanel } from "primereact/overlaypanel";
 import { ContextButton } from "../../buttons/Buttons";
 import { Dialog } from "primereact/dialog";
 import { invoiceDelete } from "@/app/actions/invoice";
+import { invoice_status } from "@/app/constants/Constants";
 
 const rechnungTypes = [
     {
@@ -79,6 +80,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const [plz, setPlz] = useState('');
     const [rechnungsdatum, setRechnungsdatum] = useState<Date | null>(null);
     const [rechnungsnummer, setRechnungsnummer] = useState('');
+    const [status, setStatus] = useState('draft');
     const [steuersatz, setSteuersatz] = useState(0.19);
     const [strasse, setStrasse] = useState('');
     const [type, setType] = useState('rechnung');
@@ -107,21 +109,18 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             setPreiseInklusive(rechnung.preise_inklusive ?? false);
             setRechnungsdatum(parseDate(rechnung.rechnungsdatum));
             setRechnungsnummer(rechnung.rechnungsnummer || '');
-            setSelectedKunde(rechnung.mandant ? String(rechnung.mandant) : null);
+            setSelectedKunde(rechnung.kunde ? (rechnung.kunde) : null);
             if (rechnung.mandant) setSelectedUser(Number(rechnung.mandant));
-            setSteuersatz(Number(rechnung.steuersatz) || 0.19);
+            setStatus(rechnung.status);
+            setSteuersatz(rechnung.steuersatz != null ? Number(rechnung.steuersatz) : 0.19);
             setStrasse(rechnung.strasse || '');
             setType(rechnung.kategorie || 'rechnung');
         };
         setData();
     }, [rechnung]);
 
-    useEffect(() => {
-        if (mandant && !rechnung) setSelectedUser(mandant.id);
-    }, [mandant, rechnung]);
-
     // SELECTIONS
-    const [selectedKunde, setSelectedKunde] = useState<string | null>(null);
+    const [selectedKunde, setSelectedKunde] = useState<number | null>(null);
     const [selectedUser, setSelectedUser] = useState<number | null>(mandant?.id ?? null);
 
     // STATES
@@ -130,13 +129,14 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        if (!team) return;
+        if (admin || !team?.id) return;
         const fetchData = async () => {
-            const res = await fetchKundenByTeam(team.id);
+            const res = await fetchKundenByTeam(team?.id || 0);
             setKunden(res);
+            console.log("Firmen:", res)
         }
         fetchData();
-    }, [team])
+    }, [admin, team?.id]);
 
     useEffect(() => {
         if (userProfile?.rolle != 'admin') return;
@@ -184,10 +184,12 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
         : Math.round(summe * steuersatz * 100) / 100;
     const brutto = Math.round((netto + steuern) * 100) / 100;
 
+    // KUNDEN
     const clients = users.map((a) => ({
         ...a,
         fullName: `${a.nachname}, ${a.vorname}`,
     })).sort((a: User, b: User) => a.nachname.localeCompare(b.nachname));
+    const kundenSortiert = [...kunden].sort((a, b) => (a.name ?? '').localeCompare(b.name ?? '', 'de'));
 
     // ACTIONS
     const adminCreateInvoiceHandler = async () => {
@@ -220,21 +222,34 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     };
 
     const createInvoice = async () => {
-        if (!userProfile) return;
+        if (!userProfile || !selectedKunde) return;
         setSaving(true);
-
+        const recipient = await fetchKundeById(selectedKunde);
+        const deadline =
+            bezahlziehl ??
+            (rechnungsdatum
+                ? new Date(rechnungsdatum.getFullYear(), rechnungsdatum.getMonth(), rechnungsdatum.getDate() + 7)
+                : null);
         const payload = {
             betrag_gesamt: brutto,
             betrag_netto: netto,
             betrag_steuern: steuern,
-            bezahlziel: toDateString(bezahlziehl),
+            bezahlziel: toDateString(deadline),
             created_by: userProfile.id,
+            empfaenger: recipient?.name,
+            hausnummer: recipient.hausnummer || '',
             kategorie: type,
             kunde: Number(selectedKunde) || null,
+            land: recipient.land || '',
+            ort: recipient?.ort || '',
+            plz: recipient?.plz || '',
             rechnungsdatum: toDateString(rechnungsdatum),
             rechnungsnummer,
+            status,
             steuersatz,
+            strasse: recipient.strasse || '',
             team: team?.id,
+            ust: recipient.ust || ''
         };
 
         const result = await saveInvoice(payload, positions, id || undefined);
@@ -262,7 +277,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     const deleteInvoice = async () => {
         if (!rechnung) return;
         await invoiceDelete(rechnung.id);
-        router.push(`/${path}/rechungen`)
+        router.push(`/${path}/rechnungen`)
     }
 
     const saveClient = async () => {
@@ -362,6 +377,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                             <DatePicker label="Rechnungsdatum" onChange={setRechnungsdatum} value={rechnungsdatum} />
                         </>
                     )}
+                    <SelectLabel label="Status" onChange={setStatus} options={invoice_status} value={status} />
                 </Grid>
             </DashboardContainer>
             <DividerBlock height={1} />
@@ -369,7 +385,11 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                 <h2>Kunde/Empfänger</h2>
                 <DividerBlock height={1} />
                 <Grid columns={2} gap={16}>
-                    {adminMode ? <SelectLabel filter label="Kunde" onChange={setSelectedUser} optionLabel="fullName" optionValue="id" options={clients} value={selectedUser} /> : <SelectLabel filter label="Kunde" onChange={setSelectedKunde} optionLabel="name" optionValue="id" options={kunden} value={selectedKunde} />}
+                    {admin ? (
+                        <SelectLabel filter label="Kunde" onChange={setSelectedUser} optionLabel="fullName" optionValue="id" options={clients} value={selectedUser} />
+                    ) : (
+                        <SelectLabel filter label="Kunde" onChange={setSelectedKunde} optionLabel="name" optionValue="id" options={kundenSortiert} value={selectedKunde} />
+                    )}
                     <TextInputLabel label="Strasse" onChange={setStrasse} value={strasse} />
                     <TextInputLabel label="Hausnr." onChange={setHausnummer} value={hausnummer} />
                     <TextInputLabel label="PLZ" onChange={setPlz} value={plz} />
@@ -381,16 +401,22 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                         <Row gap={4} width="fit-content">
                             <Button
                                 label="zzgl. USt."
-                                mode={!preiseInklusive ? 'secondary' : 'tertiary'}
-                                onClick={() => setPreiseInklusive(false)}
+                                mode={!preiseInklusive && steuersatz > 0 ? 'secondary' : 'tertiary'}
+                                onClick={() => { setPreiseInklusive(false); setSteuersatz(0.19); }}
                                 size="medium"
                             />
                             <Button
                                 label="inkl. USt."
-                                mode={preiseInklusive ? 'secondary' : 'tertiary'}
-                                onClick={() => setPreiseInklusive(true)}
+                                mode={preiseInklusive && steuersatz > 0 ? 'secondary' : 'tertiary'}
+                                onClick={() => { setPreiseInklusive(true); setSteuersatz(0.19); }}
                                 size="medium"
                             />
+                            {!admin && <Button
+                                label="Ohne"
+                                mode={steuersatz === 0 ? 'secondary' : 'tertiary'}
+                                onClick={() => { setPreiseInklusive(false); setSteuersatz(0); }}
+                                size="medium"
+                            />}
                         </Row>
                     </Column>
                 </Grid>
@@ -408,15 +434,15 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                 <DividerBlock height={1} />
                 <Row justifyContent="end" gap={24}>
                     <span style={{ fontSize: 18, fontWeight: 700 }}>Zwischensumme:</span>
-                    <span style={{ fontSize: 18, fontWeight: 700 }}>{formatCurrency(netto)}</span>
+                    <span style={{ fontSize: 18, fontWeight: 700, textAlign: 'right', width: 100 }}>{formatCurrency(netto)}</span>
                 </Row>
                 <Row justifyContent="end" gap={24}>
                     <span style={{ fontSize: 18, fontWeight: 700 }}>Steuern:</span>
-                    <span style={{ fontSize: 18, fontWeight: 700 }}>{formatCurrency(steuern)}</span>
+                    <span style={{ fontSize: 18, fontWeight: 700, textAlign: 'right', width: 100 }}>{formatCurrency(steuern)}</span>
                 </Row>
                 <Row justifyContent="end" gap={24}>
                     <span style={{ fontSize: 18, fontWeight: 700 }}>Gesamt:</span>
-                    <span style={{ fontSize: 18, fontWeight: 700 }}>{formatCurrency(brutto)}</span>
+                    <span style={{ fontSize: 18, fontWeight: 700, textAlign: 'right', width: 100 }}>{formatCurrency(brutto)}</span>
                 </Row>
             </DashboardContainer>
         </div>

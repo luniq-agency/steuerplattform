@@ -42,13 +42,6 @@ export default function ClientSidebar() {
         <AdminSidebarButton icon={File} label="Rechnungen" target="/dashboard/rechnungen" />
         {isDev && <AdminSidebarButton icon={Receipt} label="Belege/Ausgaben" target="/dashboard/belege" />}
         <DividerBlock height={1} />
-        {/*
-        <label>
-          <strong>Buchhaltung</strong>
-        </label>
-        <AdminSidebarButton icon={ChartArea} label="Überblick" target="/dashboard/ueberblick" />
-        <DividerBlock height={1} />
-        */}
         <label>
           <strong>Verwaltung</strong>
         </label>

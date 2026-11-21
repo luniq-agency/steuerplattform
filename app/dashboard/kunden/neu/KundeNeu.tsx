@@ -3,6 +3,7 @@
 import { createKunde, updateKunde } from "@/app/actions/kunden";
 import MandantenEditor from "@/app/components/agency/mandanten/MandantenEditor";
 import Button from "@/app/components/buttons/Button";
+import KundenEditor from "@/app/components/clients/kunden/KundenEditor";
 import DividerBlock from "@/app/components/DividerBlock";
 import { TextInputLabel } from "@/app/components/forms/FormElements";
 import { SelectLabel } from "@/app/components/inputs/Select";
@@ -24,15 +25,15 @@ export default function KundeNeu() {
     const saved = () => {
         toast.current?.show({
             severity: 'success',
-            summary: 'Mandant gespeichert',
-            detail: 'Der Mandant wurde erfolgreich angelegt.',
+            summary: 'Kunde gespeichert',
+            detail: 'Der Kunde wurde erfolgreich angelegt.',
         });
     }
 
     return (
         <>
             <Toast ref={toast} />
-            <MandantenEditor header="Neuen Kunden anlegen" onSave={saved} />
+            <KundenEditor header="Neuen Kunden anlegen" onSave={saved} />
         </>
 
     )

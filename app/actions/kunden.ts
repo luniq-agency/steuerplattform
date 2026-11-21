@@ -6,7 +6,11 @@ import { Kunde } from '../types/clients';
 // POST
 export async function createKunde(payload: Partial<Kunde>): Promise<Kunde> {
   const supabase = await createClient();
-  const { data } = await supabase.from('kunde').insert(payload).select('*').single();
+  const { data, error } = await supabase.from('kunde').insert(payload).select('*').single();
+  if (error) {
+    console.error('Kunde konnte nicht angelegt werden:', error);
+    throw new Error(error.message);
+  }
   return data;
 }
 
@@ -20,7 +24,7 @@ export async function fetchKundeById(id: string | number): Promise<Kunde> {
 export async function fetchKundenByTeam(team: string | number): Promise<Kunde[]> {
   const supabase = await createClient();
   const { data } = await supabase.from('kunde').select('*').eq('team', team);
-  return data || [];
+  return data || [];
 }
 
 // PATCH

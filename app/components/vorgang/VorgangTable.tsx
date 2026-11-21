@@ -15,7 +15,7 @@ interface Props {
     vorgaenge: Vorgang[];
 }
 
-const WARN_DAYS = 7; // ab wie vielen Tagen vor Fälligkeit rot
+const WARN_DAYS = 7;
 
 const formatDeadline = (date: Date) => {
     const sameYear = date.getFullYear() === new Date().getFullYear();
@@ -25,10 +25,10 @@ const formatDeadline = (date: Date) => {
             month: 'short',
             ...(sameYear ? {} : { year: 'numeric' }),
         })
-        .replace('.', '. ')          // "10.Jan." -> "10. Jan."
-        .replace(/\.\s*$/, '')       // abschließenden Punkt entfernen
+        .replace('.', '. ')         
+        .replace(/\.\s*$/, '')      
         .replace(/\s+/g, ' ')
-        .trim();                     // -> "10. Jan" bzw. "10. Jan 2027"
+        .trim();      
 };
 
 export default function VorgangTable({ mode = 'detailed', role = 'agentur', users, vorgaenge }: Props) {

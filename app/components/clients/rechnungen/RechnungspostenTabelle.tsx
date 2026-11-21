@@ -48,6 +48,11 @@ export default function RechnungspostenTabelle<T extends TempPosten>({
 
   const quantityEditTemplate = (rowData: T) => (
     <InputNumber
+      locale="de-DE"
+      min={0}
+      minFractionDigits={0}
+      maxFractionDigits={2}
+      mode='decimal'
       value={rowData.menge ?? 0}
       onValueChange={(e) => updateItem(rowData.id, 'menge', e.value ?? 0)}
     />

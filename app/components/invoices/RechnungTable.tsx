@@ -17,6 +17,13 @@ export default function RechnungTable({ emptyMessage = "Keine Rechungen gefunden
     const router = useRouter();
 
     // TEMPLATES
+    const deadlineTemplate = (rowData: Rechnung) => {
+        if (!rowData.bezahlziel) return <span>–</span>
+        return (
+            <span>{formatDate(rowData.bezahlziel)}</span>
+        )
+    }
+
     const statusTemplate = (rowData: Rechnung) => {
         const status = invoice_status.find((i) => i.value == rowData.status);
         if (!status) return <span>–</span>
@@ -36,7 +43,7 @@ export default function RechnungTable({ emptyMessage = "Keine Rechungen gefunden
             <Column field="empfaenger" header="Empfänger" />
             <Column body={(rowData: Rechnung) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" sortable sortField="betrag_gesamt" style={{ width: 200 }} />
             <Column body={(rowData: Rechnung) => formatDate(rowData.rechnungsdatum)} header="Datum" sortable sortField="rechungsdatum" style={{ width: 200 }} />
-            <Column body={(rowData: Rechnung) => formatDate(rowData.bezahlziel)} header="Zahlungsziel" sortable sortField="bezahlziel" style={{ width: 200 }} />
+            <Column body={deadlineTemplate} header="Zahlungsziel" sortable sortField="bezahlziel" style={{ width: 200 }} />
             <Column body={statusTemplate} header="Status" style={{ width: 200 }} />
         </DataTable>
     )

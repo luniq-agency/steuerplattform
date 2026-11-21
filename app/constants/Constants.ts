@@ -115,8 +115,8 @@ export const family_options = [
 
 export const invoice_status = [
   {
-    bg: 'grey',
-    color: 'black',
+    bg: '#FFECF8',
+    color: '#50253F',
     label: 'Entwurf',
     value: 'entwurf',
   },
