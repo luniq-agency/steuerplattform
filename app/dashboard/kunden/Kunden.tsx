@@ -100,12 +100,11 @@ export default function Kunden() {
         </Row>
       </Row>
       <DividerBlock height={2} />
-      <DataTable onRowClick={(e) => selectClient(e.data as Kunde)} value={kunden} emptyMessage="Bisher wurden noch keine Kunden angelegt.">
+      <DataTable onRowClick={(e) => selectClient(e.data as Kunde)}  emptyMessage="Bisher wurden noch keine Kunden angelegt." sortField="name" value={kunden}>
         <Column field="kundennummer" header="#" />
         <Column field="name" header="Name" sortable sortField='name'/>
         <Column body={addressTemplate} header="Anschrift" />
         <Column body={countryTemplate} header="Land" />
-        <Column body={statusTemplate} header="Status" />
       </DataTable>
     </div>
   );
