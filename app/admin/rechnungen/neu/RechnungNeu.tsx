@@ -7,6 +7,6 @@ interface Props {
 
 export default function RechnungNeu({ user }: Props) {
     return (
-        <RechnungEditor mandant={user} />
+        <RechnungEditor admin mandant={user} />
     )
 }

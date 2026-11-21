@@ -17,7 +17,7 @@ export default function RechnungPage({ invoice }: Props) {
   return (
     <div className="content-wrapper">
       <Toast ref={toast} />
-      <RechnungEditor header="Rechnung bearbeiten" rechnung={invoice} />
+      <RechnungEditor admin header="Rechnung bearbeiten" rechnung={invoice} />
     </div>
   );
 }

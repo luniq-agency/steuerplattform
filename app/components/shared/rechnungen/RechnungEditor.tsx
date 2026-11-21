@@ -58,6 +58,8 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
 
     const path = admin ? 'admin' : 'dashboard';
 
+    const adminMode = admin || userProfile?.rolle === 'admin';
+
     // IMPORTS
     const op = useRef<OverlayPanel | null>(null)
     const toast = useRef<Toast | null>(null);
@@ -139,13 +141,13 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
     }, [admin, team?.id]);
 
     useEffect(() => {
-        if (userProfile?.rolle != 'admin') return;
+        if (!adminMode) return;
         const fetchUsers = async () => {
             const res = await usersLoadByRole('client');
-            setUsers(res);
-        }
+            setUsers(res ?? []);
+        };
         fetchUsers();
-    }, [userProfile])
+    }, [adminMode]);
 
     useEffect(() => {
         if (!selectedKunde) return;
@@ -332,8 +334,6 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
                 .map((p, i) => ({ ...p, index: i + 1 }))
         );
     };
-
-    const adminMode = userProfile?.rolle == 'admin'
 
     return (
         <div className="content-wrapper" style={{ height: '100%', padding: 16, paddingBottom: 120 }}>
