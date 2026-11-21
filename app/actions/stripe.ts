@@ -111,6 +111,7 @@ export async function adminCreateInvoice(input: AdminRechnungInput): Promise<Adm
         stripe_invoice_id: final.id,
         stripe_url: final.hosted_invoice_url,
         stripe_pdf: final.invoice_pdf,
+        team: 7,
       },
       positionen
     );
