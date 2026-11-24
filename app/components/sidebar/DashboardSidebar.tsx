@@ -40,7 +40,7 @@ export default function ClientSidebar() {
           <SidebarLabel label="Dokumente" />
           <AdminSidebarButton icon={Folder} label="Alle Dokumente" target="/dashboard/dokumente" />
           <DividerBlock height={1} />
-          <SidebarLabel hidden={!isDev} label="Finanzen" />
+          <SidebarLabel label="Finanzen" />
           <AdminSidebarButton exact icon={ChartArea} label="Überblick" target="/dashboard/finanzen" />
           <AdminSidebarButton icon={File} label="Rechnungen" target="/dashboard/finanzen/rechnungen" />
           <AdminSidebarButton hidden={!isDev} icon={Receipt} label="Belege/Ausgaben" target="/dashboard/finanzen/belege" />
