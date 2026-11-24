@@ -49,11 +49,11 @@ export default function ClientSidebar() {
           <AdminSidebarButton hidden={!isDev} icon={SquareKanban} label="Projekte" target="/dashboard/projekte" />
           <DividerBlock height={1} />
           <SidebarLabel label="Unternehmen" />
-          <AdminSidebarButton hidden={!team?.einzelkonto} icon={BriefcaseBusiness} label="Mein Unternehmen" target="/dashboard/team" />
+          <AdminSidebarButton hidden={!team?.einzelkonto || !isDev} icon={BriefcaseBusiness} label="Mein Unternehmen" target="/dashboard/team" />
           <AdminSidebarButton hidden={!team?.einzelkonto} icon={Users} label="Mitarbeiter" target="/dashboard/team/mitarbeiter" />
           <AdminSidebarButton icon={Handshake} label="Kunden" target="/dashboard/kunden" />
           <DividerBlock height={1} />
-          <SidebarLabel hidden={!isDev} label="Hilfe & Support" />
+          <SidebarLabel label="Hilfe & Support" />
           <AdminSidebarButton
             icon={CheckCheck}
             label="Meine Vorgänge"
