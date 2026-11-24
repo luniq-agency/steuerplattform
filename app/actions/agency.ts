@@ -17,7 +17,7 @@ export async function agencyCreate(data: Partial<Agent>) {
   try {
     await sendEmail('agentur-einladung', created.email, {
       name: data.vorname,
-      url: `${process.env.NEXT_PUBLIC_BASE_URL}/admin/konto-erstellen/${created.id}`,
+      url: `${process.env.NEXT_PUBLIC_BASE_URL}/konto-erstellen/${created.id}`,
     });
   } catch (err) {
     console.error('Email Fehler:', err);

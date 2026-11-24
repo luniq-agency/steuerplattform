@@ -3,13 +3,15 @@
 import DividerBlock from '@/app/components/DividerBlock';
 import { useAuth } from '@/app/context/AuthContext';
 import { useEffect, useMemo, useState } from 'react';
-import SkeletonGrid from '../../components/ui/loading/SkeletonGrid';
+import SkeletonGrid from '@/app/components/ui/loading/SkeletonGrid';
 import Link from 'next/link';
 import Button from '@/app/components/buttons/Button';
 import { CircleCheck, Clock, Euro, Plus } from 'lucide-react';
 import Row from '@/app/components/layout/Row';
+import { DataTable } from 'primereact/datatable';
+import { Column } from 'primereact/column';
 import { Calendar } from 'primereact/calendar';
-import { SelectLabel } from '@/app/components/inputs/Select';
+import { formatCurrency, formatDate } from '@/app/utils/formats';
 import { Rechnung } from '@/app/types/rechnung/Rechnungen';
 import { fetchInvoicesByTeam } from '@/app/actions/documents/rechnungen';
 import StatCard from '@/app/components/cards/StatCard';
@@ -17,8 +19,6 @@ import { createClient } from '@/app/utils/supabase/client';
 import { invoice_status } from '@/app/constants/Constants';
 import StatusTag from '@/app/components/status/StatusTag';
 import { useRouter } from 'next/navigation';
-import RechnungTable from '@/app/components/invoices/RechnungTable';
-import SearchBox from '@/app/components/forms/SearchBox';
 
 type Statistik = {
   gesamt_anzahl: number;
@@ -33,7 +33,7 @@ type Statistik = {
 const monatKey = (d: Date) =>
   `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
 
-export default function Rechnungen() {
+export default function Belege() {
   const { team, userProfile } = useAuth();
   const router = useRouter();
   const supabase = useMemo(() => createClient(), []);
@@ -92,13 +92,27 @@ export default function Rechnungen() {
     [rechnungen, monat]
   );
 
+  // TEMPLATES
+  const statusTemplate = (rowData: Rechnung) => {
+    const status = invoice_status.find((i) => i.value == rowData.status);
+    if (!status) return <span>–</span>
+    return (
+      <StatusTag bg={status.bg || 'blue'} color={status.color || 'white'} label={status?.label} />
+    )
+  }
+
+  // ACTIONS
+  const selectInvoice = (rowData: Rechnung) => {
+    router.push(`/dashboard/rechnungen/${rowData.id}`);
+  };
+
   if (loading || !userProfile) return (
     <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
       <Row alignItems="center" justifyContent="space-between">
-        <h1>Rechnungen</h1>
+        <h1>Belege</h1>
         <Row alignItems="center" gap={8} width="fit-content">
           <SkeletonGrid columns="1fr" count={1} gap={16} height="36px" width="185px" />
-          <Link href="/dashboard/rechnungen/neu">
+          <Link href="/dashboard/belege/neu">
             <Button icon={Plus} label="Neue Rechnung" mode="secondary" size="small" />
           </Link>
         </Row>
@@ -111,18 +125,17 @@ export default function Rechnungen() {
   return (
     <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
       <Row alignItems="center" justifyContent="space-between">
-        <h1>Rechnungen</h1>
+        <h1>Belege</h1>
         <Row alignItems="center" gap={8} width="fit-content">
           <Calendar
             dateFormat="MM yy"
             locale="de"
-            monthNavigator
             onChange={(e) => e.value && setMonat(e.value as Date)}
             value={monat}
             view="month"
           />
-          <Link href="/dashboard/rechnungen/neu">
-            <Button icon={Plus} label="Neue Rechnung" mode="secondary" size="small" />
+          <Link href="/dashboard/belege/neu">
+            <Button icon={Plus} label="Neuer Beleg" mode="secondary" size="small" />
           </Link>
         </Row>
       </Row>
@@ -147,8 +160,15 @@ export default function Rechnungen() {
           value={stats?.offen_summe ?? 0}
         />
       </Row>
-      <DividerBlock height={1} />
-      <RechnungTable rechnungen={rechnungenImMonat} role="dashboard"/>
+      <DividerBlock height={2} />
+
+      <DataTable onRowClick={(e) => selectInvoice(e.data as Rechnung)} value={rechnungenImMonat} emptyMessage="Keine Rechnungen in diesem Monat.">
+        <Column field="rechnungsnummer" header="#" />
+        <Column field="empfaenger" header="Empfänger" />
+        <Column body={(rowData: Rechnung) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" />
+        <Column body={(rowData: Rechnung) => formatDate(rowData.rechnungsdatum)} header="Datum" />
+        <Column body={statusTemplate} header="Status" />
+      </DataTable>
     </div>
   );
 }

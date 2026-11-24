@@ -31,7 +31,7 @@ export default function ClientEditor({ user: userProp }: Props) {
   const toast = useRef<Toast | null>(null);
   const { userProfile } = useAuth();
 
-  const user = userProp ?? userProfile; // ← Fallback auf eingeloggten User
+  const user = userProp ?? userProfile;
 
   // STATES
   const [statusChanged, setStatusChanged] = useState(false);

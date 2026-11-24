@@ -137,16 +137,15 @@ export default function OnboardingClient() {
     setServices((prev) => (checked ? [...prev, value] : prev.filter((s) => s !== value)));
   };
 
-  if (loading || !userProfile) return null;
-
-  if (!userProfile) return (
+  if (loading || !userProfile) return (
     <div className={styles.authForm} style={{ maxWidth: 500, padding: '5rem 1rem 1rem 1rem' }}>
-      <Column alignItems="center" justifyContent='center'>
+      <Column alignItems="center" justifyContent="center">
         <ProgressSpinner color="var(--primary)" style={{ width: 80 }} />
         <span>Dein Profil wird eingerichtet.</span>
+        <a href="/" style={{ fontSize: 13, opacity: 0.6 }}>Abmelden</a>
       </Column>
     </div>
-  )
+  );
 
   return (
     <div className={styles.authForm} style={{ maxWidth: 500, padding: '5rem 1rem 1rem 1rem' }}>

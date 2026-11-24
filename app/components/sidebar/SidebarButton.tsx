@@ -8,12 +8,13 @@ interface Props {
   action?: () => void;
   collapsed?: boolean;
   exact?: boolean;
+  hidden?: boolean;
   icon?: LucideIcon;
   label: string;
   target?: string;
 }
 
-export default function AdminSidebarButton({ action, collapsed, exact, icon: Icon, label, target }: Props) {
+export default function AdminSidebarButton({ action, collapsed, exact, hidden = false, icon: Icon, label, target }: Props) {
   const pathname = usePathname();
 
   const isActive = !!target && (
@@ -22,6 +23,7 @@ export default function AdminSidebarButton({ action, collapsed, exact, icon: Ico
       : pathname === target || pathname.startsWith(target + '/')
   );
 
+  if (hidden) return;
 
   if (!target) return (
     <Button

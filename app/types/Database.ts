@@ -268,6 +268,7 @@ export type User = {
   steuer_id?: string;
   strasse: string;
   stripe_customer_id: string;
+  team_aktiv: number;
   telefon: string;
   vorname: string;
   nachname: string;

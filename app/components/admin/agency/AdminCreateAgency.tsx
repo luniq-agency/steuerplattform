@@ -9,6 +9,8 @@ import { Toast } from 'primereact/toast';
 import { useRef, useState } from 'react';
 import Button from '../../buttons/Button';
 import { Plus } from 'lucide-react';
+import { sendEmail } from '@/app/actions/email';
+import { randomBytes } from 'crypto';
 
 export default function AdminCreateAgency() {
   const toast = useRef<Toast | null>(null);
@@ -27,10 +29,15 @@ export default function AdminCreateAgency() {
   const sendInvite = async () => {
     setSubmitting(true);
     if (!userProfile) return;
-
+    const bytes = crypto.getRandomValues(new Uint8Array(32));
+    const token = btoa(String.fromCharCode(...bytes))
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
     try {
       const agencyPayload = {
         email: agentEmail,
+        einladung_token: token,
         firma: agentCompany,
         referrer: userProfile.id,
         status: 'pending',
@@ -38,8 +45,11 @@ export default function AdminCreateAgency() {
         nachname: agentNachname,
         rolle: 'agency',
       };
-
-      await agentCreate(agencyPayload);
+      const created = await agentCreate(agencyPayload);
+      await sendEmail('agentur-einladung', created.email, {
+        NAME: agentVorname,
+        URL: `${created.id}?code=${token}`,
+      });
       setVisible(false);
       toast.current?.show({
         severity: 'success',

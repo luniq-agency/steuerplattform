@@ -6,7 +6,7 @@ import { esc, wrapEmailTemplate } from './emails/emailUtils';
 let client: Resend | null = null;
 const resend = () => (client ??= new Resend(process.env.RESEND_API_KEY));
 
-const FROM = 'ADVACT <info@conek.de>';
+const FROM = 'ADVACT <info@advact.de>';
 
 export async function sendHtmlEmail(to: string, subject: string, bodyHtml: string) {
   const { data, error } = await resend().emails.send({

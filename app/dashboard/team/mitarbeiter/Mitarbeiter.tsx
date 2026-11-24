@@ -3,7 +3,7 @@
 import DividerBlock from '@/app/components/DividerBlock';
 import { useAuth } from '@/app/context/AuthContext';
 import { useEffect, useState } from 'react';
-import SkeletonGrid from '../../components/ui/loading/SkeletonGrid';
+import SkeletonGrid from '@/app/components/ui/loading/SkeletonGrid';
 import LayoutColumn from "@/app/components/layout/Column";
 import Link from 'next/link';
 import Button from '@/app/components/buttons/Button';

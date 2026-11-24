@@ -20,10 +20,12 @@ import { Statistik } from '../types/stats';
 import { AusgabeStatistik, fetchAusgabeStatistik } from '../actions/stats/ausgaben';
 import { Vorgang } from '../types/vorgang';
 import { fetchVorgaengeByClient } from '../actions/vorgang/vorgang';
+import { useRouter } from 'next/navigation';
 
 export default function Dashboard() {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  const { team, user, userProfile } = useAuth();
+  const { loading, team, user, userProfile } = useAuth();
+  const router = useRouter();
 
   // STATES
   const [statsLoading, setStatsLoading] = useState(false);
@@ -53,6 +55,11 @@ export default function Dashboard() {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
   }, [user, userProfile]);
+
+  useEffect(() => {
+    if (loading || !userProfile) return;
+    if (!userProfile.team_aktiv) router.replace('/onboarding');
+  }, [loading, userProfile, router]);
 
   useEffect(() => {
     if (!team || !userProfile) return;

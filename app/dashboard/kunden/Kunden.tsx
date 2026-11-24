@@ -58,15 +58,7 @@ export default function Kunden() {
 
   const countryTemplate = (rowData: Kunde) => {
     const country = LAENDER_SORTIERT.find((l) => l.code === rowData.land)
-    return <Row alignItems="center" gap={4}><img alt={country?.code} height={8} src={country?.flag || ''} width={12}/><span>{country?.name}</span></Row>
-  }
-
-  const statusTemplate = (rowData: Rechnung) => {
-    const status = invoice_status.find((i) => i.value == rowData.status);
-    if (!status) return <span>–</span>
-    return (
-      <StatusTag bg={status.bg || 'blue'} color={status.color || 'white'} label={status?.label} />
-    )
+    return <Row alignItems="center" gap={4}><img alt={country?.code} height={10} src={`/flaggen/${country?.code}.png` || ''} width={15} /><span>{country?.name}</span></Row>
   }
 
   // ACTIONS
@@ -100,9 +92,9 @@ export default function Kunden() {
         </Row>
       </Row>
       <DividerBlock height={2} />
-      <DataTable onRowClick={(e) => selectClient(e.data as Kunde)}  emptyMessage="Bisher wurden noch keine Kunden angelegt." sortField="name" value={kunden}>
+      <DataTable onRowClick={(e) => selectClient(e.data as Kunde)} emptyMessage="Bisher wurden noch keine Kunden angelegt." sortField="name" sortOrder={1} value={kunden}>
         <Column field="kundennummer" header="#" />
-        <Column field="name" header="Name" sortable sortField='name'/>
+        <Column field="name" header="Name" sortable sortField='name' />
         <Column body={addressTemplate} header="Anschrift" />
         <Column body={countryTemplate} header="Land" />
       </DataTable>

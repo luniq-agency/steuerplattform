@@ -34,7 +34,7 @@ export default function RechnungTable({ emptyMessage = "Keine Rechungen gefunden
 
     // ACTIONS
     const selectInvoice = (rowData: Rechnung) => {
-        router.push(`/${role}/rechnungen/${rowData.id}`);
+        router.push(`/${role}/finanzen/rechnungen/${rowData.id}`);
     };
 
     return (

@@ -148,7 +148,7 @@ export function InvoicePDF({ invoice, items, recipient }: Props) {
               </View>
               <View style={{ alignItems: 'flex-start' }}>
                 <Text style={{ fontSize: 8, color: '#aaa' }}>Tel.: 0176 / 845 076 32</Text>
-                <Text style={{ fontSize: 8, color: '#aaa' }}>info@conek.de</Text>
+                <Text style={{ fontSize: 8, color: '#aaa' }}>info@advact.de</Text>
                 <Text style={{ fontSize: 8, color: '#aaa' }}>www.conek.de</Text>
               </View>
               <View style={{ alignItems: 'flex-start' }}>

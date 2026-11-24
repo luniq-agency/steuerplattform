@@ -19,21 +19,28 @@ interface Props {
   colors?: string[];
   height?: number;
   series: Series[];
+  yFormatter?: (value: number) => string;
 }
 
 export default function LineChart({
   colors = ['#4b39ef', '#48F5B6', '#f59e0b', '#ef4444'],
   height = 200,
   series,
+  yFormatter,
 }: Props) {
   const options: ApexOptions = {
-    chart: { type: 'line', toolbar: { show: false } },
+    chart: { type: 'line', toolbar: { show: false }, fontFamily: 'inherit' },
     stroke: { curve: 'smooth', width: 2 },
     colors,
     xaxis: { type: 'category', labels: { style: { colors: '#888', fontSize: '11px' } } },
-    yaxis: { labels: { style: { colors: '#888', fontSize: '11px' } } },
+    yaxis: {
+      labels: {
+        style: { colors: '#888', fontSize: '11px' },
+        formatter: yFormatter ? (v) => yFormatter(v) : undefined,
+      },
+    },
     grid: { borderColor: '#f0f0f0' },
-    tooltip: { theme: 'light' },
+    tooltip: { theme: 'light', y: { formatter: yFormatter ? (v) => yFormatter(v) : undefined } },
     dataLabels: { enabled: false },
     legend: { show: true },
   };

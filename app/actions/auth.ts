@@ -69,11 +69,9 @@ export async function signUp(email: string, password: string) {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signUp({
-    email,
+    email: email.trim(),
     password,
-    options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback`,
-    },
+    options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_BASE_URL}/auth/callback` },
   });
 
   if (error) {
@@ -81,12 +79,9 @@ export async function signUp(email: string, password: string) {
     return { error: authFehler(error) };
   }
 
-  // E-Mail-Bestätigung aktiv → noch keine Session, User muss Mail bestätigen
-  if (!data.session) {
-    return { needsConfirmation: true };
-  }
+  if (!data.session) return { needsConfirmation: true };
 
-  redirect('/onboarding');
+  return { ziel: '/onboarding' };
 }
 
 export async function signInWithGoogle() {

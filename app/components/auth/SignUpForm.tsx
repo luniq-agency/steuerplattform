@@ -33,11 +33,14 @@ export default function SignUpForm() {
 
         setSubmitting(true);
         const result = await signUp(email, password);
-
         if (result?.error) {
             setError(result.error);
+            setSubmitting(false);
         } else if (result?.needsConfirmation) {
             setInfo('Fast geschafft! Bitte bestätige deine E-Mail-Adresse über den Link, den wir dir geschickt haben.');
+            setSubmitting(false);
+        } else if (result?.ziel) {
+            window.location.assign(result.ziel);
         }
         setSubmitting(false);
     };

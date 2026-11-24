@@ -20,7 +20,7 @@ export async function fetchEmails(): Promise<Email[]> {
 
 export async function sendEmail(templateId: string, to: string, props: any) {
   const { data, error } = await resend.emails.send({
-    from: 'ADVACT <info@conek.de>',
+    from: 'ADVACT <info@advact.de>',
     to,
     template: { id: templateId, variables: props },
   } as any);
@@ -45,7 +45,7 @@ export async function sendEmailWithAttachment({
   pdfFilename: string;
 }) {
   const { data, error } = await resend.emails.send({
-    from: 'ADVACT <info@conek.de>',
+    from: 'ADVACT <info@advact.de>',
     to,
     subject,
     template: {
@@ -74,7 +74,7 @@ export async function sendInvoiceEmail(
   const buffer = await generateInvoicePDF(invoice, items, recipient);
 
   const { data, error } = await resend.emails.send({
-    from: 'ADVACT <info@conek.de>',
+    from: 'ADVACT <info@advact.de>',
     to: recipient.email,
     subject: `Rechnung ${invoice.invoice_number}`,
     template: {
@@ -99,7 +99,7 @@ export async function sendInvoiceEmail(
 
 export async function sendAdminInviteEmail(name: string, to: string, url: string) {
   const { data, error } = await resend.emails.send({
-    from: 'ADVACT <info@conek.de>',
+    from: 'ADVACT <info@advact.de>',
     to,
     subject: 'Deine Einladung zu ADVACT',
     template: {
