@@ -1,10 +1,10 @@
 "use client"
 
-import { usersLoadAll, usersLoadByRole } from '@/app/actions/users';
+import { usersLoadAll, usersLoadByRole, userUpdate } from '@/app/actions/users';
 import Button from '@/app/components/buttons/Button';
 import DividerBlock from '@/app/components/DividerBlock';
 import SearchBox from '@/app/components/forms/SearchBox';
-import { SelectLabel } from '@/app/components/inputs/Select';
+import { SelectLabel, UserSelectLabel } from '@/app/components/inputs/Select';
 import Row from '@/app/components/layout/Row';
 import Tag from '@/app/components/ui/Tag';
 import { job_categories } from '@/app/constants/Constants';
@@ -32,6 +32,10 @@ export default function Kunden() {
     const [agenturisten, setAgenturisten] = useState<User[]>([]);
     const [kunden, setKunden] = useState<User[]>([]);
     const [users, setUsers] = useState<User[]>([]);
+
+    // SELECTIONS
+    const [auswahl, setAuswahl] = useState<User[]>([]);
+    const [selectedAgent, setSelectedAgent] = useState<User | null>(null);
 
     // FILTER
     const [search, setSearch] = useState('');
@@ -69,6 +73,11 @@ export default function Kunden() {
     const filterAktiv = !!search || !!statusFilter;
 
     // ACTIONS
+    const assignClient = async () => {
+        auswahl.map(async (a) => await userUpdate({ bearbeiter: selectedAgent?.id }, a.id))
+        await usersLoadAll();
+    }
+
     const selectClient = (u: User) => router.push(`/admin/kunden/${u.id}`);
 
     const resetFilter = () => {
@@ -98,40 +107,48 @@ export default function Kunden() {
                 </Link>
             </Row>
             <DividerBlock height={2} />
-
             {/* FILTER */}
-            <Row alignItems="end" gap={16}>
-                <div style={{ flex: 1, maxWidth: 400 }}>
-                    <SearchBox maxWidth={400} onChange={setSearch} value={search} />
-                </div>
-                <div style={{ width: 240 }}>
-                    <SelectLabel
-                        onChange={setStatusFilter}
-                        optionLabel="label"
-                        optionValue="value"
-                        options={STATUS_OPTIONEN}
-                        value={statusFilter}
-                    />
-                </div>
-                {filterAktiv && <Button label="Filter zurücksetzen" mode="tertiary" onClick={resetFilter} size="small" />}
+            <Row alignItems="center" justifyContent='space-between'>
+                <Row alignItems="center" gap={16}>
+                    <div style={{ flex: 1, maxWidth: 400 }}>
+                        <SearchBox maxWidth={400} onChange={setSearch} value={search} />
+                    </div>
+                    <div style={{ width: 240 }}>
+                        <SelectLabel
+                            onChange={setStatusFilter}
+                            optionLabel="label"
+                            optionValue="value"
+                            options={STATUS_OPTIONEN}
+                            value={statusFilter}
+                        />
+                    </div>
+                    {filterAktiv && <Button label="Filter zurücksetzen" mode="tertiary" onClick={resetFilter} size="small" />}
+                </Row>
+                <Row alignItems="center" gap={8} width="fit-content">
+                    {auswahl.length > 0 && <UserSelectLabel maxWidth={300} onChange={setSelectedAgent} options={agenturisten} placeholder='Agenturist auswählen' value={selectedAgent} />}
+                    {auswahl.length > 0 && <Button label="Kunden zuordnen" mode="primary" onClick={assignClient} size="small" />}
+                </Row>
             </Row>
             <DividerBlock height={1} />
             <span className="text-meta">
                 {gefiltert.length} von {kunden.length} Kunden
             </span>
             <DividerBlock height={1} />
-
             <DataTable
                 emptyMessage={filterAktiv ? 'Keine Kunden gefunden. Passe Suche oder Filter an.' : 'Noch keine Kunden vorhanden.'}
                 onRowClick={(e) => selectClient(e.data as User)}
+                onSelectionChange={(e) => setAuswahl(e.value as User[])}
                 paginator
                 rowHover
                 rows={12}
+                selection={auswahl}
+                selectionMode="checkbox"
                 sortField="nachname"
                 sortOrder={1}
                 stripedRows
                 value={gefiltert}
             >
+                <Column headerStyle={{ width: 48 }} selectionMode="multiple" />
                 <Column
                     body={(rowData: User) => <span>{rowData.nachname}, {rowData.vorname}</span>}
                     field="nachname"

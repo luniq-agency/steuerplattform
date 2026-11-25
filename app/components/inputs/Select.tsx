@@ -23,9 +23,11 @@ interface Props {
 
 interface UserProps {
   label?: string;
+  maxWidth?: string | number;
   onChange: (value: User) => void;
   options?: SelectItemOptionsType;
   optionLabel?: string;
+  placeholder?: string;
   value: User | null;
 }
 
@@ -75,7 +77,7 @@ export function SelectLabel({
   );
 }
 
-export function UserSelectLabel({ label, onChange, options, value }: UserProps) {
+export function UserSelectLabel({ label, maxWidth, onChange, options, placeholder, value }: UserProps) {
   if (!options) return;
   const userOptions = options
     .map((a) => ({
@@ -86,19 +88,16 @@ export function UserSelectLabel({ label, onChange, options, value }: UserProps) 
 
   const matchedValue = userOptions.find((o) => o.id === value?.id) ?? null;
 
-  const userTemplate = (option: SelectItemOptionsType) => {
-
-  }
-
   return (
-    <Column gap={4}>
-      <label>{label}</label>
+    <Column gap={4} maxWidth={maxWidth}>
+      {label && <label>{label}</label>}
       <Dropdown
         filter
         filterPlaceholder="Suchen"
         onChange={(e) => onChange(e.value)}
         options={userOptions}
         optionLabel="fullName"
+        placeholder={placeholder}
         value={matchedValue}
       />
     </Column>

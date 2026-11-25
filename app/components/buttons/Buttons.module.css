@@ -6,6 +6,7 @@
   gap: 0.5rem;
   height: auto;
   justify-content: center;
+  white-space: nowrap;
 }
 
 .buttonContext {
