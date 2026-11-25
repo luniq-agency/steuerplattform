@@ -217,9 +217,8 @@ export default function SubscriptionEditor({ abo, header = 'Neues Abonnement' }:
   const statusInfo = abo ? ABO_STATUS[abo.status] : null;
 
   return (
-    <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
+    <div className="page-content">
       <Toast ref={toast} />
-
       {/* KOPF */}
       <Row alignItems="center" justifyContent="space-between">
         <Row alignItems="center" gap={12} width="fit-content">

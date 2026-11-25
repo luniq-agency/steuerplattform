@@ -90,7 +90,7 @@ export default function Kunden() {
     };
 
     return (
-        <div className="content-wrapper" style={{ height: '100%', padding: 16 }}>
+        <div className="page-content">
             <Row alignItems="center" justifyContent="space-between">
                 <h1>Kunden</h1>
                 <Link href="/admin/kunden/neu">

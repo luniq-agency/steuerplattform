@@ -7,8 +7,6 @@ interface Props {
 
 export default function Abonnement({ abo }: Props) {
     return (
-        <div className="page-content column" style={{ padding: 16 }}>
-            <SubscriptionEditor abo={abo} />
-        </div>
+        <SubscriptionEditor abo={abo} />
     )
 }

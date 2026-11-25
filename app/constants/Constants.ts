@@ -159,7 +159,7 @@ export const job_categories = [
   },
   {
     bg: '#FCEC52',
-    label: 'Freelancer',
+    label: 'Freiberuflich',
     color: 'black',
     value: 'freelancer',
   },
