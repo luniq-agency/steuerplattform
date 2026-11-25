@@ -1,4 +1,7 @@
-import { SelectItemOptionsType } from "primereact/selectitem";
+'use client';
+
+import { useEffect, useState } from 'react';
+import { SelectItemOptionsType } from 'primereact/selectitem';
 import { Dropdown } from 'primereact/dropdown';
 import Column from '../../layout/Column';
 import { IconButton } from '../../buttons/IconButton';
@@ -28,12 +31,16 @@ export function SelectLabel({
     onClear,
     optionDescription,
     options,
-    optionLabel = "label",
-    optionValue = "value",
+    optionLabel = 'label',
+    optionValue = 'value',
     placeholder,
     showClear = false,
     value,
 }: Props) {
+    // Dropdown erst im Browser rendern (PrimeReact greift beim Rendern aufs DOM zu)
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => setMounted(true), []);
+
     const itemTemplate = (option: SelectItemOptionsType) => {
         const opt = option as Record<string, any>;
         return (
@@ -47,16 +54,23 @@ export function SelectLabel({
     return (
         <Column gap={4} maxWidth={maxWidth}>
             {label && <label>{label}</label>}
-            <Dropdown
-                filter={filter}
-                itemTemplate={itemTemplate}
-                onChange={(e) => onChange(e.value)}
-                options={options}
-                optionLabel={optionLabel}
-                optionValue={optionValue}
-                placeholder={placeholder}
-                value={value}
-            />
+            {mounted ? (
+                <Dropdown
+                    filter={filter}
+                    itemTemplate={optionDescription ? itemTemplate : undefined}
+                    onChange={(e) => onChange(e.value)}
+                    options={options ?? []}
+                    optionLabel={optionLabel}
+                    optionValue={optionValue}
+                    placeholder={placeholder}
+                    value={value ?? null}
+                />
+            ) : (
+                // gleich große Hülle, damit nichts springt
+                <div className="p-dropdown p-component p-inputwrapper" style={{ width: '100%' }}>
+                    <span className="p-dropdown-label p-inputtext p-placeholder">{placeholder ?? '\u00A0'}</span>
+                </div>
+            )}
             {showClear && (
                 <div className={styles.clearButton} style={{ right: 48 }}>
                     <IconButton bg="transparent" icon={X} onClick={onClear} />
