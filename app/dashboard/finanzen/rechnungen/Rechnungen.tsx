@@ -151,7 +151,7 @@ export default function Rechnungen() {
         />
       </Row>
       <DividerBlock height={1} />
-      <RechnungTable rechnungen={rechnungenImMonat} role="dashboard" />
+      <RechnungTable rechnungen={rechnungenImMonat} role="client" />
     </div>
   );
 }

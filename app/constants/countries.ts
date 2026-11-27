@@ -259,7 +259,7 @@ export const LAENDER: Land[] = [
 ];
 
 // Häufig genutzte Länder zuerst, danach alle übrigen
-const TOP = ['DE', 'AT', 'CH'];
+const TOP = ['de', 'at', 'ch'];
 
 export const LAENDER_SORTIERT: Land[] = [
   ...TOP.map((code) => LAENDER.find((l) => l.code === code)!),
