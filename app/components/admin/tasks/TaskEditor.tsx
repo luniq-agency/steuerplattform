@@ -22,7 +22,6 @@ import DashboardContainer from '../../layout/DashboardContainer';
 import Column from '../../layout/Column';
 import Row from '../../layout/Row';
 import UserDisplay from '../../users/UserDisplay';
-import UserSelector from '../../forms/UserSelector';
 import DetailField from '../../forms/DetailField';
 import Button from '../../buttons/Button';
 import { Dokument } from '@/app/types/docs';
@@ -83,6 +82,16 @@ export default function TaskEditor({ task }: Props) {
     };
     load();
   }, [task.id]);
+
+  useEffect(() => {
+    if (!task || !userProfile) return;
+    if (task.status != 'neu') return;
+    const setOpened = async () => {
+      await patchVorgang({ status: 'in_bearbeitung' }, task.id)
+    }
+    setOpened()
+    console.log('Status:', 'geöffnet')
+  }, [task, userProfile])
 
   // HELPERS
   const findUser = (id: User['id'] | null | undefined) => users.find((u) => u.id === id) ?? null;

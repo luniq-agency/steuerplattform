@@ -12,6 +12,16 @@
   text-transform: uppercase;
 }
 
+.cardIcon {
+  color: var(--text-meta, #9aa5b1);
+  flex-shrink: 0;
+}
+
+.disclaimer {
+  font-size: 11px;
+  color: var(--text-meta, #9aa5b1);
+}
+
 .decisionCard {
   align-items: center;
   aspect-ratio: 1;
@@ -56,6 +66,30 @@
 .selected {
   background-color: var(--primary-10);
   border: 1px solid var(--primary);
+}
+
+.trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  line-height: 1.2;
+  flex-wrap: wrap;
+}
+
+.trendLabel {
+  color: var(--text-meta, #9aa5b1);
+  font-weight: 400;
+}
+
+.trendGut {
+  color: #00a35c;
+}
+.trendSchlecht {
+  color: #d92d20;
+}
+.trendNeutral {
+  color: var(--text-meta, #9aa5b1);
 }
 
 .value {

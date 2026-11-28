@@ -299,7 +299,7 @@ export const ticket_options = [
 export const ticket_status = [
   {
     label: 'Neu',
-    severity: 'info',
+    severity: 'error',
     value: 'neu',
   },
   {
@@ -313,13 +313,17 @@ export const ticket_status = [
     value: 'ready',
   },
   {
+    label: 'In Bearbeitung',
+    value: 'in_bearbeitung'
+  },
+  {
     label: 'Warten auf Antwort',
     severity: 'warning',
     value: 'answered',
   },
   {
     label: 'Geschlossen',
-    severity: 'Success',
+    severity: 'success',
     value: 'geschlossen',
   },
 ];

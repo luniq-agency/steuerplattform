@@ -57,3 +57,22 @@ export const templateUploadCode = (code: string, minuten: number) => `
   <p>Gib diesen Code auf der Upload-Seite ein, um deine Dokumente hochzuladen:</p>
   <p style="font-size: 32px; font-weight: bold; letter-spacing: 6px; margin: 24px 0;">${esc(code)}</p>
   <p style="font-size: 13px; color: #9aa5b1;">Der Code ist ${minuten} Minuten gültig. Falls du keinen Code angefordert hast, kannst du diese E-Mail ignorieren.</p>`;
+
+export const templateZahlungserinnerung = (
+  vorname: string,
+  rechnungsnummer: string,
+  betrag: string,
+  faelligAm: string,
+  url: string,
+  anzahl: number
+) => `
+  <h2 style="margin-top: 0;">Hallo ${esc(vorname)},</h2>
+  <p>${
+    anzahl <= 1
+      ? 'vielleicht ist es im Alltag untergegangen:'
+      : 'wir möchten dich noch einmal erinnern:'
+  } Die Rechnung <strong>${esc(rechnungsnummer)}</strong> über <strong>${esc(betrag)}</strong>
+  war am ${esc(faelligAm)} fällig und ist bei uns noch nicht als bezahlt verbucht.</p>
+  <p>Über den folgenden Link kannst du die Rechnung ansehen und direkt bezahlen:</p>
+  ${button('Rechnung bezahlen', url)}
+  <p style="font-size: 13px; color: #9aa5b1;">Falls du bereits bezahlt hast, betrachte diese E-Mail bitte als gegenstandslos.</p>`;

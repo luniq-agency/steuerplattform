@@ -56,7 +56,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
 
     const idempotencyKey = useRef(crypto.randomUUID());
 
-    const path = admin ? 'admin' : 'dashboard';
+    const path = admin ? 'admin' : 'dashboard/finanzen';
 
     const adminMode = admin || userProfile?.rolle === 'admin';
 
@@ -353,7 +353,7 @@ export default function RechnungEditor({ admin = false, header = 'Neue Rechnung 
             <Row justifyContent="space-between">
                 <h1>{header}</h1>
                 <Row gap={8} width="fit-content">
-                    {adminMode && <Button label="Aktionen" mode="tertiary" onClick={(e) => op.current?.toggle(e)} size="small" />}
+                    <Button label="Aktionen" mode="tertiary" onClick={(e) => op.current?.toggle(e)} size="small" />
                     <Button
                         disabled={saving || (adminMode && (!selectedUser || positions.length === 0))}
                         label={adminMode ? (saving ? 'Wird erstellt …' : 'Erstellen & versenden') : 'Speichern'}

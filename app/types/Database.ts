@@ -243,6 +243,7 @@ export type User = {
   client_profile: string;
   created_at: Date;
   dob: string | null;
+  einladung_token: string;
   email: string;
   familienstand: string;
   firma: string;

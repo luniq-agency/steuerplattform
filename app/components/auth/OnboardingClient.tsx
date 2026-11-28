@@ -38,7 +38,7 @@ function Feld({ label, children }: { label: string; children: ReactNode }) {
 }
 
 export default function OnboardingClient() {
-  const { userProfile, loading } = useAuth();
+  const { userProfile, loading, logout } = useAuth();
   const router = useRouter();
 
   // STATES
@@ -142,7 +142,7 @@ export default function OnboardingClient() {
       <Column alignItems="center" justifyContent="center">
         <ProgressSpinner color="var(--primary)" style={{ width: 80 }} />
         <span>Dein Profil wird eingerichtet.</span>
-        <a href="/" style={{ fontSize: 13, opacity: 0.6 }}>Abmelden</a>
+        <Button label="Abmelden" onClick={logout} />
       </Column>
     </div>
   );

@@ -39,7 +39,7 @@ export default function RechnungTable({ emptyMessage = "Keine Rechungen gefunden
     };
 
     return (
-        <DataTable onRowClick={(e) => selectInvoice(e.data as Rechnung)} value={rechnungen} emptyMessage={emptyMessage}>
+        <DataTable emptyMessage={emptyMessage} onRowClick={(e) => selectInvoice(e.data as Rechnung)} sortField="rechnungsdatum" sortOrder={-1} value={rechnungen} >
             <Column field="rechnungsnummer" header="#" sortable sortField="rechnungsnummer" style={{ width: 150 }} />
             <Column field="empfaenger" header="Empfänger" />
             <Column body={(rowData: Rechnung) => formatCurrency(rowData.betrag_gesamt)} header="Betrag" sortable sortField="betrag_gesamt" style={{ width: 200 }} />
